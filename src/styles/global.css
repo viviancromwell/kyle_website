@@ -12,7 +12,9 @@ body {
   font-size: var(--text-base);
   line-height: var(--leading-normal);
   color: var(--color-text);
-  background: var(--color-bg);
+  background-color: var(--color-bg);
+  background-image: url('../assets/textures/rag-paper.svg');
+  background-size: var(--texture-paper-size);
 }
 
 h1,
@@ -72,7 +74,50 @@ a:focus-visible {
 
 .nav-links {
   display: flex;
+  align-items: baseline;
   gap: var(--space-lg);
+}
+
+.nav-menu {
+  position: relative;
+}
+
+.nav-menu summary {
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--color-border);
+}
+
+.nav-menu summary:hover,
+.nav-menu summary:focus-visible {
+  color: var(--color-accent);
+  text-decoration-color: var(--color-accent);
+}
+
+.nav-menu summary::marker {
+  color: var(--color-accent);
+}
+
+.nav-submenu {
+  position: absolute;
+  top: calc(100% + var(--space-xs));
+  right: 0;
+  z-index: 10;
+  min-width: max-content;
+  list-style: none;
+  margin: 0;
+  padding: var(--space-sm);
+  display: grid;
+  gap: var(--space-xs);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.nav-submenu a {
+  display: block;
+  text-decoration: none;
 }
 
 .page {

@@ -9,7 +9,7 @@ design direction, made machine-readable. Be opinionated; vague answers produce g
 
 ## Color direction
 
-(Warm or cool? Quiet or loud? Name a base and an accent if you know them. Update `src/styles/tokens.css` to match.)
+Faded and timeworn, with a desaturated cotton-rag base, a subtle sepia undertone, restrained monochrome film grain, and a muted archival red called Faded Oxblood for accents; avoid obvious yellow or green casts so the surface feels naturally aged rather than tinted.
 
 ## Typography
 

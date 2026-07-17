@@ -8,13 +8,13 @@
 */
 :root {
   /* color */
-  --color-bg:             #FFFFFF;
-  --color-bg-subtle:      #F5F5F4;
+  --color-bg:             oklch(0.86 0.028 68);
+  --color-bg-subtle:      oklch(0.8 0.032 64);
   --color-text:           #1C1917;
   --color-text-secondary: #57534E;
   --color-border:         #D6D3D1;
-  --color-accent:         #2563EB;
-  --color-accent-hover:   #1D4ED8;
+  --color-accent:         oklch(0.43 0.09 28);
+  --color-accent-hover:   oklch(0.35 0.075 28);
 
   /* typography */
   --font-display: system-ui, -apple-system, sans-serif;
@@ -46,4 +46,7 @@
 
   /* layout */
   --max-width-page: 1100px;
+
+  /* texture */
+  --texture-paper-size: 12rem;
 }

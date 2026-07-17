@@ -23,7 +23,7 @@ const radii = [
 const navSections = [
   ['Foundations', [['#color', 'Color'], ['#typography', 'Typography'], ['#spacing', 'Spacing']]],
   ['Attributes', [['#radius', 'Radius']]],
-  ['Components', [['#component-nav', 'Nav Link'], ['#component-list', 'List Row']]],
+  ['Components', [['#component-nav', 'Nav Link'], ['#component-work-menu', 'Work Menu'], ['#component-list', 'List Row']]],
 ];
 ---
 
@@ -114,10 +114,25 @@ const navSections = [
       <section id="component-nav">
         <h2>Nav Link</h2>
         <div class="ds-demo">
-          <a href="#component-nav" class="nav-name" style="margin-right: var(--space-lg);">Your Name</a>
+          <a href="#component-nav" class="nav-name" style="margin-right: var(--space-lg);">Vivian Cromwell</a>
           <a href="#component-nav">Work</a>
         </div>
         <p class="ds-note">The site header pieces, live from <code>global.css</code>.</p>
+      </section>
+
+      <section id="component-work-menu">
+        <h2>Work Menu</h2>
+        <div class="ds-demo">
+          <details class="nav-menu ds-menu-demo" open>
+            <summary>Work</summary>
+            <ul class="nav-submenu" aria-label="Work menu example">
+              <li><a href="#component-work-menu">Portraits</a></li>
+              <li><a href="#component-work-menu">Maternity</a></li>
+              <li><a href="#component-work-menu">Events</a></li>
+            </ul>
+          </details>
+        </div>
+        <p class="ds-note">Use in the site header to reveal photography categories with native keyboard and touch support.</p>
       </section>
 
       <section id="component-list">
@@ -287,6 +302,11 @@ const navSections = [
     background: var(--color-bg-subtle);
     border: 1px solid var(--color-border);
     margin-bottom: var(--space-xs);
+  }
+
+  .ds-menu-demo .nav-submenu {
+    position: static;
+    margin-top: var(--space-xs);
   }
 
   @media (max-width: 640px) {

@@ -2,7 +2,7 @@
 import '../styles/tokens.css';
 import '../styles/global.css';
 
-const { title = 'Your Name — Portfolio', description = 'Portfolio of an emerging designer.' } = Astro.props;
+const { title = 'Vivian Cromwell — Portfolio', description = 'Portfolio of an emerging designer.' } = Astro.props;
 ---
 
 <!doctype html>
@@ -17,9 +17,17 @@ const { title = 'Your Name — Portfolio', description = 'Portfolio of an emergi
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="site-header">
       <nav class="site-nav" aria-label="Main">
-        <a href="/" class="nav-name">Your Name</a>
+        <a href="/" class="nav-name">Vivian Cromwell</a>
         <div class="nav-links">
-          <a href="/work/">Work</a>
+          <details class="nav-menu">
+            <summary>Work</summary>
+            <ul class="nav-submenu" aria-label="Work categories">
+              <li><a href="/work/">All Work</a></li>
+              <li><a href="/work/#portraits">Portraits</a></li>
+              <li><a href="/work/#maternity">Maternity</a></li>
+              <li><a href="/work/#events">Events</a></li>
+            </ul>
+          </details>
           <a href="/about/">About</a>
         </div>
       </nav>
@@ -28,7 +36,7 @@ const { title = 'Your Name — Portfolio', description = 'Portfolio of an emergi
       <slot />
     </main>
     <footer class="site-footer">
-      <p>&copy; 2026 Your Name</p>
+      <p>&copy; 2026 Vivian Cromwell</p>
     </footer>
   </body>
 </html>
