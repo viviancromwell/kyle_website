@@ -1,0 +1,89 @@
+/* Base styles. Everything here uses tokens from tokens.css. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  line-height: var(--leading-tight);
+}
+
+a {
+  color: var(--color-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--color-border);
+  transition: color 0.15s ease, text-decoration-color 0.15s ease;
+}
+
+a:hover,
+a:focus-visible {
+  color: var(--color-accent);
+  text-decoration-color: var(--color-accent);
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+}
+
+.skip-link:focus {
+  left: var(--space-md);
+  top: var(--space-md);
+  background: var(--color-bg);
+  padding: var(--space-xs) var(--space-sm);
+  z-index: 10;
+}
+
+.site-header,
+.site-footer,
+.page {
+  max-width: var(--max-width-page);
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+}
+
+.site-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: var(--space-lg) 0;
+}
+
+.nav-name {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  gap: var(--space-lg);
+}
+
+.page {
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-2xl);
+}
+
+.site-footer {
+  padding-top: var(--space-lg);
+  padding-bottom: var(--space-lg);
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}

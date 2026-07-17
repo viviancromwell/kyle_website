@@ -1,0 +1,49 @@
+/*
+  Design tokens — the single source of truth.
+  Every color, font size, and space on this site comes from here.
+  Change these values and the whole site changes with them.
+
+  Week 2: replace these neutral defaults with YOUR design system.
+  See /showcase to watch your system take shape.
+*/
+:root {
+  /* color */
+  --color-bg:             #FFFFFF;
+  --color-bg-subtle:      #F5F5F4;
+  --color-text:           #1C1917;
+  --color-text-secondary: #57534E;
+  --color-border:         #D6D3D1;
+  --color-accent:         #2563EB;
+  --color-accent-hover:   #1D4ED8;
+
+  /* typography */
+  --font-display: system-ui, -apple-system, sans-serif;
+  --font-body:    system-ui, -apple-system, sans-serif;
+
+  --text-sm:   0.875rem;
+  --text-base: 1rem;
+  --text-lg:   1.25rem;
+  --text-xl:   1.5rem;
+  --text-2xl:  2rem;
+  --text-3xl:  2.75rem;
+
+  --leading-tight:  1.2;
+  --leading-normal: 1.5;
+  --leading-loose:  1.75;
+
+  /* spacing */
+  --space-2xs: 4px;
+  --space-xs:  8px;
+  --space-sm:  12px;
+  --space-md:  16px;
+  --space-lg:  24px;
+  --space-xl:  48px;
+  --space-2xl: 96px;
+
+  /* radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+
+  /* layout */
+  --max-width-page: 1100px;
+}

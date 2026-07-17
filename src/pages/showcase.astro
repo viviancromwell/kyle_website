@@ -1,0 +1,306 @@
+---
+import Base from '../layouts/Base.astro';
+
+const colors = [
+  ['--color-bg', 'Background', 'page background'],
+  ['--color-bg-subtle', 'Background subtle', 'cards, panels'],
+  ['--color-text', 'Text', 'headings, body'],
+  ['--color-text-secondary', 'Text secondary', 'supporting copy'],
+  ['--color-border', 'Border', 'dividers, outlines'],
+  ['--color-accent', 'Accent', 'links, highlights'],
+  ['--color-accent-hover', 'Accent hover', 'hover states'],
+];
+
+const sizes = ['--text-sm', '--text-base', '--text-lg', '--text-xl', '--text-2xl', '--text-3xl'];
+
+const spaces = ['--space-2xs', '--space-xs', '--space-sm', '--space-md', '--space-lg', '--space-xl', '--space-2xl'];
+
+const radii = [
+  ['--radius-sm', 'buttons, inputs, tags'],
+  ['--radius-md', 'cards, containers'],
+];
+
+const navSections = [
+  ['Foundations', [['#color', 'Color'], ['#typography', 'Typography'], ['#spacing', 'Spacing']]],
+  ['Attributes', [['#radius', 'Radius']]],
+  ['Components', [['#component-nav', 'Nav Link'], ['#component-list', 'List Row']]],
+];
+---
+
+<Base title="Design System — Showcase">
+  <div class="ds-layout">
+    <nav class="ds-nav" aria-label="Design system contents">
+      {navSections.map(([group, links]) => (
+        <div>
+          <p class="ds-nav-label">{group}</p>
+          <ul>
+            {links.map(([href, label]) => (
+              <li><a href={href}>{label}</a></li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </nav>
+
+    <article>
+      <header>
+        <h1>Your Design System</h1>
+        <p class="ds-intro">
+          This page reads directly from <code>src/styles/tokens.css</code>. Change a token,
+          refresh, and your whole system updates at once. When you build a new reusable
+          component, add a demo of it to the Components section here — that's a house rule.
+        </p>
+      </header>
+
+      <section id="color">
+        <h2>Color</h2>
+        <table class="ds-table">
+          <thead>
+            <tr><th></th><th>Token</th><th>Role</th><th>Used for</th></tr>
+          </thead>
+          <tbody>
+            {colors.map(([token, role, use]) => (
+              <tr>
+                <td><span class="ds-chip" style={`background: var(${token})`}></span></td>
+                <td><code>{token}</code></td>
+                <td>{role}</td>
+                <td class="ds-use">{use}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+
+      <section id="typography">
+        <h2>Typography</h2>
+        <p class="ds-note">Display font for impression, body font for information. Both set in <code>tokens.css</code>.</p>
+        <div class="ds-type-scale">
+          {sizes.map((token) => (
+            <div class="ds-type-row">
+              <code>{token}</code>
+              <p class="ds-type-sample" style={`font-size: var(${token})`}>The quick brown fox</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section id="spacing">
+        <h2>Spacing</h2>
+        <div class="ds-space-scale">
+          {spaces.map((token) => (
+            <div class="ds-space-row">
+              <code>{token}</code>
+              <div class="ds-space-bar" style={`width: var(${token})`}></div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section id="radius">
+        <h2>Radius</h2>
+        <div class="ds-radius-grid">
+          {radii.map(([token, use]) => (
+            <figure class="ds-radius-card">
+              <div class="ds-radius-demo" style={`border-radius: var(${token})`}></div>
+              <figcaption>
+                <code>{token}</code>
+                <span class="ds-use">{use}</span>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </section>
+
+      <section id="component-nav">
+        <h2>Nav Link</h2>
+        <div class="ds-demo">
+          <a href="#component-nav" class="nav-name" style="margin-right: var(--space-lg);">Your Name</a>
+          <a href="#component-nav">Work</a>
+        </div>
+        <p class="ds-note">The site header pieces, live from <code>global.css</code>.</p>
+      </section>
+
+      <section id="component-list">
+        <h2>List Row</h2>
+        <div class="ds-demo">
+          <p style="margin: 0;"><a href="#component-list">First Project</a></p>
+          <p class="ds-use" style="margin: 0;">One line about this project.</p>
+        </div>
+        <p class="ds-note">The work-index row pattern. As you build new components, add each one here as its own section.</p>
+      </section>
+    </article>
+  </div>
+</Base>
+
+<style>
+  .ds-layout {
+    display: grid;
+    grid-template-columns: 160px minmax(0, 1fr);
+    gap: var(--space-xl);
+    align-items: start;
+  }
+
+  .ds-nav {
+    position: sticky;
+    top: var(--space-lg);
+    display: grid;
+    gap: var(--space-lg);
+  }
+
+  .ds-nav-label {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--space-xs);
+  }
+
+  .ds-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-2xs);
+  }
+
+  .ds-nav a {
+    font-size: var(--text-sm);
+    text-decoration: none;
+  }
+
+  h1 {
+    font-size: var(--text-2xl);
+    margin: 0 0 var(--space-sm);
+  }
+
+  .ds-intro {
+    color: var(--color-text-secondary);
+    max-width: 40em;
+    margin: 0;
+  }
+
+  section {
+    margin-top: var(--space-xl);
+  }
+
+  h2 {
+    font-size: var(--text-xl);
+    margin: 0 0 var(--space-sm);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--color-border);
+  }
+
+  code {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .ds-note,
+  .ds-use {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .ds-table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  .ds-table th {
+    font-size: var(--text-sm);
+    text-align: left;
+    padding: var(--space-xs) var(--space-sm) var(--space-xs) 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .ds-table td {
+    padding: var(--space-xs) var(--space-sm) var(--space-xs) 0;
+    border-bottom: 1px solid var(--color-border);
+    font-size: var(--text-sm);
+  }
+
+  .ds-chip {
+    display: block;
+    width: var(--space-xl);
+    height: var(--space-lg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+  }
+
+  .ds-type-row {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    align-items: baseline;
+    gap: var(--space-md);
+    padding: var(--space-xs) 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .ds-type-sample {
+    margin: 0;
+    line-height: var(--leading-tight);
+  }
+
+  .ds-space-scale {
+    display: grid;
+    gap: var(--space-xs);
+  }
+
+  .ds-space-row {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    align-items: center;
+    gap: var(--space-md);
+  }
+
+  .ds-space-bar {
+    height: var(--space-sm);
+    background: var(--color-accent);
+    border-radius: var(--radius-sm);
+  }
+
+  .ds-radius-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: var(--space-lg);
+  }
+
+  .ds-radius-card {
+    margin: 0;
+    display: grid;
+    gap: var(--space-xs);
+  }
+
+  .ds-radius-demo {
+    height: var(--space-2xl);
+    background: var(--color-bg-subtle);
+    border: 1px solid var(--color-border);
+  }
+
+  .ds-radius-card figcaption {
+    display: grid;
+  }
+
+  .ds-demo {
+    padding: var(--space-lg);
+    background: var(--color-bg-subtle);
+    border: 1px solid var(--color-border);
+    margin-bottom: var(--space-xs);
+  }
+
+  @media (max-width: 640px) {
+    .ds-layout {
+      grid-template-columns: 1fr;
+      gap: var(--space-lg);
+    }
+
+    .ds-nav {
+      position: static;
+      grid-auto-flow: column;
+      justify-content: start;
+      gap: var(--space-lg);
+      overflow-x: auto;
+    }
+  }
+</style>

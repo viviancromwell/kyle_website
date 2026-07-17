@@ -1,0 +1,51 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+
+<Base title="First Project — Your Name">
+  <article class="case-study">
+    <h1>Project Title</h1>
+    <p class="summary">One-paragraph summary: what this is and what it proves about you. Week 3 is when you fill this page with a real project.</p>
+
+    <h2>Role &amp; Context</h2>
+    <p>What was the assignment or situation? What part was yours?</p>
+
+    <h2>Constraints</h2>
+    <p>Time, tools, materials, brief — what were you working within?</p>
+
+    <h2>Decisions</h2>
+    <p>The two or three choices that shaped the outcome. Show the option you rejected and why.</p>
+
+    <h2>Iteration</h2>
+    <p>What changed between the first version and the final one? Process images go here.</p>
+
+    <h2>Outcome</h2>
+    <p>Where it ended up, and what this project proves you can do.</p>
+  </article>
+</Base>
+
+<style>
+  .case-study {
+    max-width: 42em;
+  }
+
+  .case-study h1 {
+    font-size: var(--text-2xl);
+    margin: 0 0 var(--space-sm);
+  }
+
+  .summary {
+    font-size: var(--text-lg);
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--space-xl);
+  }
+
+  .case-study h2 {
+    font-size: var(--text-xl);
+    margin: var(--space-xl) 0 var(--space-sm);
+  }
+
+  .case-study p {
+    line-height: var(--leading-loose);
+  }
+</style>

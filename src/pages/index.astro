@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base>
+  <section class="hero">
+    <h1>Your Name</h1>
+    <p class="hero-line">One sentence about who you are and what you make. Replace me in Week 1.</p>
+    <a href="/work/">See my work</a>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    padding: var(--space-2xl) 0;
+  }
+
+  .hero h1 {
+    font-size: var(--text-3xl);
+    margin: 0 0 var(--space-md);
+  }
+
+  .hero-line {
+    font-size: var(--text-lg);
+    color: var(--color-text-secondary);
+    max-width: 36em;
+    margin: 0 0 var(--space-lg);
+  }
+</style>

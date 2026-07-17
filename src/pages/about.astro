@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="About — Your Name">
+  <h1>About</h1>
+  <p class="bio">A short bio: where you're from, what you study, what kind of work pulls you in. Write it like you talk.</p>
+  <h2>Contact</h2>
+  <p>Email, and anywhere else you want people to find you.</p>
+</Base>
+
+<style>
+  h1 {
+    font-size: var(--text-2xl);
+    margin: 0 0 var(--space-md);
+  }
+
+  .bio {
+    max-width: 36em;
+    line-height: var(--leading-loose);
+  }
+
+  h2 {
+    font-size: var(--text-xl);
+    margin: var(--space-xl) 0 var(--space-sm);
+  }
+</style>
