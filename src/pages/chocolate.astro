@@ -1,0 +1,102 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Base from '../layouts/Base.astro';
+import { chocolateArchive } from '../data/chocolateArchive.mjs';
+
+const chocolateImages = import.meta.glob('../assets/chocolate/*', {
+  eager: true,
+  import: 'default',
+}) as Record<string, ImageMetadata>;
+---
+
+<Base
+  title="Chocolate — Kyle Cromwell"
+  description="Kyle Cromwell’s chocolate creations, fundraisers, and seasonal editions from 2020 to 2022."
+>
+  <header class="page-header reveal">
+    <div>
+      <p class="eyebrow">Retired hobby · Chocolate</p>
+      <h1 class="page-title">Come to the dark side.<br /><span>We have chocolate.</span></h1>
+    </div>
+    <p class="lede">
+      A timeline of Kyle’s handmade truffles, holiday boxes, and fundraising editions.
+    </p>
+  </header>
+
+  <section class="chocolate-section reveal reveal--late" aria-labelledby="order-archive-heading">
+    <article class="statement-card statement-card--wide chocolate-card">
+      <p class="archive-index">Order archive · {chocolateArchive.orderArchive.status}</p>
+      <div class="chocolate-card-copy">
+        <h2 id="order-archive-heading">{chocolateArchive.orderArchive.heading}</h2>
+        <h3>{chocolateArchive.orderArchive.date}:</h3>
+        <p>{chocolateArchive.orderArchive.intro}</p>
+        <ul>
+          {chocolateArchive.orderArchive.inventory.map((item) => <li>{item}</li>)}
+        </ul>
+        <h3>Chocolate used:</h3>
+        <ul>
+          {chocolateArchive.orderArchive.chocolateUsed.map((item) => <li>{item}</li>)}
+        </ul>
+        <h3>Tasting tips:</h3>
+        <ul>
+          {chocolateArchive.orderArchive.tastingTips.map((tip) => <li>{tip}</li>)}
+        </ul>
+      </div>
+    </article>
+  </section>
+
+  <section class="chocolate-section" aria-labelledby="chocolate-about-heading">
+    <article class="memory-card chocolate-card">
+      <Image
+        class="chocolate-card-media"
+        src={chocolateImages[`../assets/chocolate/${chocolateArchive.aboutImage.file}`]}
+        alt={chocolateArchive.aboutImage.alt}
+        loading="lazy"
+      />
+      <div class="chocolate-card-copy">
+        <p class="archive-index">The story</p>
+        <h2 id="chocolate-about-heading">About the chocolate</h2>
+        {chocolateArchive.about.map((paragraph) => <p>{paragraph}</p>)}
+      </div>
+    </article>
+  </section>
+
+  <div class="section-heading">
+    <h2 id="chocolate-timeline-heading">Chocolate creations</h2>
+    <p>2020–2022</p>
+  </div>
+
+  <section class="memory-grid" aria-labelledby="chocolate-timeline-heading">
+    {chocolateArchive.editions.map((edition, index) => (
+      <article class="memory-card chocolate-card">
+        <div class="chocolate-gallery">
+          {edition.images.map((asset) => (
+            <Image
+              class="chocolate-card-media"
+              src={chocolateImages[`../assets/chocolate/${asset.file}`]}
+              alt={asset.alt}
+              loading="lazy"
+            />
+          ))}
+        </div>
+        <div class="chocolate-card-copy">
+          <p class="archive-index">Edition · {String(index + 1).padStart(2, '0')}</p>
+          <h2>{edition.title}</h2>
+          <p>{edition.description}</p>
+          {edition.details && (
+            <ul>
+              {edition.details.map((detail) => <li>{detail}</li>)}
+            </ul>
+          )}
+          {edition.secondaryHeading && <h3>{edition.secondaryHeading}</h3>}
+          {edition.flavors && (
+            <ul>
+              {edition.flavors.map((flavor) => <li>{flavor}</li>)}
+            </ul>
+          )}
+        </div>
+      </article>
+    ))}
+  </section>
+</Base>

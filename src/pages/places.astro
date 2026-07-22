@@ -1,0 +1,46 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Base from '../layouts/Base.astro';
+import { interestingPlaces } from '../data/interestingPlaces.mjs';
+
+const placeImages = import.meta.glob('../assets/places/*', {
+  eager: true,
+  import: 'default',
+}) as Record<string, ImageMetadata>;
+---
+
+<Base
+  title="Interesting Places — Kyle Cromwell"
+  description="Kyle Cromwell’s index of memorable places, overlooked corners, and locations worth revisiting."
+>
+  <header class="page-header reveal">
+    <div>
+      <p class="eyebrow">Index · 02</p>
+      <h1 class="page-title">Interesting<br /><span>Places</span></h1>
+    </div>
+    <p class="lede">
+      Twenty-five places that held Kyle’s attention, with the writing and photographs preserved from his original collection.
+    </p>
+  </header>
+
+  <section class="collection-grid reveal reveal--late" aria-label="Interesting places archive">
+    {interestingPlaces.map((place, index) => (
+      <figure class:list={['archive-card', 'place-card', { 'archive-card--feature': index === 0 }]}>
+        <Image
+          class="place-card-media"
+          src={placeImages[`../assets/places/${place.image}`]}
+          alt={place.title}
+          loading="lazy"
+        />
+        <figcaption class="place-card-copy">
+          <span class="archive-index">Pin · {String(index + 1).padStart(3, '0')}</span>
+          <div>
+            <h2>{place.title}</h2>
+            <p>{place.description}</p>
+          </div>
+        </figcaption>
+      </figure>
+    ))}
+  </section>
+</Base>

@@ -1,9 +1,6 @@
-# Studio Starter
+# Kyle Cromwell — Personal Field Atlas
 
-Your portfolio site for the **AI-Native Design Studio** course. You'll clone this in
-Week 1, and by the end of Week 4 it will be your finished, live portfolio.
-
-It works right now — it's just deliberately plain. The design is what you add.
+Kyle Cromwell’s personal site for visited countries, interesting places, and retired hobbies, built as part of the **AI-Native Design Studio** course.
 
 ## Get started
 
@@ -59,9 +56,11 @@ app (`.agents/skills/`). Each gets introduced in the week that uses it.
 ## Pages
 
 - `/` — home
-- `/work/` — work index
-- `/work/first-project/` — case-study template (rename it when you fill it)
-- `/about/` — about + contact
+- `/countries/` — visited countries and travel field notes
+- `/places/` — interesting places worth recording
+- `/about/` — Kyle’s profile and retired-hobby links
+- `/chocolate/` — retired chocolate hobby archive
+- `/poems/` — retired poetry archive
 - `/showcase/` — your design system, rendered live from `tokens.css`. **This is where you
   look at your system** — keep it open in a tab while you design. It, `tokens.css`, and
   `DESIGN.md` must always tell the same story.

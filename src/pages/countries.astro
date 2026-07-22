@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+import { visitedCountryRegions } from '../data/visitedCountries.mjs';
+
+const totalEntries = visitedCountryRegions.reduce(
+  (total, region) => total + region.countries.length,
+  0,
+);
+---
+
+<Base
+  title="Visited Countries — Kyle Cromwell"
+  description="Kyle Cromwell’s growing archive of visited countries and travel field notes."
+>
+  <header class="page-header reveal">
+    <div>
+      <p class="eyebrow">Atlas · 01</p>
+      <h1 class="page-title">Visited<br /><span>Countries</span></h1>
+    </div>
+    <p class="lede">
+      {totalEntries} entries from Kyle’s travels, organized by region and preserved from his original country list.
+    </p>
+  </header>
+
+  <section class="collection-grid reveal reveal--late" aria-label="Country archive">
+    {visitedCountryRegions.map((region, index) => (
+      <article class:list={['archive-card', { 'archive-card--feature': index === 0 }]}>
+        <span class="archive-index">Region · {String(index + 1).padStart(2, '0')}</span>
+        <div>
+          <h2>{region.name}</h2>
+          <ul class="country-list">
+            {region.countries.map((country) => <li>{country}</li>)}
+          </ul>
+        </div>
+        <span class="status-label">
+          {region.countries.length} {region.countries.length === 1 ? 'entry' : 'entries'}
+        </span>
+      </article>
+    ))}
+  </section>
+</Base>

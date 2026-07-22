@@ -1,0 +1,48 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Base from '../layouts/Base.astro';
+import { poems } from '../data/poems.mjs';
+
+const poemImages = import.meta.glob('../assets/poems/*', {
+  eager: true,
+  import: 'default',
+}) as Record<string, ImageMetadata>;
+---
+
+<Base
+  title="Poems Archive — Kyle Cromwell"
+  description="Kyle Cromwell’s archive of a retired poetry practice."
+>
+  <header class="page-header reveal">
+    <div>
+      <p class="eyebrow">Former practice · 02</p>
+      <h1 class="page-title">Poems<br /><span>Archive</span></h1>
+    </div>
+    <p class="lede">
+      Two poems preserved from Kyle’s original writing archive.
+    </p>
+  </header>
+
+  <section class="memory-grid reveal reveal--late" aria-label="Poetry archive">
+    {poems.map((poem, index) => (
+      <article class="memory-card poem-card">
+        <Image
+          class="poem-card-media"
+          src={poemImages[`../assets/poems/${poem.image}`]}
+          alt={poem.alt}
+          loading="lazy"
+        />
+        <header class="poem-card-header">
+          <p class="archive-index">
+            Poem · {String(index + 1).padStart(2, '0')} · <time datetime={poem.published}>{poem.displayDate}</time>
+          </p>
+          <h2>{poem.title}</h2>
+        </header>
+        <div class="poem-lines">
+          {poem.lines.map((line) => <p>{line}</p>)}
+        </div>
+      </article>
+    ))}
+  </section>
+</Base>

@@ -1,0 +1,42 @@
+// Migrated from kylecromwell.com/blog on July 21, 2026.
+export const poems = [
+  {
+    title: 'Out of Time',
+    published: '2020-05-07',
+    displayDate: 'May 7, 2020',
+    image: 'out-of-time.png',
+    alt: 'A crowd rushing beneath an oversized clock',
+    lines: [
+      'A fog of dazzling color, it’s hard to turn away.',
+      'I struggle, stumble towards the finish line,',
+      'The sweet smell of candy holds me back.',
+      'Tick tock, tick. A deadline approaches.',
+      'With a chilling breeze, color fades.',
+      'My vision narrows to a tunnel,',
+      'Black between both sides, a yellow terror behind.',
+      'Nothing, then Ba-boom. Ba-boom.',
+      'A pounding heart races to the end.',
+      'Finished, I submit.',
+    ],
+  },
+  {
+    title: 'The Cost of War',
+    published: '2020-03-18',
+    displayDate: 'March 18, 2020',
+    image: 'the-cost-of-war.png',
+    alt: 'Four-panel antiwar collage with a soldier, child, bomb, peace symbol, and nuclear warning',
+    lines: [
+      'Red flows through cracks in the stone,',
+      'The smell of brimstone invades my nostrils,',
+      'Bodies splayed on the ground,',
+      'Feelings fractured, shocked and shattered,',
+      'Revenge boiling inside tastes bitter,',
+      'The smell of rain signals a storm is brewing,',
+      'Thunder claps as red rains down.',
+      'Everywhere, charred to ash,',
+      'The bitter taste turns saccharine.',
+      'Then becomes metallic,',
+      'Revenge is artificial sweetener.',
+    ],
+  },
+];

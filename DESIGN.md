@@ -1,28 +1,25 @@
 # DESIGN.md — how this site should look and feel
 
-Fill this in during Week 2. The AI reads this file before design work — it is your
-design direction, made machine-readable. Be opinionated; vague answers produce generic design.
-
 ## Mood & references
 
-(Three adjectives, plus two or three sites or artists whose feeling you want — not to copy, but as a register.)
+Clean, analytical, and curious. The primary reference remains at `src/assets/design/reference/kyle-purple-dashboard-reference.png`, but it guides only the purple accent scale and compact technical labels—not the page background or overall theme.
 
 ## Color direction
 
-Faded and timeworn, with a desaturated cotton-rag base, a subtle sepia undertone, restrained monochrome film grain, and a muted archival red called Faded Oxblood for accents; avoid obvious yellow or green casts so the surface feels naturally aged rather than tinted.
+The site uses white and very light neutral surfaces with dark neutral text. Purple is reserved for links, selected states, status indicators, focus rings, and small moments of emphasis. Purple must not become the page background or the dominant surface color.
 
 ## Typography
 
-(One display feeling + one body feeling. Serif, sans, mono? Update the font tokens when you choose.)
+Avenir Next provides a precise but human editorial voice for large titles and body copy. The system monospace face is reserved for atlas indices, status labels, breadcrumbs, and other compact metadata.
 
 ## Spacing & layout feel
 
-(Dense and editorial, or airy and slow? Big images or text-led?)
+The layout balances a bold, asymmetric hero with a controlled dashboard-like grid. Large titles and atmospheric negative space establish identity, while dense labels and bordered cards make the growing archive easy to scan.
 
 ## Motion personality
 
-(Calm, springy, instant, deliberate? Week 3 will use this.)
+Calm and deliberate. Pages enter with one restrained rise-and-fade sequence, cards lift slightly on hover, and reduced-motion preferences remove the transitions.
 
 ## What to avoid
 
-(The looks you do NOT want — this is the most useful section for steering the AI away from generic output.)
+No leftover photography language, full-purple canvases, purple-dominant surfaces, neon-on-black styling, excessive glow, invented travel facts, hidden hobby pages, or animations that compete with the content.

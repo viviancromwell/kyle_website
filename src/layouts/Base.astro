@@ -2,7 +2,13 @@
 import '../styles/tokens.css';
 import '../styles/global.css';
 
-const { title = 'Vivian Cromwell — Portfolio', description = 'Portfolio of an emerging designer.' } = Astro.props;
+const {
+  title = 'Kyle Cromwell — Personal Field Atlas',
+  description = 'Kyle Cromwell’s personal atlas of visited countries, interesting places, and retired hobbies.',
+} = Astro.props;
+
+const pathname = Astro.url.pathname;
+const isCurrent = (route) => pathname === route || pathname.startsWith(route);
 ---
 
 <!doctype html>
@@ -17,18 +23,11 @@ const { title = 'Vivian Cromwell — Portfolio', description = 'Portfolio of an 
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="site-header">
       <nav class="site-nav" aria-label="Main">
-        <a href="/" class="nav-name">Vivian Cromwell</a>
+        <a href="/" class="nav-name">Kyle Cromwell</a>
         <div class="nav-links">
-          <details class="nav-menu">
-            <summary>Work</summary>
-            <ul class="nav-submenu" aria-label="Work categories">
-              <li><a href="/work/">All Work</a></li>
-              <li><a href="/work/#portraits">Portraits</a></li>
-              <li><a href="/work/#maternity">Maternity</a></li>
-              <li><a href="/work/#events">Events</a></li>
-            </ul>
-          </details>
-          <a href="/about/">About</a>
+          <a href="/countries/" aria-current={isCurrent('/countries/') ? 'page' : undefined}>Visited Countries</a>
+          <a href="/places/" aria-current={isCurrent('/places/') ? 'page' : undefined}>Interesting Places</a>
+          <a href="/about/" aria-current={isCurrent('/about/') ? 'page' : undefined}>About Me</a>
         </div>
       </nav>
     </header>
@@ -36,7 +35,8 @@ const { title = 'Vivian Cromwell — Portfolio', description = 'Portfolio of an 
       <slot />
     </main>
     <footer class="site-footer">
-      <p>&copy; 2026 Vivian Cromwell</p>
+      <p>&copy; 2026 Kyle Cromwell</p>
+      <p>Personal field atlas · Always in progress</p>
     </footer>
   </body>
 </html>

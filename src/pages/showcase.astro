@@ -2,32 +2,50 @@
 import Base from '../layouts/Base.astro';
 
 const colors = [
-  ['--color-bg', 'Background', 'page background'],
-  ['--color-bg-subtle', 'Background subtle', 'cards, panels'],
-  ['--color-text', 'Text', 'headings, body'],
-  ['--color-text-secondary', 'Text secondary', 'supporting copy'],
-  ['--color-border', 'Border', 'dividers, outlines'],
-  ['--color-accent', 'Accent', 'links, highlights'],
-  ['--color-accent-hover', 'Accent hover', 'hover states'],
+  ['ds-chip--bg-deep', '--color-bg-deep', 'Deep background', 'page depth'],
+  ['ds-chip--bg', '--color-bg', 'Background', 'atmosphere'],
+  ['ds-chip--surface', '--color-surface', 'Surface', 'cards, panels'],
+  ['ds-chip--raised', '--color-surface-raised', 'Raised surface', 'hover depth'],
+  ['ds-chip--text', '--color-text', 'Text', 'headings, body'],
+  ['ds-chip--secondary', '--color-text-secondary', 'Secondary text', 'supporting copy'],
+  ['ds-chip--border', '--color-border', 'Border', 'dividers, outlines'],
+  ['ds-chip--accent', '--color-accent', 'Purple accent', 'links, status, focus'],
+  ['ds-chip--accent-soft', '--color-accent-soft', 'Lavender tint', 'highlights, labels'],
 ];
 
-const sizes = ['--text-sm', '--text-base', '--text-lg', '--text-xl', '--text-2xl', '--text-3xl'];
+const sizes = [
+  ['ds-type-sample--xs', '--text-xs'],
+  ['ds-type-sample--sm', '--text-sm'],
+  ['ds-type-sample--base', '--text-base'],
+  ['ds-type-sample--lg', '--text-lg'],
+  ['ds-type-sample--xl', '--text-xl'],
+  ['ds-type-sample--2xl', '--text-2xl'],
+];
 
-const spaces = ['--space-2xs', '--space-xs', '--space-sm', '--space-md', '--space-lg', '--space-xl', '--space-2xl'];
+const spaces = [
+  ['ds-space-bar--2xs', '--space-2xs'],
+  ['ds-space-bar--xs', '--space-xs'],
+  ['ds-space-bar--sm', '--space-sm'],
+  ['ds-space-bar--md', '--space-md'],
+  ['ds-space-bar--lg', '--space-lg'],
+  ['ds-space-bar--xl', '--space-xl'],
+  ['ds-space-bar--2xl', '--space-2xl'],
+];
 
 const radii = [
-  ['--radius-sm', 'buttons, inputs, tags'],
-  ['--radius-md', 'cards, containers'],
+  ['ds-radius-demo--sm', '--radius-sm', 'tags and focusable controls'],
+  ['ds-radius-demo--md', '--radius-md', 'compact surfaces'],
+  ['ds-radius-demo--lg', '--radius-lg', 'atlas cards and navigation'],
 ];
 
 const navSections = [
   ['Foundations', [['#color', 'Color'], ['#typography', 'Typography'], ['#spacing', 'Spacing']]],
   ['Attributes', [['#radius', 'Radius']]],
-  ['Components', [['#component-nav', 'Nav Link'], ['#component-work-menu', 'Work Menu'], ['#component-list', 'List Row']]],
+  ['Components', [['#component-nav', 'Navigation'], ['#component-portal', 'Portal Card'], ['#component-status', 'Status']]],
 ];
 ---
 
-<Base title="Design System — Showcase">
+<Base title="Kyle’s Field Atlas — Design System">
   <div class="ds-layout">
     <nav class="ds-nav" aria-label="Design system contents">
       {navSections.map(([group, links]) => (
@@ -43,42 +61,43 @@ const navSections = [
     </nav>
 
     <article>
-      <header>
-        <h1>Your Design System</h1>
+      <header class="ds-header">
+        <p class="eyebrow">System reference · 2026</p>
+        <h1>Kyle’s<br />Field Atlas</h1>
         <p class="ds-intro">
-          This page reads directly from <code>src/styles/tokens.css</code>. Change a token,
-          refresh, and your whole system updates at once. When you build a new reusable
-          component, add a demo of it to the Components section here — that's a house rule.
+          A white, neutral foundation keeps the content clear; purple is reserved for navigation states, status, focus, and small moments of emphasis.
         </p>
       </header>
 
       <section id="color">
         <h2>Color</h2>
-        <table class="ds-table">
-          <thead>
-            <tr><th></th><th>Token</th><th>Role</th><th>Used for</th></tr>
-          </thead>
-          <tbody>
-            {colors.map(([token, role, use]) => (
-              <tr>
-                <td><span class="ds-chip" style={`background: var(${token})`}></span></td>
-                <td><code>{token}</code></td>
-                <td>{role}</td>
-                <td class="ds-use">{use}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div class="ds-table-wrap">
+          <table class="ds-table">
+            <thead>
+              <tr><th></th><th>Token</th><th>Role</th><th>Used for</th></tr>
+            </thead>
+            <tbody>
+              {colors.map(([className, token, role, use]) => (
+                <tr>
+                  <td><span class:list={['ds-chip', className]}></span></td>
+                  <td><code>{token}</code></td>
+                  <td>{role}</td>
+                  <td class="ds-use">{use}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </section>
 
       <section id="typography">
         <h2>Typography</h2>
-        <p class="ds-note">Display font for impression, body font for information. Both set in <code>tokens.css</code>.</p>
+        <p class="ds-note">Avenir Next carries the large editorial voice; the system mono face labels the archive.</p>
         <div class="ds-type-scale">
-          {sizes.map((token) => (
+          {sizes.map(([className, token]) => (
             <div class="ds-type-row">
               <code>{token}</code>
-              <p class="ds-type-sample" style={`font-size: var(${token})`}>The quick brown fox</p>
+              <p class:list={['ds-type-sample', className]}>Field notes from elsewhere</p>
             </div>
           ))}
         </div>
@@ -87,10 +106,10 @@ const navSections = [
       <section id="spacing">
         <h2>Spacing</h2>
         <div class="ds-space-scale">
-          {spaces.map((token) => (
+          {spaces.map(([className, token]) => (
             <div class="ds-space-row">
               <code>{token}</code>
-              <div class="ds-space-bar" style={`width: var(${token})`}></div>
+              <div class:list={['ds-space-bar', className]}></div>
             </div>
           ))}
         </div>
@@ -99,9 +118,9 @@ const navSections = [
       <section id="radius">
         <h2>Radius</h2>
         <div class="ds-radius-grid">
-          {radii.map(([token, use]) => (
+          {radii.map(([className, token, use]) => (
             <figure class="ds-radius-card">
-              <div class="ds-radius-demo" style={`border-radius: var(${token})`}></div>
+              <div class:list={['ds-radius-demo', className]}></div>
               <figcaption>
                 <code>{token}</code>
                 <span class="ds-use">{use}</span>
@@ -112,36 +131,39 @@ const navSections = [
       </section>
 
       <section id="component-nav">
-        <h2>Nav Link</h2>
-        <div class="ds-demo">
-          <a href="#component-nav" class="nav-name" style="margin-right: var(--space-lg);">Vivian Cromwell</a>
-          <a href="#component-nav">Work</a>
+        <h2>Navigation</h2>
+        <div class="ds-demo ds-nav-demo">
+          <a href="#component-nav" class="nav-name">Kyle Cromwell</a>
+          <div class="nav-links">
+            <a href="#component-nav">Visited Countries</a>
+            <a href="#component-nav">Interesting Places</a>
+            <a href="#component-nav">About Me</a>
+          </div>
         </div>
-        <p class="ds-note">The site header pieces, live from <code>global.css</code>.</p>
+        <p class="ds-note">One identity anchor and three top-level destinations. Retired hobbies remain contextual links inside About Me.</p>
       </section>
 
-      <section id="component-work-menu">
-        <h2>Work Menu</h2>
+      <section id="component-portal">
+        <h2>Portal Card</h2>
         <div class="ds-demo">
-          <details class="nav-menu ds-menu-demo" open>
-            <summary>Work</summary>
-            <ul class="nav-submenu" aria-label="Work menu example">
-              <li><a href="#component-work-menu">Portraits</a></li>
-              <li><a href="#component-work-menu">Maternity</a></li>
-              <li><a href="#component-work-menu">Events</a></li>
-            </ul>
-          </details>
+          <a class="portal-card" href="#component-portal">
+            <span class="archive-index">Atlas · 01</span>
+            <div>
+              <h2>Visited Countries</h2>
+              <p>Passport stamps, field notes, and the details that stayed.</p>
+            </div>
+            <span class="portal-link">Open the atlas</span>
+          </a>
         </div>
-        <p class="ds-note">Use in the site header to reveal photography categories with native keyboard and touch support.</p>
+        <p class="ds-note">Primary destination cards combine an archive index, editorial title, short description, and directional action.</p>
       </section>
 
-      <section id="component-list">
-        <h2>List Row</h2>
+      <section id="component-status">
+        <h2>Status</h2>
         <div class="ds-demo">
-          <p style="margin: 0;"><a href="#component-list">First Project</a></p>
-          <p class="ds-use" style="margin: 0;">One line about this project.</p>
+          <span class="status-label">Field notes in progress</span>
         </div>
-        <p class="ds-note">The work-index row pattern. As you build new components, add each one here as its own section.</p>
+        <p class="ds-note">Coming-soon content stays honest and intentional through the mono status treatment.</p>
       </section>
     </article>
   </div>
@@ -150,106 +172,119 @@ const navSections = [
 <style>
   .ds-layout {
     display: grid;
-    grid-template-columns: 160px minmax(0, 1fr);
     gap: var(--space-xl);
     align-items: start;
   }
 
   .ds-nav {
-    position: sticky;
-    top: var(--space-lg);
-    display: grid;
+    display: flex;
     gap: var(--space-lg);
+    overflow-x: auto;
+    padding-bottom: var(--space-xs);
+  }
+
+  .ds-nav > div {
+    flex: 0 0 auto;
   }
 
   .ds-nav-label {
-    font-size: var(--text-sm);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--color-text-secondary);
     margin: 0 0 var(--space-xs);
+    color: var(--color-accent-soft);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
   }
 
   .ds-nav ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
     display: grid;
     gap: var(--space-2xs);
+    margin: 0;
+    padding: 0;
+    list-style: none;
   }
 
-  .ds-nav a {
-    font-size: var(--text-sm);
-    text-decoration: none;
+  .ds-nav a,
+  code {
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
   }
 
-  h1 {
-    font-size: var(--text-2xl);
-    margin: 0 0 var(--space-sm);
+  .ds-header h1 {
+    margin-bottom: var(--space-lg);
+    font-size: var(--text-3xl);
+    line-height: var(--leading-tight);
   }
 
   .ds-intro {
-    color: var(--color-text-secondary);
-    max-width: 40em;
+    max-width: var(--max-width-copy);
     margin: 0;
+    color: var(--color-text-secondary);
+    font-size: var(--text-lg);
   }
 
   section {
-    margin-top: var(--space-xl);
+    margin-top: var(--space-2xl);
   }
 
-  h2 {
-    font-size: var(--text-xl);
-    margin: 0 0 var(--space-sm);
+  section > h2 {
+    margin: 0 0 var(--space-md);
     padding-top: var(--space-lg);
-    border-top: 1px solid var(--color-border);
-  }
-
-  code {
-    font-size: var(--text-sm);
-    color: var(--color-text-secondary);
+    border-top: var(--border-width) solid var(--color-border);
+    font-size: var(--text-xl);
   }
 
   .ds-note,
   .ds-use {
-    font-size: var(--text-sm);
     color: var(--color-text-secondary);
+    font-size: var(--text-sm);
+  }
+
+  .ds-table-wrap {
+    overflow-x: auto;
   }
 
   .ds-table {
-    border-collapse: collapse;
     width: 100%;
+    border-collapse: collapse;
   }
 
-  .ds-table th {
-    font-size: var(--text-sm);
-    text-align: left;
-    padding: var(--space-xs) var(--space-sm) var(--space-xs) 0;
-    border-bottom: 1px solid var(--color-border);
-  }
-
+  .ds-table th,
   .ds-table td {
     padding: var(--space-xs) var(--space-sm) var(--space-xs) 0;
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: var(--border-width) solid var(--color-border);
     font-size: var(--text-sm);
+    text-align: left;
   }
 
   .ds-chip {
     display: block;
     width: var(--space-xl);
     height: var(--space-lg);
-    border: 1px solid var(--color-border);
+    border: var(--border-width) solid var(--color-border);
     border-radius: var(--radius-sm);
   }
 
-  .ds-type-row {
+  .ds-chip--bg-deep { background: var(--color-bg-deep); }
+  .ds-chip--bg { background: var(--color-bg); }
+  .ds-chip--surface { background: var(--color-surface); }
+  .ds-chip--raised { background: var(--color-surface-raised); }
+  .ds-chip--text { background: var(--color-text); }
+  .ds-chip--secondary { background: var(--color-text-secondary); }
+  .ds-chip--border { background: var(--color-border); }
+  .ds-chip--accent { background: var(--color-accent); }
+  .ds-chip--accent-soft { background: var(--color-accent-soft); }
+
+  .ds-type-row,
+  .ds-space-row {
     display: grid;
-    grid-template-columns: 120px 1fr;
-    align-items: baseline;
+    grid-template-columns: auto minmax(0, 1fr);
     gap: var(--space-md);
-    padding: var(--space-xs) 0;
-    border-bottom: 1px solid var(--color-border);
+    align-items: center;
+    padding-block: var(--space-xs);
+    border-bottom: var(--border-width) solid var(--color-border);
   }
 
   .ds-type-sample {
@@ -257,41 +292,53 @@ const navSections = [
     line-height: var(--leading-tight);
   }
 
+  .ds-type-sample--xs { font-size: var(--text-xs); }
+  .ds-type-sample--sm { font-size: var(--text-sm); }
+  .ds-type-sample--base { font-size: var(--text-base); }
+  .ds-type-sample--lg { font-size: var(--text-lg); }
+  .ds-type-sample--xl { font-size: var(--text-xl); }
+  .ds-type-sample--2xl { font-size: var(--text-2xl); }
+
   .ds-space-scale {
     display: grid;
     gap: var(--space-xs);
   }
 
-  .ds-space-row {
-    display: grid;
-    grid-template-columns: 120px 1fr;
-    align-items: center;
-    gap: var(--space-md);
-  }
-
   .ds-space-bar {
     height: var(--space-sm);
-    background: var(--color-accent);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-pill);
+    background: var(--gradient-accent);
   }
+
+  .ds-space-bar--2xs { width: var(--space-2xs); }
+  .ds-space-bar--xs { width: var(--space-xs); }
+  .ds-space-bar--sm { width: var(--space-sm); }
+  .ds-space-bar--md { width: var(--space-md); }
+  .ds-space-bar--lg { width: var(--space-lg); }
+  .ds-space-bar--xl { width: var(--space-xl); }
+  .ds-space-bar--2xl { width: var(--space-2xl); }
 
   .ds-radius-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: var(--space-lg);
+    grid-template-columns: repeat(auto-fit, minmax(var(--min-card-width), 1fr));
+    gap: var(--space-md);
   }
 
   .ds-radius-card {
-    margin: 0;
     display: grid;
     gap: var(--space-xs);
+    margin: 0;
   }
 
   .ds-radius-demo {
     height: var(--space-2xl);
-    background: var(--color-bg-subtle);
-    border: 1px solid var(--color-border);
+    border: var(--border-width) solid var(--color-border);
+    background: var(--gradient-surface);
   }
+
+  .ds-radius-demo--sm { border-radius: var(--radius-sm); }
+  .ds-radius-demo--md { border-radius: var(--radius-md); }
+  .ds-radius-demo--lg { border-radius: var(--radius-lg); }
 
   .ds-radius-card figcaption {
     display: grid;
@@ -299,28 +346,33 @@ const navSections = [
 
   .ds-demo {
     padding: var(--space-lg);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-lg);
     background: var(--color-bg-subtle);
-    border: 1px solid var(--color-border);
-    margin-bottom: var(--space-xs);
   }
 
-  .ds-menu-demo .nav-submenu {
-    position: static;
-    margin-top: var(--space-xs);
+  .ds-nav-demo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-lg);
+    align-items: center;
+    justify-content: space-between;
   }
 
-  @media (max-width: 640px) {
+  .ds-demo .portal-card {
+    min-height: var(--min-height-card);
+  }
+
+  @media (min-width: 52rem) {
     .ds-layout {
-      grid-template-columns: 1fr;
-      gap: var(--space-lg);
+      grid-template-columns: auto minmax(0, 1fr);
     }
 
     .ds-nav {
-      position: static;
-      grid-auto-flow: column;
-      justify-content: start;
-      gap: var(--space-lg);
-      overflow-x: auto;
+      position: sticky;
+      top: calc(var(--header-offset) + var(--space-2xl));
+      display: grid;
+      overflow: visible;
     }
   }
 </style>

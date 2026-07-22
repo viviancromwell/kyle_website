@@ -3,27 +3,48 @@ import Base from '../layouts/Base.astro';
 ---
 
 <Base>
-  <section class="hero">
-    <h1>Vivian Cromwell</h1>
-    <p class="hero-line">One sentence about who you are and what you make. Replace me in Week 1.</p>
-    <a href="/work/">See my work</a>
+  <section class="home-hero reveal">
+    <div class="home-hero-copy">
+      <p class="eyebrow">Personal field atlas · Est. 2026</p>
+      <h1 class="display-title">Kyle<br /><span>Cromwell</span></h1>
+      <p class="lede">
+        A growing record of countries visited, places worth remembering, and the interests that still leave a trace.
+      </p>
+    </div>
+
+    <div class="home-hero-orbit" aria-hidden="true">
+      <span class="orbit-label orbit-label--north">Countries</span>
+      <span class="orbit-label orbit-label--east">Places</span>
+      <span class="orbit-label orbit-label--south">Side quests</span>
+    </div>
+  </section>
+
+  <section class="portal-grid reveal reveal--late" aria-label="Explore Kyle's site">
+    <a class="portal-card" href="/countries/">
+      <span class="archive-index">Atlas · 01</span>
+      <div>
+        <h2>Visited Countries</h2>
+        <p>Passport stamps, field notes, and the details that stayed long after the flight home.</p>
+      </div>
+      <span class="portal-link">Open the atlas</span>
+    </a>
+
+    <a class="portal-card" href="/places/">
+      <span class="archive-index">Index · 02</span>
+      <div>
+        <h2>Interesting Places</h2>
+        <p>Specific corners of the world that deserve their own pin, story, or return visit.</p>
+      </div>
+      <span class="portal-link">Browse the index</span>
+    </a>
+
+    <a class="portal-card" href="/about/">
+      <span class="archive-index">Profile · 03</span>
+      <div>
+        <h2>About Me</h2>
+        <p>The person behind the atlas, plus a cabinet of retired hobbies and former obsessions.</p>
+      </div>
+      <span class="portal-link">Read the profile</span>
+    </a>
   </section>
 </Base>
-
-<style>
-  .hero {
-    padding: var(--space-2xl) 0;
-  }
-
-  .hero h1 {
-    font-size: var(--text-3xl);
-    margin: 0 0 var(--space-md);
-  }
-
-  .hero-line {
-    font-size: var(--text-lg);
-    color: var(--color-text-secondary);
-    max-width: 36em;
-    margin: 0 0 var(--space-lg);
-  }
-</style>

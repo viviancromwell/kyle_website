@@ -1,24 +1,21 @@
 # PRODUCT.md — what this site is
 
-Fill this in during Week 2. Keep every answer short — one to three sentences.
-The AI reads this file before design work, so what you write here shapes everything it makes.
-
 ## Who I am
 
-(Your name, what you study, what kind of designer you're becoming.)
+Kyle Cromwell, collecting the places, journeys, and former obsessions that make a life more interesting than a short biography can show.
 
 ## Who this site is for
 
-(Who do you want looking at it — internship recruiters, professors, collaborators?)
+Friends, family, and curious visitors who want to know where Kyle has been, what caught his attention, and what he has cared about over time.
 
 ## What it must communicate
 
-(The one impression a visitor should leave with.)
+Kyle is observant, curious, and willing to keep a personal record without turning it into a résumé or a travel ranking.
 
 ## Pages
 
-Home, Work, one case study, About. (Add more only after these are done.)
+Home, Visited Countries, Interesting Places, About Me, Chocolate, Poems, and the internal design-system Showcase. Chocolate and Poems are linked from About Me rather than the main navigation.
 
 ## Success criteria
 
-(How you'll know the site works — e.g. "a stranger can say what kind of work I do in 10 seconds.")
+A visitor understands the site’s three main sections immediately, can reach every page without guessing, and recognizes the clean white foundation with a restrained purple accent.
