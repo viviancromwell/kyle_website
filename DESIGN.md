@@ -175,21 +175,21 @@ Depth is conveyed by material stacking (overlap, rotation, tape) far more than b
 
 ### About Tab
 - **Character:** a quieter bookmark tucked behind the countries panel.
-- **Form:** 4.5rem-wide vertical tab, violet cap bar, rotated continuous "About me" label (vertical-rl), circled person icon below; slides out 0.75rem on hover/focus. On mobile it is a horizontal chip placed after the panels.
+- **Form (desktop, 72rem+):** 4.5rem-wide vertical tab, violet cap bar, rotated continuous "About me" label (vertical-rl), circled person icon below; tucked under the countries panel and slides out 0.75rem on hover/focus. Below 72rem it is a horizontal chip placed after the panels, per PRODUCT.md's quieter-secondary role.
 
 ### Travel Print / Field Note / Band Print
 - **Character:** photographs as physical objects; each carries a centered italic Caption Ink label.
 - **Travel print:** white-bordered square print, washi tape at top, rotation 1.25deg.
 - **Field note:** ruled Paper Raised sheet (repeating 1px Paper Line), binding keyholes, grayscale-multiplied photo, rotation 4.5deg, descends into the band; corner tape at its lower right.
 - **Band print:** wide 2:1 print straddling the band's top edge.
-- **Behavior:** the three images shuffle per visit from the Interesting Places pool (Fisher-Yates), fade in on decode, and keep static SSR fallbacks for no-JS.
+- **Behavior:** the three images shuffle per visit from the Interesting Places pool (Fisher-Yates). Each replacement decodes off-screen first, then the print fades out, swaps, and fades back in; nothing hides before its replacement is ready. Swapped images carry empty alt with the figcaption naming the place; the static SSR fallbacks keep their descriptive alts for no-JS.
 
 ### Archive Links (band)
-- **Style:** uppercase Label type in On Aubergine, underlined Collegiate Coral Soft with small ring ornaments at both underline ends; interpunct separators; the non-link "Older archives" label is plain On Aubergine Muted with no underline.
+- **Style:** uppercase Label type in On Aubergine with a plain Collegiate Coral Soft underline; interpunct separators bound to their links so a wrap cannot strand them; the non-link "Older archives" label is plain On Aubergine Muted with no underline.
 - **Hover:** text to Warm Paper, underline to On Aubergine.
 
 ### Journal Band + Home Footer
-- **Style:** Deep Aubergine ground with the stitched diamond lattice, rings, and crosses (Route Dark); 2px Collegiate Coral Soft vertical rule beside the copy. The site footer on the home route continues the aubergine ground in body type; contact is the obfuscated email plus LinkedIn.
+- **Style:** Deep Aubergine ground with the stitched diamond lattice, rings, and crosses (Route Dark) kept clear of the copy zone; 2px Collegiate Coral Soft vertical rule beside the copy. The site footer on the home route is a thin Warm Paper strip below the band, in body type with Caption Ink text and Field Violet links; contact is the obfuscated email plus LinkedIn.
 
 ### Navigation (interior pages)
 - **Style:** sticky pill nav from the starter shell (mono labels); functional but not yet part of this system. Redesign pending per The Two-Family Rule.
@@ -198,6 +198,7 @@ Depth is conveyed by material stacking (overlap, rotation, tape) far more than b
 
 ### Do:
 - **Do** source every color, size, spacing, and radius from `src/styles/tokens.css` via `var(--*)`; new values land in tokens first.
+- **Do** migrate each interior page onto the journal tokens as it is redesigned, then delete the starter tokens it was using (`--color-bg*`, `--color-surface*`, `--color-accent*`, `--color-header`, `--color-grid`, the old gradients, glow, and orbit sizes; roughly 17 entries). Two systems currently share `tokens.css`; the file ends at the fifteen documented colors, not thirty-two.
 - **Do** keep every design-token change in sync with `/showcase` in the same change.
 - **Do** keep rotations between 1 and 4.5 degrees and overlaps deliberate; collage, not clutter.
 - **Do** gate hover transforms behind `(hover: hover)` and keep all motion within 400ms, entrance and hover only, honoring reduced motion.

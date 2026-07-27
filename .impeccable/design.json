@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-07-27T06:25:00Z",
+  "generatedAt": "2026-07-27T16:55:00Z",
   "title": "Design System: Kyle Cromwell — Personal Journal",
   "extensions": {
     "colorMeta": {
@@ -58,9 +58,9 @@
       "name": "Archive Link",
       "kind": "chip",
       "refersTo": "archive-link",
-      "description": "Band link with coral underline and ring ornaments; only real links get the underline.",
+      "description": "Band link with a plain coral underline; only real links get the underline, separators stay bound to their link.",
       "html": "<div class=\"ds-band-row\"><span class=\"ds-archive-label\">Older archives</span><span class=\"ds-archive-sep\" aria-hidden=\"true\">·</span><a class=\"ds-archive-link\" href=\"#\">Chocolate</a></div>",
-      "css": ".ds-band-row { display: flex; gap: 1.5rem; align-items: center; padding: 1.5rem; background: var(--color-aubergine, oklch(0.2924 0.0488 293.35)); color: var(--color-on-aubergine, oklch(0.94 0.015 84.58)); font-size: 0.875rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; } .ds-archive-label { color: var(--color-on-aubergine-muted, oklch(0.78 0.025 310)); } .ds-archive-sep { color: var(--color-collegiate-coral-soft, oklch(0.6985 0.1589 36.85)); font-weight: 700; } .ds-archive-link { position: relative; padding-bottom: 0.5rem; border-bottom: 1px solid var(--color-collegiate-coral-soft, oklch(0.6985 0.1589 36.85)); color: inherit; text-decoration: none; } .ds-archive-link::before, .ds-archive-link::after { content: \"\"; position: absolute; bottom: -0.225rem; width: 0.45rem; height: 0.45rem; border: 1px solid var(--color-collegiate-coral-soft, oklch(0.6985 0.1589 36.85)); border-radius: 999rem; background: var(--color-aubergine, oklch(0.2924 0.0488 293.35)); } .ds-archive-link::before { left: -0.225rem; } .ds-archive-link::after { right: -0.225rem; } .ds-archive-link:hover { color: var(--color-paper, oklch(0.9486 0.0165 79.35)); border-color: var(--color-on-aubergine, oklch(0.94 0.015 84.58)); } .ds-archive-link:focus-visible { outline: 0.125rem solid var(--color-collegiate-coral-soft, oklch(0.6985 0.1589 36.85)); outline-offset: 0.25rem; }"
+      "css": ".ds-band-row { display: flex; gap: 1.5rem; align-items: center; padding: 1.5rem; background: var(--color-aubergine, oklch(0.2924 0.0488 293.35)); color: var(--color-on-aubergine, oklch(0.94 0.015 84.58)); font-size: 0.875rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; } .ds-archive-label { color: var(--color-on-aubergine-muted, oklch(0.78 0.025 310)); } .ds-archive-sep { color: var(--color-collegiate-coral-soft, oklch(0.6985 0.1589 36.85)); font-weight: 700; } .ds-archive-link { padding-bottom: 0.5rem; border-bottom: 1px solid var(--color-collegiate-coral-soft, oklch(0.6985 0.1589 36.85)); color: inherit; text-decoration: none; } .ds-archive-link:hover { color: var(--color-paper, oklch(0.9486 0.0165 79.35)); border-color: var(--color-on-aubergine, oklch(0.94 0.015 84.58)); } .ds-archive-link:focus-visible { outline: 0.125rem solid var(--color-collegiate-coral-soft, oklch(0.6985 0.1589 36.85)); outline-offset: 0.25rem; }"
     },
     {
       "name": "Travel Print",

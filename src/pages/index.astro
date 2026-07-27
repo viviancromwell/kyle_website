@@ -103,12 +103,16 @@ const placeTitle = (file, fallback) =>
       <FieldRoutes variant="dark" />
       <div class="home-journal-copy">
         <p>Political science, great food, video games, and time with friends.</p>
-        <nav class="home-archive-links" aria-label="Older archives">
-          <span class="home-archive-label">Older archives</span>
-          <span class="home-archive-sep" aria-hidden="true">·</span>
-          <a href="/chocolate/">Chocolate</a>
-          <span class="home-archive-sep" aria-hidden="true">·</span>
-          <a href="/poems/">Poems</a>
+        <nav class="home-archive-links" aria-labelledby="archive-label">
+          <span class="home-archive-label" id="archive-label">Older archives</span>
+          <span class="home-archive-pair">
+            <span class="home-archive-sep" aria-hidden="true">·</span>
+            <a href="/chocolate/">Chocolate</a>
+          </span>
+          <span class="home-archive-pair">
+            <span class="home-archive-sep" aria-hidden="true">·</span>
+            <a href="/poems/">Poems</a>
+          </span>
         </nav>
       </div>
 
@@ -139,15 +143,32 @@ const placeTitle = (file, fallback) =>
       if (!pick) return;
       const img = figure.querySelector('img');
       const caption = figure.querySelector('figcaption');
-      img.style.opacity = '0';
-      img.src = pick.src;
-      img.srcset = pick.srcset;
-      img.alt = pick.alt;
-      if (caption) caption.textContent = pick.alt;
-      const show = () => {
-        img.style.opacity = '1';
-      };
-      img.decode().then(show, show);
+      const next = new Image();
+      next.srcset = pick.srcset;
+      next.sizes = img.sizes || '';
+      next.src = pick.src;
+      next
+        .decode()
+        .then(() => {
+          img.style.opacity = '0';
+          let swapped = false;
+          const swap = () => {
+            if (swapped) return;
+            swapped = true;
+            img.srcset = pick.srcset;
+            img.src = pick.src;
+            img.alt = '';
+            if (caption) caption.textContent = pick.alt;
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => {
+                img.style.opacity = '1';
+              });
+            });
+          };
+          img.addEventListener('transitionend', swap, { once: true });
+          setTimeout(swap, 400);
+        })
+        .catch(() => {});
     });
   </script>
 </Base>

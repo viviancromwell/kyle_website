@@ -262,6 +262,16 @@ a:focus-visible {
   display: none;
 }
 
+/* The design-system reference lives on the journal ground. */
+.showcase-route::before {
+  display: none;
+}
+
+.showcase-route {
+  color: var(--color-soft-charcoal);
+  background: var(--color-paper);
+}
+
 .home-route .page {
   width: 100%;
   max-width: none;
@@ -271,7 +281,6 @@ a:focus-visible {
 .home-hero-journal {
   display: grid;
   grid-template-rows: 1fr auto;
-  min-height: var(--hero-fill-height);
   color: var(--color-soft-charcoal);
   background: var(--color-paper);
 }
@@ -483,7 +492,7 @@ a:focus-visible {
 
 /* Spiral-binding keyholes punched below the top edge, per the approved
    direction: a stem descends from the edge into a soft grey shadow dot.
-   Embedded greys sit between --color-paper-raised and --color-note-hole. */
+   Embedded greys are the warm binding tones sampled from the mock. */
 .home-destination::before,
 .home-field-note::before {
   position: absolute;
@@ -589,7 +598,7 @@ a:focus-visible {
 .home-journal-glimpse img {
   display: block;
   width: 100%;
-  height: 100%;
+  height: auto;
   object-fit: cover;
   transition: opacity var(--duration-medium) var(--ease-out);
 }
@@ -724,28 +733,15 @@ a:focus-visible {
 }
 
 .home-archive-links a {
-  position: relative;
   border-bottom: var(--border-width) solid var(--color-collegiate-coral-soft);
 }
 
-.home-archive-links a::before,
-.home-archive-links a::after {
-  position: absolute;
-  bottom: calc(var(--hero-ring-hole) * -0.75);
-  width: calc(var(--hero-ring-hole) * 1.5);
-  height: calc(var(--hero-ring-hole) * 1.5);
-  border: var(--border-width) solid var(--color-collegiate-coral-soft);
-  border-radius: var(--radius-pill);
-  background: var(--color-aubergine);
-  content: "";
-}
-
-.home-archive-links a::before {
-  left: calc(var(--hero-ring-hole) * -0.75);
-}
-
-.home-archive-links a::after {
-  right: calc(var(--hero-ring-hole) * -0.75);
+/* Separator stays glued to its link so a wrap can't strand it. */
+.home-archive-pair {
+  display: inline-flex;
+  gap: var(--space-lg);
+  align-items: center;
+  white-space: nowrap;
 }
 
 .home-archive-sep {
@@ -763,23 +759,25 @@ a:focus-visible {
   border-color: var(--color-on-aubergine);
 }
 
-/* Journal ground continues under the footer on the home route. */
-.home-route .site-footer {
+/* Thin cream strip below the band on the home route. */
+.home-route .site-footer,
+.showcase-route .site-footer {
   max-width: none;
-  padding-block: var(--space-lg);
+  padding-block: var(--space-md);
   padding-inline: var(--space-hero-gutter);
   border-top: none;
-  color: var(--color-on-aubergine-muted);
-  background: var(--color-aubergine);
+  color: var(--color-caption-ink);
+  background: var(--color-paper);
   font-family: var(--font-body);
   letter-spacing: normal;
   text-transform: none;
 }
 
 .home-route .site-footer a {
-  --color-focus: var(--color-collegiate-coral-soft);
-
-  color: var(--color-on-aubergine);
+  display: inline-block;
+  padding-block: calc(var(--space-sm) + var(--space-2xs) * 0.5);
+  margin-block: calc((var(--space-sm) + var(--space-2xs) * 0.5) * -1);
+  color: var(--color-field-violet);
 }
 
 .home-journal-glimpse {
@@ -1155,39 +1153,20 @@ a:focus-visible {
     justify-content: flex-end;
   }
 
+  /* Panels stack under the copy so the media column can't strand them
+     below a dead stretch of paper. */
   .home-hero-paper {
     grid-template-areas:
       "copy media"
-      "destinations destinations";
+      "destinations media";
     grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    grid-template-rows: auto 1fr;
     align-items: start;
   }
 
   .home-destinations {
-    grid-template-columns: calc(var(--hero-tab-width) - var(--space-lg)) repeat(2, minmax(0, 1fr));
-    align-items: stretch;
-  }
-
-  .home-about-tab {
-    z-index: -1;
-    flex-direction: column;
-    gap: var(--space-md);
-    align-items: center;
     align-self: start;
-    order: -1;
-    width: var(--hero-tab-width);
-    margin-top: var(--space-md);
-    padding-block: calc(var(--space-md) + var(--space-xs)) var(--space-md);
-    padding-inline: var(--space-sm);
-  }
-
-  .home-about-tab-label {
-    writing-mode: vertical-rl;
-  }
-
-  /* Tucked under the countries panel; slides out on keyboard focus. */
-  .home-about-tab:focus-visible {
-    transform: translateX(calc(var(--space-sm) * -1));
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .home-hero-media {
@@ -1218,7 +1197,7 @@ a:focus-visible {
   }
 }
 
-@media (min-width: 48rem) and (hover: hover) {
+@media (min-width: 72rem) and (hover: hover) {
   .home-about-tab:hover {
     transform: translateX(calc(var(--space-sm) * -1));
   }
@@ -1255,6 +1234,12 @@ a:focus-visible {
 }
 
 @media (min-width: 72rem) {
+  /* Viewport-fill only at desktop; in the 48-72rem range it stranded the
+     panels below a dead column. */
+  .home-hero-journal {
+    min-height: var(--hero-fill-height);
+  }
+
   .home-hero-paper {
     grid-template-areas:
       "copy media"
@@ -1268,6 +1253,29 @@ a:focus-visible {
 
   .home-destinations {
     align-self: end;
+    grid-template-columns: calc(var(--hero-tab-width) - var(--space-lg)) repeat(2, minmax(0, 1fr));
+  }
+
+  .home-about-tab {
+    z-index: -1;
+    flex-direction: column;
+    gap: var(--space-md);
+    align-items: center;
+    align-self: start;
+    order: -1;
+    width: var(--hero-tab-width);
+    margin-top: var(--space-md);
+    padding-block: calc(var(--space-md) + var(--space-xs)) var(--space-md);
+    padding-inline: var(--space-sm);
+  }
+
+  .home-about-tab-label {
+    writing-mode: vertical-rl;
+  }
+
+  /* Tucked under the countries panel; slides out on keyboard focus. */
+  .home-about-tab:focus-visible {
+    transform: translateX(calc(var(--space-sm) * -1));
   }
 
   .home-destination {
