@@ -475,22 +475,24 @@ a:focus-visible {
   gap: var(--space-md);
   min-height: var(--hero-destination-min-height);
   padding: var(--space-hero-card);
+  padding-top: calc(var(--space-hero-card) + var(--space-md));
   padding-bottom: calc(var(--space-lg) * 2);
   border: var(--border-width) solid var(--color-paper-muted);
   border-radius: var(--radius-note);
 }
 
-/* Torn spiral-binding stubs rising above the top edge, per the approved
-   direction. Embedded colors mirror --color-paper-raised / --color-note-hole. */
+/* Spiral-binding keyholes punched below the top edge, per the approved
+   direction: a stem descends from the edge into a soft grey shadow dot.
+   Embedded greys sit between --color-paper-raised and --color-note-hole. */
 .home-destination::before,
 .home-field-note::before {
   position: absolute;
-  top: calc(var(--hero-binding-gap) * -0.85);
+  top: var(--border-width);
   right: var(--space-md);
   left: var(--space-md);
-  height: calc(var(--hero-binding-gap) * 1.44);
-  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2018%2026'%3E%3Cellipse%20cx='9'%20cy='21'%20rx='3'%20ry='2.2'%20fill='%23BFB6A8'/%3E%3Cpath%20d='M9%2012.8V21'%20stroke='%23BDB4A6'%20stroke-width='2'/%3E%3Ccircle%20cx='9'%20cy='7'%20r='5.8'%20fill='%23F8F2E7'%20stroke='%23BDB4A6'%20stroke-width='1.5'/%3E%3C/svg%3E");
-  background-position: left bottom;
+  height: calc(var(--hero-binding-gap) * 0.79);
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2028%2022'%3E%3Cpath%20d='M14.6%200c-.3%203-1.2%205-.9%208.6'%20stroke='%23CFC8BA'%20stroke-width='1.2'%20fill='none'/%3E%3Ccircle%20cx='13.9'%20cy='14'%20r='5'%20fill='%23DFD8CB'/%3E%3Ccircle%20cx='13.9'%20cy='14.4'%20r='3.8'%20fill='%23B5AC9D'/%3E%3Ccircle%20cx='13.9'%20cy='13.6'%20r='3.8'%20fill='%23C6BDAF'/%3E%3C/svg%3E");
+  background-position: left top;
   background-repeat: round no-repeat;
   background-size: var(--hero-binding-gap) 100%;
   content: "";
@@ -635,6 +637,7 @@ a:focus-visible {
   width: 82%;
   min-height: var(--hero-note-min-height);
   padding: var(--space-lg);
+  padding-top: calc(var(--space-lg) + var(--space-md));
   justify-self: start;
   border: var(--border-width) solid var(--color-paper-line);
   border-radius: var(--radius-note);
