@@ -15,13 +15,18 @@ import baiPeople from '../assets/places/bai-people-china.jpeg';
     <div class="home-hero-paper">
       <FieldRoutes variant="light" />
 
-      <header class="home-hero-copy">
+      <header class="home-hero-copy reveal">
         <h1 id="home-title">Kyle Cromwell</h1>
+        <p class="home-hero-kicker">Personal field journal</p>
+        <p class="home-hero-intro">
+          A growing record of countries visited, places worth remembering, and the interests that
+          still leave a trace.
+        </p>
       </header>
 
-      <nav class="home-destinations" aria-label="Explore Kyle's journal">
+      <nav class="home-destinations reveal reveal--late" aria-label="Explore Kyle's journal">
         <a class="home-about-tab" href="/about/">
-          <span>About me</span>
+          <span class="home-about-tab-label">About me</span>
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <circle cx="12" cy="8" r="4"></circle>
             <path d="M4.5 21c.5-4.2 3-6.5 7.5-6.5s7 2.3 7.5 6.5"></path>
@@ -47,7 +52,7 @@ import baiPeople from '../assets/places/bai-people-china.jpeg';
         </a>
       </nav>
 
-      <div class="home-hero-media">
+      <div class="home-hero-media reveal reveal--later">
         <figure class="home-travel-print">
           <span class="home-travel-tape" aria-hidden="true"></span>
           <Image
@@ -60,6 +65,7 @@ import baiPeople from '../assets/places/bai-people-china.jpeg';
         </figure>
 
         <figure class="home-field-note">
+          <span class="home-note-tape" aria-hidden="true"></span>
           <Image
             src={mostarBridge}
             alt="The arched Old Bridge crossing the Neretva River in Mostar"
@@ -82,7 +88,7 @@ import baiPeople from '../assets/places/bai-people-china.jpeg';
       <FieldRoutes variant="dark" />
       <div class="home-journal-copy">
         <h2>A personal<br />field journal</h2>
-        <p>Political science, great food,<br />video games, and time with friends.</p>
+        <p>Political science, great food, video games, and time with friends.</p>
         <nav class="home-archive-links" aria-label="Older archives">
           <span>Older archives</span>
           <a href="/chocolate/">Chocolate</a>

@@ -59,6 +59,7 @@
   --text-3xl: clamp(3rem, 8vw, 6rem);
   --text-display: clamp(3.75rem, 12vw, 8.5rem);
   --text-hero-name: clamp(3.25rem, 5.4vw, 5.5rem);
+  --text-hero-kicker: clamp(1rem, 1.3vw, 1.25rem);
   --text-hero-destination: clamp(1.85rem, 2.3vw, 2.15rem);
   --text-hero-band: clamp(2.15rem, 3.1vw, 3.35rem);
   --text-hero-note: clamp(1.05rem, 1.5vw, 1.45rem);
@@ -83,8 +84,9 @@
   --space-hero-gutter: clamp(1.5rem, 5vw, 5.5rem);
   --space-hero-section: clamp(2rem, 4vw, 4.5rem);
   --space-hero-card: clamp(1.25rem, 2.2vw, 2.25rem);
-  --space-hero-overlap: -2.5rem;
+  --space-hero-overlap: -7rem;
   --space-hero-overlap-sm: -1rem;
+  --space-hero-band-overlap: -4.5rem;
 
   /* radius and borders */
   --radius-sm: 0.5rem;
@@ -100,6 +102,7 @@
   --max-width-page: 78rem;
   --max-width-copy: 42rem;
   --max-width-narrow: 32rem;
+  --max-width-intro: 24rem;
   --min-card-width: 15rem;
   --min-portal-width: 17rem;
   --min-height-card: 15rem;
@@ -116,9 +119,11 @@
   --hero-note-min-height: 14rem;
   --hero-destination-min-height: 13rem;
   --hero-icon-size: 3.4rem;
+  --hero-icon-stroke: 1.5;
   --hero-tab-width: 4.5rem;
   --hero-pattern-line: 0.08rem;
-  --hero-note-hole-size: 0.28rem;
+  --hero-ring-size: 0.9rem;
+  --hero-ring-hole: 0.3rem;
   --hero-note-hole-gap: 2.1rem;
   --hero-tape-width: 9rem;
   --hero-tape-height: 2.6rem;

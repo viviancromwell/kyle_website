@@ -256,7 +256,12 @@ a:focus-visible {
 .home-journal-band {
   position: relative;
   isolation: isolate;
-  overflow: hidden;
+}
+
+/* The field note and glimpse print cross the paper/band boundary; the paper
+   layer must paint above the band for the overlap to survive. */
+.home-hero-paper {
+  z-index: 1;
 }
 
 .home-hero-paper {
@@ -338,7 +343,7 @@ a:focus-visible {
   z-index: 1;
   display: grid;
   grid-area: copy;
-  gap: var(--space-lg);
+  gap: var(--space-md);
   align-content: start;
   max-width: var(--max-width-copy);
 }
@@ -349,12 +354,42 @@ a:focus-visible {
 }
 
 .home-hero-copy h1 {
-  padding-bottom: var(--space-lg);
+  position: relative;
+  width: fit-content;
+  padding-right: var(--space-xl);
+  padding-bottom: var(--space-md);
   border-bottom: var(--border-width) solid var(--color-field-violet);
   font-size: var(--text-hero-name);
   font-weight: 500;
   letter-spacing: var(--tracking-tight);
   line-height: var(--leading-tight);
+}
+
+.home-hero-copy h1::after {
+  position: absolute;
+  right: 0;
+  bottom: calc(var(--hero-ring-hole) * -1);
+  width: calc(var(--hero-ring-hole) * 2);
+  height: calc(var(--hero-ring-hole) * 2);
+  border: var(--border-width) solid var(--color-field-violet);
+  border-radius: var(--radius-pill);
+  background: var(--color-paper);
+  content: "";
+}
+
+.home-hero-kicker {
+  color: var(--color-field-violet);
+  font-family: var(--font-display);
+  font-size: var(--text-hero-kicker);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+}
+
+.home-hero-intro {
+  max-width: var(--max-width-intro);
+  font-size: var(--text-lg);
+  line-height: var(--leading-normal);
 }
 
 .home-destinations {
@@ -375,11 +410,13 @@ a:focus-visible {
 }
 
 .home-about-tab {
+  position: relative;
   display: inline-flex;
   gap: var(--space-sm);
   align-items: center;
   width: fit-content;
   padding: var(--space-sm) var(--space-md);
+  overflow: hidden;
   border: var(--border-width) solid var(--color-paper-muted);
   border-radius: var(--radius-note);
   color: var(--color-aubergine);
@@ -389,37 +426,58 @@ a:focus-visible {
   text-transform: uppercase;
 }
 
+.home-about-tab::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: var(--space-xs);
+  background: var(--color-field-violet);
+  content: "";
+}
+
 .home-about-tab svg {
+  flex: 0 0 auto;
   width: var(--space-lg);
   height: var(--space-lg);
+  padding: var(--space-2xs);
+  border: var(--border-width) solid currentColor;
+  border-radius: var(--radius-pill);
   fill: none;
   stroke: currentColor;
-  stroke-width: var(--border-width);
+  stroke-width: var(--hero-icon-stroke);
 }
 
 .home-destination {
   position: relative;
   display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   grid-template-rows: auto 1fr;
   gap: var(--space-md);
   min-height: var(--hero-destination-min-height);
   padding: var(--space-hero-card);
-  padding-top: var(--space-xl);
-  overflow: hidden;
+  padding-bottom: calc(var(--space-lg) * 2);
   border: var(--border-width) solid var(--color-paper-muted);
   border-radius: var(--radius-note);
-  clip-path: polygon(0 0, 94% 0, 100% 13%, 100% 100%, 0 100%);
 }
 
-.home-destination::before {
+/* Spiral-notebook perforations straddling the top edge; the hole shows the
+   page paper through the punched ring. */
+.home-destination::before,
+.home-field-note::before {
   position: absolute;
-  top: var(--space-xs);
+  top: calc(var(--hero-ring-size) / -2);
   right: var(--space-md);
   left: var(--space-md);
-  height: var(--space-sm);
-  background-image: radial-gradient(circle, var(--color-note-hole) 0 var(--hero-note-hole-size), transparent calc(var(--hero-note-hole-size) + var(--hero-pattern-line)));
-  background-position: left center;
-  background-size: var(--hero-note-hole-gap) var(--hero-note-hole-gap);
+  height: var(--hero-ring-size);
+  background-image: radial-gradient(
+    circle,
+    var(--color-paper) 0 var(--hero-ring-hole),
+    var(--color-note-hole) var(--hero-ring-hole) calc(var(--hero-ring-hole) + var(--hero-pattern-line)),
+    transparent calc(var(--hero-ring-hole) + var(--hero-pattern-line) * 2)
+  );
+  background-position: center;
+  background-size: var(--hero-note-hole-gap) var(--hero-ring-size);
   content: "";
 }
 
@@ -428,8 +486,18 @@ a:focus-visible {
   right: var(--space-hero-card);
   bottom: var(--space-lg);
   left: var(--space-hero-card);
-  height: var(--hero-pattern-line);
-  background: currentColor;
+  height: calc(var(--hero-ring-hole) * 2);
+  background-image:
+    radial-gradient(
+      circle at var(--hero-ring-hole) center,
+      transparent 0 calc(var(--hero-ring-hole) - var(--hero-pattern-line)),
+      currentColor calc(var(--hero-ring-hole) - var(--hero-pattern-line)) var(--hero-ring-hole),
+      transparent var(--hero-ring-hole)
+    ),
+    linear-gradient(currentColor, currentColor);
+  background-position: left center, right center;
+  background-repeat: no-repeat;
+  background-size: auto, calc(100% - var(--hero-ring-hole) * 2 - var(--space-xs)) var(--hero-pattern-line);
   content: "";
 }
 
@@ -441,7 +509,7 @@ a:focus-visible {
   stroke: currentColor;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-width: var(--border-width);
+  stroke-width: var(--hero-icon-stroke);
 }
 
 .home-destination-title {
@@ -455,11 +523,9 @@ a:focus-visible {
 }
 
 .home-destination-arrow {
-  position: absolute;
-  right: var(--space-hero-card);
-  bottom: var(--space-xl);
-  font-size: var(--text-2xl);
-  line-height: 1;
+  align-self: end;
+  font-size: var(--text-hero-destination);
+  line-height: var(--leading-tight);
 }
 
 .home-destination--countries {
@@ -491,6 +557,7 @@ a:focus-visible {
 
 .home-travel-print {
   position: relative;
+  z-index: 2;
   width: 92%;
   padding: var(--space-sm);
   justify-self: end;
@@ -510,7 +577,7 @@ a:focus-visible {
 }
 
 .home-travel-print img {
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 1 / 1;
 }
 
 .home-travel-tape {
@@ -528,6 +595,7 @@ a:focus-visible {
 
 .home-field-note {
   position: relative;
+  z-index: 1;
   width: 82%;
   min-height: var(--hero-note-min-height);
   padding: var(--space-lg);
@@ -537,7 +605,20 @@ a:focus-visible {
   background-color: var(--color-paper-raised);
   background-image: repeating-linear-gradient(to bottom, transparent 0, transparent var(--space-lg), var(--color-paper-line) calc(var(--space-lg) + var(--hero-pattern-line)));
   box-shadow: var(--shadow-note);
-  transform: rotate(-1.25deg);
+  transform: rotate(1.25deg);
+}
+
+.home-note-tape {
+  position: absolute;
+  right: calc(var(--space-lg) * -1);
+  bottom: var(--space-xl);
+  z-index: 1;
+  width: calc(var(--hero-tape-width) * 0.66);
+  height: var(--hero-tape-height);
+  background: var(--color-field-violet-soft);
+  box-shadow: var(--shadow-tape);
+  opacity: 0.7;
+  transform: rotate(75deg);
 }
 
 .home-field-note img {
@@ -606,6 +687,7 @@ a:focus-visible {
 }
 
 .home-journal-copy p {
+  max-width: var(--max-width-intro);
   color: var(--color-on-aubergine);
   font-size: var(--text-lg);
 }
@@ -653,12 +735,19 @@ a:focus-visible {
 }
 
 .home-journal-glimpse img {
-  aspect-ratio: 3 / 1;
+  aspect-ratio: 2 / 1;
+}
+
+.home-about-tab,
+.home-destination {
+  transition:
+    transform var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
 }
 
 .home-about-tab:hover,
 .home-destination:hover {
-  color: var(--color-field-violet);
+  box-shadow: var(--shadow-paper);
   transform: translateY(var(--hover-lift));
 }
 
@@ -967,6 +1056,10 @@ a:focus-visible {
   animation-delay: var(--duration-fast);
 }
 
+.reveal--later {
+  animation-delay: var(--duration-medium);
+}
+
 @keyframes reveal {
   from {
     opacity: 0;
@@ -1010,12 +1103,6 @@ a:focus-visible {
 
   .home-about-tab {
     grid-column: 1 / -1;
-    flex-direction: row;
-    writing-mode: horizontal-tb;
-  }
-
-  .home-about-tab svg {
-    flex: 0 0 auto;
   }
 
   .home-hero-media {
@@ -1028,19 +1115,21 @@ a:focus-visible {
   }
 
   .home-field-note {
-    position: absolute;
-    right: 0;
-    bottom: 0;
     width: 64%;
+    margin-top: var(--space-hero-overlap-sm);
+    margin-left: var(--space-lg);
+    justify-self: start;
   }
 
   .home-journal-band {
-    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: center;
   }
 
   .home-journal-glimpse {
+    align-self: start;
     justify-self: end;
+    margin-top: var(--space-hero-band-overlap);
   }
 
   .portal-grid {
@@ -1082,26 +1171,31 @@ a:focus-visible {
     grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
     grid-template-rows: auto 1fr;
     gap: var(--space-xl) var(--space-hero-section);
-    align-items: center;
+    align-items: start;
     padding-block: var(--space-xl);
   }
 
-  .home-hero-copy {
-    align-self: end;
-  }
-
   .home-destinations {
-    align-self: start;
+    align-self: end;
     grid-template-columns: var(--hero-tab-width) repeat(2, minmax(0, 1fr));
   }
 
   .home-about-tab {
     grid-column: auto;
     flex-direction: column;
-    justify-content: center;
+    gap: var(--space-md);
+    align-items: center;
+    align-self: start;
     width: var(--hero-tab-width);
+    margin-top: var(--space-sm);
+    margin-right: calc(var(--space-xs) * -1);
+    padding-block: calc(var(--space-md) + var(--space-xs)) var(--space-md);
     padding-inline: var(--space-sm);
+  }
+
+  .home-about-tab-label {
     writing-mode: vertical-rl;
+    text-orientation: upright;
   }
 
   .home-destination {
@@ -1116,19 +1210,25 @@ a:focus-visible {
   .home-travel-print {
     position: absolute;
     top: 0;
-    right: 7%;
-    width: 76%;
+    right: 22%;
+    width: 66%;
   }
 
   .home-field-note {
+    position: absolute;
     right: 0;
     bottom: var(--space-hero-overlap);
     width: 58%;
+    margin: 0;
   }
 
   .home-journal-band {
     grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
     padding-block: var(--space-lg);
+  }
+
+  .home-journal-glimpse {
+    justify-self: center;
   }
 }
 

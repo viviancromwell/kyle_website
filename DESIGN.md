@@ -29,7 +29,7 @@ The site uses only these two type families. The notebook character comes from co
 
 The hero uses one horizontal composition with four clear zones:
 
-1. Kyle's name
+1. Kyle's name, the journal kicker, and a short introduction
 2. Two prominent notebook navigation panels for Visited Countries and Interesting Places
 3. A quieter attached About Me tab
 4. A travel-print and field-note cluster using existing project imagery
@@ -41,7 +41,7 @@ The lower aubergine band introduces Kyle's academic and personal interests and k
 - Sparse dashed mapped routes, outlined nodes, and violet crosses on both paper and purple fields
 - Clean notebook perforations and ruled paper
 - Pale violet tape and crisp off-white print borders
-- Slight, controlled overlap between the travel print and field note
+- Slight, controlled overlap between the travel print and field note, with the note descending into the aubergine band and the band print rising to meet it
 
 ## Responsive behavior
 

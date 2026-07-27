@@ -9,6 +9,8 @@ test('homepage exposes the approved notebook hero destinations', async () => {
   const source = await readProjectFile('src/pages/index.astro');
 
   assert.match(source, /class="home-hero-journal"/);
+  assert.match(source, /class="home-hero-kicker"/);
+  assert.match(source, /class="home-hero-intro"/);
   assert.match(source, /class="home-destination home-destination--countries"/);
   assert.match(source, /class="home-destination home-destination--places"/);
   assert.match(source, /href="\/countries\/"/);
