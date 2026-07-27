@@ -87,7 +87,6 @@ const shadows = [
 const navSections = [
   ['Foundations', [['#color', 'Color'], ['#typography', 'Typography'], ['#spacing', 'Spacing'], ['#radius', 'Radius'], ['#elevation', 'Elevation']]],
   ['Journal components', [['#component-panel', 'Notepad Panel'], ['#component-tab', 'About Tab'], ['#component-print', 'Travel Print'], ['#component-band', 'Band + Archives']]],
-  ['Interior shell', [['#component-nav', 'Navigation']]],
 ];
 ---
 
@@ -295,21 +294,6 @@ const navSections = [
         </p>
       </section>
 
-      <section id="component-nav">
-        <h2>Navigation (interior shell)</h2>
-        <div class="ds-demo ds-nav-demo">
-          <a href="#component-nav" class="nav-name">Kyle Cromwell</a>
-          <div class="nav-links">
-            <a href="#component-nav">Visited Countries</a>
-            <a href="#component-nav">Interesting Places</a>
-            <a href="#component-nav">About Me</a>
-          </div>
-        </div>
-        <p class="ds-note">
-          Starter shell, still monospace: functional on interior pages but outside the Two-Family
-          Rule. Slated for replacement as each page is redesigned; not a pattern for new work.
-        </p>
-      </section>
     </article>
   </div>
 </Base>
@@ -618,14 +602,6 @@ const navSections = [
     width: 100%;
     max-width: 20rem;
     margin-inline: auto;
-  }
-
-  .ds-nav-demo {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-lg);
-    align-items: center;
-    justify-content: space-between;
   }
 
   @media (min-width: 52rem) {
