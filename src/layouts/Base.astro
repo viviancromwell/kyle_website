@@ -9,6 +9,7 @@ const {
 
 const pathname = Astro.url.pathname;
 const isHome = pathname === '/';
+const isShowcase = pathname.startsWith('/showcase');
 const isCurrent = (route) => pathname === route || pathname.startsWith(route);
 ---
 
@@ -36,10 +37,10 @@ const isCurrent = (route) => pathname === route || pathname.startsWith(route);
       rel="stylesheet"
     />
   </head>
-  <body class:list={{ 'home-route': isHome }}>
+  <body class:list={{ 'home-route': isHome, 'showcase-route': isShowcase }}>
     <a class="skip-link" href="#main">Skip to content</a>
     {
-      !isHome && (
+      !isHome && !isShowcase && (
         <header class="site-header">
           <nav class="site-nav" aria-label="Main">
             <a href="/" class="nav-name">Kyle Cromwell</a>

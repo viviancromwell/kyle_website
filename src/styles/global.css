@@ -262,6 +262,16 @@ a:focus-visible {
   display: none;
 }
 
+/* The design-system reference lives on the journal ground. */
+.showcase-route::before {
+  display: none;
+}
+
+.showcase-route {
+  color: var(--color-soft-charcoal);
+  background: var(--color-paper);
+}
+
 .home-route .page {
   width: 100%;
   max-width: none;
@@ -482,7 +492,7 @@ a:focus-visible {
 
 /* Spiral-binding keyholes punched below the top edge, per the approved
    direction: a stem descends from the edge into a soft grey shadow dot.
-   Embedded greys sit between --color-paper-raised and --color-note-hole. */
+   Embedded greys are the warm binding tones sampled from the mock. */
 .home-destination::before,
 .home-field-note::before {
   position: absolute;
@@ -750,7 +760,8 @@ a:focus-visible {
 }
 
 /* Thin cream strip below the band on the home route. */
-.home-route .site-footer {
+.home-route .site-footer,
+.showcase-route .site-footer {
   max-width: none;
   padding-block: var(--space-md);
   padding-inline: var(--space-hero-gutter);

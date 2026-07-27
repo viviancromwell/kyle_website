@@ -3,22 +3,52 @@ import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import machuPicchu from '../assets/places/machu-picchu-peru.jpeg';
 
-const colors = [
-  ['ds-chip--paper', '--color-paper', 'Warm Paper', 'main notebook ground'],
-  ['ds-chip--paper-raised', '--color-paper-raised', 'Paper Raised', 'notepads, prints, tabs'],
-  ['ds-chip--paper-muted', '--color-paper-muted', 'Paper Muted', 'panel borders'],
-  ['ds-chip--paper-line', '--color-paper-line', 'Paper Line', 'ruled note lines'],
-  ['ds-chip--charcoal', '--color-soft-charcoal', 'Soft Charcoal', 'light-theme text'],
-  ['ds-chip--caption', '--color-caption-ink', 'Caption Ink', 'print captions'],
-  ['ds-chip--aubergine', '--color-aubergine', 'Deep Aubergine', 'journal-cover band'],
-  ['ds-chip--violet', '--color-field-violet', 'Field Violet', 'primary accent, countries, focus'],
-  ['ds-chip--violet-soft', '--color-field-violet-soft', 'Field Violet Soft', 'washi tape, dark-route accents'],
-  ['ds-chip--coral', '--color-collegiate-coral', 'Collegiate Coral', 'places accent on paper'],
-  ['ds-chip--coral-soft', '--color-collegiate-coral-soft', 'Coral Soft', 'links and focus on aubergine'],
-  ['ds-chip--on-aubergine', '--color-on-aubergine', 'On Aubergine', 'band text'],
-  ['ds-chip--on-aubergine-muted', '--color-on-aubergine-muted', 'On Aubergine Muted', 'band labels'],
-  ['ds-chip--route-light', '--color-route-light', 'Route Light', 'paper route strokes'],
-  ['ds-chip--route-dark', '--color-route-dark', 'Route Dark', 'band lattice strokes'],
+const colorFamilies = [
+  [
+    'Paper',
+    'grounds and paper materials, light to dark',
+    [
+      ['ds-chip--paper-raised', 'paper-raised', 'notepads, prints, tabs'],
+      ['ds-chip--paper', 'paper', 'main ground'],
+      ['ds-chip--paper-muted', 'paper-muted', 'panel borders'],
+      ['ds-chip--route-light', 'route-light', 'route strokes'],
+      ['ds-chip--paper-line', 'paper-line', 'ruled lines'],
+    ],
+  ],
+  [
+    'Ink',
+    'text on paper',
+    [
+      ['ds-chip--caption', 'caption-ink', 'print captions'],
+      ['ds-chip--charcoal', 'soft-charcoal', 'body and headings'],
+    ],
+  ],
+  [
+    'Violet',
+    'the primary accent: countries, focus, tape',
+    [
+      ['ds-chip--violet-soft', 'field-violet-soft', 'washi tape'],
+      ['ds-chip--violet', 'field-violet', 'accent, links, focus'],
+    ],
+  ],
+  [
+    'Coral',
+    'the secondary accent: places; soft carries the band',
+    [
+      ['ds-chip--coral-soft', 'collegiate-coral-soft', 'links on aubergine'],
+      ['ds-chip--coral', 'collegiate-coral', 'accent on paper'],
+    ],
+  ],
+  [
+    'Aubergine',
+    'the journal cover and everything on it, light to dark',
+    [
+      ['ds-chip--on-aubergine', 'on-aubergine', 'band text'],
+      ['ds-chip--on-aubergine-muted', 'on-aubergine-muted', 'band labels'],
+      ['ds-chip--route-dark', 'route-dark', 'lattice strokes'],
+      ['ds-chip--aubergine', 'aubergine', 'band ground'],
+    ],
+  ],
 ];
 
 const typeRoles = [
@@ -88,22 +118,29 @@ const navSections = [
 
       <section id="color">
         <h2>Color</h2>
-        <div class="ds-table-wrap">
-          <table class="ds-table">
-            <thead>
-              <tr><th></th><th>Token</th><th>Role</th><th>Used for</th></tr>
-            </thead>
-            <tbody>
-              {colors.map(([className, token, role, use]) => (
-                <tr>
-                  <td><span class:list={['ds-chip', className]}></span></td>
-                  <td><code>{token}</code></td>
-                  <td>{role}</td>
-                  <td class="ds-use">{use}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <p class="ds-note">
+          Five families, fifteen jobs. Every token below is <code>--color-[name]</code>.
+        </p>
+        <div class="ds-color-families">
+          {colorFamilies.map(([family, desc, tokens]) => (
+            <div class="ds-color-family">
+              <div class="ds-family-head">
+                <h3>{family}</h3>
+                <span class="ds-use">{desc}</span>
+              </div>
+              <div class="ds-swatch-row">
+                {tokens.map(([className, name, use]) => (
+                  <figure class="ds-swatch">
+                    <div class:list={['ds-swatch-chip', className]}></div>
+                    <figcaption>
+                      <code>{name}</code>
+                      <span class="ds-use">{use}</span>
+                    </figcaption>
+                  </figure>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
         <p class="ds-note">
           The Dark-Band Coral Rule: on Deep Aubergine, interactive affordances use Coral Soft, never
@@ -297,8 +334,7 @@ const navSections = [
 
   .ds-nav-label {
     margin: 0 0 var(--space-xs);
-    color: var(--color-accent-soft);
-    font-family: var(--font-mono);
+    color: var(--color-field-violet);
     font-size: var(--text-xs);
     font-weight: 700;
     letter-spacing: var(--tracking-wide);
@@ -313,7 +349,17 @@ const navSections = [
     list-style: none;
   }
 
-  .ds-nav a,
+  .ds-nav a {
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    text-decoration: none;
+  }
+
+  .ds-nav a:hover {
+    color: var(--color-field-violet);
+    text-decoration: underline;
+  }
+
   code {
     color: var(--color-text-secondary);
     font-family: var(--font-mono);
@@ -350,29 +396,49 @@ const navSections = [
     font-size: var(--text-sm);
   }
 
-  .ds-table-wrap {
-    overflow-x: auto;
+  .ds-color-families {
+    display: grid;
+    gap: var(--space-lg);
+    margin-top: var(--space-md);
   }
 
-  .ds-table {
-    width: 100%;
-    border-collapse: collapse;
+  .ds-color-family {
+    display: grid;
+    gap: var(--space-xs);
   }
 
-  .ds-table th,
-  .ds-table td {
-    padding: var(--space-xs) var(--space-sm) var(--space-xs) 0;
-    border-bottom: var(--border-width) solid var(--color-border);
-    font-size: var(--text-sm);
-    text-align: left;
+  .ds-family-head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    align-items: baseline;
   }
 
-  .ds-chip {
-    display: block;
-    width: var(--space-xl);
-    height: var(--space-lg);
+  .ds-family-head h3 {
+    margin: 0;
+    font-size: var(--text-base);
+  }
+
+  .ds-swatch-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+    gap: var(--space-xs);
+  }
+
+  .ds-swatch {
+    display: grid;
+    gap: var(--space-2xs);
+    margin: 0;
+  }
+
+  .ds-swatch-chip {
+    height: var(--space-xl);
     border: var(--border-width) solid var(--color-border);
     border-radius: var(--radius-sm);
+  }
+
+  .ds-swatch figcaption {
+    display: grid;
   }
 
   .ds-chip--paper { background: var(--color-paper); }

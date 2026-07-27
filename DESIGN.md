@@ -198,6 +198,7 @@ Depth is conveyed by material stacking (overlap, rotation, tape) far more than b
 
 ### Do:
 - **Do** source every color, size, spacing, and radius from `src/styles/tokens.css` via `var(--*)`; new values land in tokens first.
+- **Do** migrate each interior page onto the journal tokens as it is redesigned, then delete the starter tokens it was using (`--color-bg*`, `--color-surface*`, `--color-accent*`, `--color-header`, `--color-grid`, the old gradients, glow, and orbit sizes; roughly 17 entries). Two systems currently share `tokens.css`; the file ends at the fifteen documented colors, not thirty-two.
 - **Do** keep every design-token change in sync with `/showcase` in the same change.
 - **Do** keep rotations between 1 and 4.5 degrees and overlaps deliberate; collage, not clutter.
 - **Do** gate hover transforms behind `(hover: hover)` and keep all motion within 400ms, entrance and hover only, honoring reduced motion.
