@@ -12,28 +12,27 @@
   --color-border: oklch(0.87 0.01 290);
   --color-grid: oklch(0.76 0.012 290 / 0.22);
   --color-header: oklch(1 0 0 / 0.88);
-  --color-accent: oklch(0.52 0.2 295);
-  --color-accent-hover: oklch(0.43 0.19 295);
-  --color-accent-soft: oklch(0.91 0.055 295);
-  --color-accent-ink: oklch(0.25 0.08 295);
-  --color-focus: oklch(0.48 0.2 295);
-  --color-selection: oklch(0.72 0.14 295 / 0.28);
+  --color-accent: var(--color-field-violet);
+  --color-accent-hover: oklch(0.38 0.13 295.24);
+  --color-accent-soft: oklch(0.9 0.04 295.24);
+  --color-accent-ink: oklch(0.31 0.08 295.24);
+  --color-focus: var(--color-field-violet);
+  --color-selection: oklch(0.72 0.1 295.24 / 0.28);
 
-  /* confirmed personal-journal palette */
-  --color-paper: oklch(0.953 0.0115 84.58);
+  /* sampled from the approved personal-journal direction */
+  --color-paper: oklch(0.9486 0.0165 79.35);
   --color-paper-raised: oklch(0.975 0.009 84.58);
   --color-paper-muted: oklch(0.9 0.014 84.58);
   --color-paper-line: oklch(0.82 0.018 285);
   --color-soft-charcoal: oklch(0.2556 0.0159 307.77);
-  --color-aubergine: oklch(0.273 0.0476 312.12);
-  --color-aubergine-raised: oklch(0.32 0.052 312.12);
-  --color-field-violet: oklch(0.5084 0.1164 305.73);
-  --color-field-violet-soft: oklch(0.72 0.07 305.73);
+  --color-aubergine: oklch(0.2924 0.0488 293.35);
+  --color-field-violet: oklch(0.4502 0.1397 295.24);
+  --color-field-violet-soft: oklch(0.72 0.07 295.24);
   --color-collegiate-coral: oklch(0.6028 0.1295 31.85);
   --color-on-aubergine: oklch(0.94 0.015 84.58);
   --color-on-aubergine-muted: oklch(0.78 0.025 310);
-  --color-route-light: oklch(0.64 0.025 307.77);
-  --color-route-dark: oklch(0.48 0.065 305.73);
+  --color-route-light: oklch(0.7 0.012 79.35);
+  --color-route-dark: oklch(0.52 0.065 295.24);
   --color-note-hole: oklch(0.78 0.018 84.58);
 
   /* gradients and depth */
@@ -47,9 +46,8 @@
   --shadow-tape: 0 0.2rem 0.5rem oklch(0.2556 0.0159 307.77 / 0.08);
 
   /* typography */
-  --font-display: "Literata", Georgia, serif;
-  --font-body: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", "Helvetica Neue", sans-serif;
-  --font-note: "Bradley Hand", "Segoe Print", cursive;
+  --font-display: "Cormorant SC", Georgia, "Times New Roman", serif;
+  --font-body: "Avenir Next", Avenir, "Helvetica Neue", Arial, sans-serif;
   --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 
   --text-xs: 0.75rem;
@@ -61,8 +59,6 @@
   --text-3xl: clamp(3rem, 8vw, 6rem);
   --text-display: clamp(3.75rem, 12vw, 8.5rem);
   --text-hero-name: clamp(3.25rem, 5.4vw, 5.5rem);
-  --text-hero-kicker: clamp(1rem, 1.65vw, 1.55rem);
-  --text-hero-intro: clamp(1.1rem, 1.6vw, 1.45rem);
   --text-hero-destination: clamp(1.85rem, 2.3vw, 2.15rem);
   --text-hero-band: clamp(2.15rem, 3.1vw, 3.35rem);
   --text-hero-note: clamp(1.05rem, 1.5vw, 1.45rem);
@@ -74,7 +70,6 @@
   --tracking-tight: -0.045em;
   --tracking-wide: 0.12em;
   --tracking-wider: 0.18em;
-  --tracking-journal: 0.15em;
 
   /* spacing */
   --space-2xs: 0.25rem;
@@ -122,9 +117,7 @@
   --hero-destination-min-height: 13rem;
   --hero-icon-size: 3.4rem;
   --hero-tab-width: 4.5rem;
-  --hero-pattern-size: 11rem;
   --hero-pattern-line: 0.08rem;
-  --hero-node-size: 0.45rem;
   --hero-note-hole-size: 0.28rem;
   --hero-note-hole-gap: 2.1rem;
   --hero-tape-width: 9rem;

@@ -271,19 +271,66 @@ a:focus-visible {
   background: var(--color-paper);
 }
 
-.home-field-pattern,
-.home-band-pattern {
+.field-routes {
   position: absolute;
   inset: 0;
   z-index: -1;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
-  background-image:
-    radial-gradient(circle at 8% 18%, transparent var(--hero-node-size), var(--color-route-light) calc(var(--hero-node-size) + var(--hero-pattern-line)), transparent calc(var(--hero-node-size) + var(--hero-pattern-line) + var(--hero-pattern-line))),
-    radial-gradient(circle at 44% 10%, transparent var(--hero-node-size), var(--color-route-light) calc(var(--hero-node-size) + var(--hero-pattern-line)), transparent calc(var(--hero-node-size) + var(--hero-pattern-line) + var(--hero-pattern-line))),
-    radial-gradient(circle at 82% 33%, transparent var(--hero-node-size), var(--color-route-light) calc(var(--hero-node-size) + var(--hero-pattern-line)), transparent calc(var(--hero-node-size) + var(--hero-pattern-line) + var(--hero-pattern-line))),
-    repeating-linear-gradient(28deg, transparent 0, transparent calc(var(--hero-pattern-size) - var(--hero-pattern-line)), var(--color-route-light) var(--hero-pattern-size)),
-    repeating-linear-gradient(152deg, transparent 0, transparent calc(var(--hero-pattern-size) - var(--hero-pattern-line)), var(--color-route-light) var(--hero-pattern-size));
-  opacity: 0.34;
+}
+
+.field-routes__lines,
+.field-routes__nodes,
+.field-routes__accents {
+  fill: none;
+}
+
+.field-routes__lines path,
+.field-routes__nodes circle,
+.field-routes__accents path {
+  vector-effect: non-scaling-stroke;
+}
+
+.field-routes__lines {
+  stroke-dasharray: 9 9;
+  stroke-linecap: round;
+  stroke-width: 1.2;
+}
+
+.field-routes__nodes {
+  stroke-width: 1.4;
+}
+
+.field-routes__accents {
+  stroke-linecap: round;
+  stroke-width: 1.6;
+}
+
+.field-routes--light .field-routes__lines,
+.field-routes--light .field-routes__nodes {
+  stroke: var(--color-route-light);
+}
+
+.field-routes--light .field-routes__nodes {
+  fill: var(--color-paper);
+}
+
+.field-routes--light .field-routes__accents {
+  stroke: var(--color-field-violet);
+}
+
+.field-routes--dark .field-routes__lines,
+.field-routes--dark .field-routes__nodes {
+  stroke: var(--color-route-dark);
+}
+
+.field-routes--dark .field-routes__nodes {
+  fill: var(--color-aubergine);
+}
+
+.field-routes--dark .field-routes__accents {
+  stroke: var(--color-field-violet-soft);
 }
 
 .home-hero-copy {
@@ -308,21 +355,6 @@ a:focus-visible {
   font-weight: 500;
   letter-spacing: var(--tracking-tight);
   line-height: var(--leading-tight);
-}
-
-.home-hero-kicker {
-  color: var(--color-aubergine);
-  font-family: var(--font-display);
-  font-size: var(--text-hero-kicker);
-  letter-spacing: var(--tracking-journal);
-  line-height: var(--leading-snug);
-  text-transform: uppercase;
-}
-
-.home-hero-intro {
-  max-width: var(--max-width-narrow);
-  font-size: var(--text-hero-intro);
-  line-height: var(--leading-normal);
 }
 
 .home-destinations {
@@ -521,8 +553,10 @@ a:focus-visible {
   margin-top: var(--space-md);
   padding-left: var(--space-sm);
   border-bottom: var(--border-width) solid var(--color-field-violet);
-  font-family: var(--font-note);
+  font-family: var(--font-body);
   font-size: var(--text-hero-note);
+  font-style: italic;
+  font-weight: 500;
   line-height: var(--leading-snug);
   transform: rotate(-1deg);
 }
@@ -534,10 +568,6 @@ a:focus-visible {
   padding: var(--space-xl) var(--space-hero-gutter);
   color: var(--color-on-aubergine);
   background: var(--color-aubergine);
-}
-
-.home-band-pattern {
-  opacity: 0.42;
 }
 
 .home-journal-copy {

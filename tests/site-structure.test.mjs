@@ -177,7 +177,7 @@ test('the token system uses neutral light surfaces with purple reserved for acce
   assert.match(tokens, /--color-bg:\s*oklch\(0\.985 0\.003 290\);/);
   assert.match(tokens, /--color-surface:\s*oklch\(1 0 0\);/);
   assert.match(tokens, /--color-text:\s*oklch\(0\.2 0\.012 290\);/);
-  assert.match(tokens, /--color-accent:\s*oklch\(0\.52 0\.2 295\);/);
+  assert.match(tokens, /--color-accent:\s*var\(--color-field-violet\);/);
 
   const atmosphere = tokens.match(/--gradient-atmosphere:([\s\S]*?);/)?.[1] ?? '';
   assert.doesNotMatch(atmosphere, /radial-gradient/);

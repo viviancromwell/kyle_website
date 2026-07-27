@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
+import FieldRoutes from '../components/FieldRoutes.astro';
 import machuPicchu from '../assets/places/machu-picchu-peru.jpeg';
 import mostarBridge from '../assets/places/mostar-bridge-bosnia.jpeg';
 import baiPeople from '../assets/places/bai-people-china.jpeg';
@@ -12,14 +13,10 @@ import baiPeople from '../assets/places/bai-people-china.jpeg';
 >
   <section class="home-hero-journal" aria-labelledby="home-title">
     <div class="home-hero-paper">
-      <div class="home-field-pattern" aria-hidden="true"></div>
+      <FieldRoutes variant="light" />
 
       <header class="home-hero-copy">
         <h1 id="home-title">Kyle Cromwell</h1>
-        <p class="home-hero-kicker">Personal field journal</p>
-        <p class="home-hero-intro">
-          A growing record of countries visited, places worth remembering, and the interests that still leave a trace.
-        </p>
       </header>
 
       <nav class="home-destinations" aria-label="Explore Kyle's journal">
@@ -82,7 +79,7 @@ import baiPeople from '../assets/places/bai-people-china.jpeg';
     </div>
 
     <div class="home-journal-band">
-      <div class="home-band-pattern" aria-hidden="true"></div>
+      <FieldRoutes variant="dark" />
       <div class="home-journal-copy">
         <h2>A personal<br />field journal</h2>
         <p>Political science, great food,<br />video games, and time with friends.</p>

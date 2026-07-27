@@ -15,6 +15,8 @@ test('homepage exposes the approved notebook hero destinations', async () => {
   assert.match(source, /href="\/places\/"/);
   assert.match(source, /href="\/about\/"/);
   assert.match(source, /class="home-journal-band"/);
+  assert.match(source, /<FieldRoutes variant="light" \/>/);
+  assert.match(source, /<FieldRoutes variant="dark" \/>/);
 });
 
 test('homepage hero uses real travel assets with descriptive alternatives', async () => {
@@ -26,13 +28,14 @@ test('homepage hero uses real travel assets with descriptive alternatives', asyn
   assert.match(source, /loading="eager"/);
 });
 
-test('tokens define the approved paper, aubergine, violet, coral, and type roles', async () => {
+test('tokens define the approved palette and two-family typography system', async () => {
   const source = await readProjectFile('src/styles/tokens.css');
 
-  assert.match(source, /--color-paper:/);
-  assert.match(source, /--color-aubergine:/);
-  assert.match(source, /--color-field-violet:/);
+  assert.match(source, /--color-paper:\s*oklch\(0\.9486 0\.0165 79\.35\);/);
+  assert.match(source, /--color-aubergine:\s*oklch\(0\.2924 0\.0488 293\.35\);/);
+  assert.match(source, /--color-field-violet:\s*oklch\(0\.4502 0\.1397 295\.24\);/);
   assert.match(source, /--color-collegiate-coral:/);
-  assert.match(source, /--font-display:\s*"Literata"/);
-  assert.match(source, /--font-body:\s*"Atkinson Hyperlegible Next"/);
+  assert.match(source, /--font-display:\s*"Cormorant SC"/);
+  assert.match(source, /--font-body:\s*"Avenir Next"/);
+  assert.doesNotMatch(source, /--font-note:/);
 });
