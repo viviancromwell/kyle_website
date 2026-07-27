@@ -30,7 +30,7 @@ Run these in order.
 4. **Capture the pick** — in Claude Code or Codex:
    > I'm choosing direction "[name]". Update DESIGN.md to describe it: mood and references, color direction, typography feeling, spacing and layout feel, motion personality, and what to avoid. Keep my answers from PRODUCT.md in mind. Also confirm the page list in PRODUCT.md — which pages my portfolio needs.
 
-   Steps 1–5 are the in-session work: direction settled. Steps 6–9 happen
+   Steps 1–5 are the in-session work: direction settled. Steps 6–10 happen
    through the week as you build.
 
 5. **Commit**
@@ -47,7 +47,14 @@ Run these in order.
    Repeat with other pieces once the hero feels right. Always read the plan and
    look at the mocks before saying yes — that's the design review habit.
 
-8. **Harvest your components** — after you've styled a few pages, find what
+8. **First real review** — before repeating craft on other pieces:
+   > /impeccable critique the homepage
+
+   Fix the top findings before building anything else. Critique returns in
+   Week 4 for the whole site — this one is just your calibration surface, so
+   flaws don't get copied onto every page you build next.
+
+9. **Harvest your components** — after you've styled a few pages, find what
    you've been repeating and turn it into reusable pieces:
    > /impeccable extract
 
@@ -55,9 +62,9 @@ Run these in order.
    systems are born: pulled out of work, not invented up front. Remember the
    house rule: each new component gets a demo on /showcase.
 
-9. **Lock it in** — your tokens are real code now, so regenerate DESIGN.md from
-   what actually exists:
-   > /impeccable document
+10. **Lock it in** — your tokens are real code now, so regenerate DESIGN.md
+    from what actually exists:
+    > /impeccable document
 
 By Friday: design settled (both files filled in, your tokens live on /showcase),
 navigation settled, and your real work starting to fill the pages. Components
