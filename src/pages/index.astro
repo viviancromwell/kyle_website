@@ -29,7 +29,7 @@ const placeTitle = (file, fallback) =>
 ---
 
 <Base
-  title="Kyle Cromwell — Personal Field Journal"
+  title="Kyle Cromwell — Personal Journal"
   description="Meet Kyle Cromwell through the countries he has visited, places he remembers, and interests that still leave a trace."
 >
   <section class="home-hero-journal" aria-labelledby="home-title">
@@ -45,14 +45,6 @@ const placeTitle = (file, fallback) =>
       </header>
 
       <nav class="home-destinations reveal reveal--late" aria-label="Explore Kyle's journal">
-        <a class="home-about-tab" href="/about/">
-          <span class="home-about-tab-label">About me</span>
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="12" cy="8" r="4"></circle>
-            <path d="M4.5 21c.5-4.2 3-6.5 7.5-6.5s7 2.3 7.5 6.5"></path>
-          </svg>
-        </a>
-
         <a class="home-destination home-destination--countries" href="/countries/">
           <svg class="home-destination-icon" viewBox="0 0 24 24" aria-hidden="true">
             <circle cx="12" cy="12" r="9"></circle>
@@ -69,6 +61,14 @@ const placeTitle = (file, fallback) =>
           </svg>
           <span class="home-destination-title">Interesting<br />Places</span>
           <span class="home-destination-arrow" aria-hidden="true">→</span>
+        </a>
+
+        <a class="home-about-tab" href="/about/">
+          <span class="home-about-tab-label">About me</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="8" r="4"></circle>
+            <path d="M4.5 21c.5-4.2 3-6.5 7.5-6.5s7 2.3 7.5 6.5"></path>
+          </svg>
         </a>
       </nav>
 
@@ -99,7 +99,7 @@ const placeTitle = (file, fallback) =>
       </div>
     </div>
 
-    <div class="home-journal-band">
+    <div class="home-journal-band" role="region" aria-label="Kyle's interests">
       <FieldRoutes variant="dark" />
       <div class="home-journal-copy">
         <p>Political science, great food, video games, and time with friends.</p>
@@ -129,16 +129,25 @@ const placeTitle = (file, fallback) =>
     const figures = ['.home-travel-print', '.home-field-note', '.home-journal-glimpse']
       .map((selector) => document.querySelector(selector))
       .filter(Boolean);
-    const picks = [...heroPool].sort(() => Math.random() - 0.5).slice(0, figures.length);
+    const pool = [...heroPool];
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
     figures.forEach((figure, i) => {
-      const pick = picks[i];
+      const pick = pool[i];
       if (!pick) return;
       const img = figure.querySelector('img');
       const caption = figure.querySelector('figcaption');
+      img.style.opacity = '0';
       img.src = pick.src;
       img.srcset = pick.srcset;
       img.alt = pick.alt;
       if (caption) caption.textContent = pick.alt;
+      const show = () => {
+        img.style.opacity = '1';
+      };
+      img.decode().then(show, show);
     });
   </script>
 </Base>
