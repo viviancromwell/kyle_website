@@ -247,21 +247,16 @@ a:focus-visible {
 }
 
 .home-hero-journal {
-  min-height: 100svh;
   color: var(--color-soft-charcoal);
   background: var(--color-paper);
 }
 
+/* The field note and glimpse print cross the paper/band boundary in both
+   directions, so neither section may isolate or raise itself: the sections
+   stay unstacked and the crossing elements carry their own z-index. */
 .home-hero-paper,
 .home-journal-band {
   position: relative;
-  isolation: isolate;
-}
-
-/* The field note and glimpse print cross the paper/band boundary; the paper
-   layer must paint above the band for the overlap to survive. */
-.home-hero-paper {
-  z-index: 1;
 }
 
 .home-hero-paper {
@@ -279,7 +274,6 @@ a:focus-visible {
 .field-routes {
   position: absolute;
   inset: 0;
-  z-index: -1;
   width: 100%;
   height: 100%;
   pointer-events: none;
@@ -298,7 +292,7 @@ a:focus-visible {
 }
 
 .field-routes__lines {
-  stroke-dasharray: 9 9;
+  stroke-dasharray: 6 7;
   stroke-linecap: round;
   stroke-width: 1.2;
 }
@@ -322,7 +316,7 @@ a:focus-visible {
 }
 
 .field-routes--light .field-routes__accents {
-  stroke: var(--color-field-violet);
+  stroke: var(--color-field-violet-soft);
 }
 
 .field-routes--dark .field-routes__lines,
@@ -335,7 +329,7 @@ a:focus-visible {
 }
 
 .field-routes--dark .field-routes__accents {
-  stroke: var(--color-field-violet-soft);
+  stroke: var(--color-route-dark);
 }
 
 .home-hero-copy {
@@ -461,23 +455,19 @@ a:focus-visible {
   border-radius: var(--radius-note);
 }
 
-/* Spiral-notebook perforations straddling the top edge; the hole shows the
-   page paper through the punched ring. */
+/* Torn spiral-binding stubs rising above the top edge, per the approved
+   direction. Embedded colors mirror --color-paper-raised / --color-note-hole. */
 .home-destination::before,
 .home-field-note::before {
   position: absolute;
-  top: calc(var(--hero-ring-size) / -2);
+  top: calc(var(--hero-binding-height) * -1 + var(--border-width));
   right: var(--space-md);
   left: var(--space-md);
-  height: var(--hero-ring-size);
-  background-image: radial-gradient(
-    circle,
-    var(--color-paper) 0 var(--hero-ring-hole),
-    var(--color-note-hole) var(--hero-ring-hole) calc(var(--hero-ring-hole) + var(--hero-pattern-line)),
-    transparent calc(var(--hero-ring-hole) + var(--hero-pattern-line) * 2)
-  );
-  background-position: center;
-  background-size: var(--hero-note-hole-gap) var(--hero-ring-size);
+  height: var(--hero-binding-height);
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2029%2022'%3E%3Crect%20x='9'%20y='1.5'%20width='11'%20height='34'%20rx='5.5'%20fill='%23F8F2E7'%20stroke='%23C2BAAD'%20stroke-width='1.6'/%3E%3C/svg%3E");
+  background-position: left bottom;
+  background-repeat: repeat-x;
+  background-size: var(--hero-binding-gap) 100%;
   content: "";
 }
 
@@ -543,7 +533,7 @@ a:focus-visible {
 
 .home-hero-media {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: grid;
   grid-area: media;
   gap: var(--space-md);
@@ -580,6 +570,20 @@ a:focus-visible {
   aspect-ratio: 1 / 1;
 }
 
+/* Washi-tape material shared by both tape pieces: the texture is cropped
+   straight from the approved direction (design/directions/03-direction-v5.png),
+   torn ends via clip-path. */
+.home-travel-tape,
+.home-note-tape {
+  background: url("../assets/home/tape-washi.png") center / cover no-repeat;
+  box-shadow: var(--shadow-tape);
+  clip-path: polygon(
+    0 8%, 1.5% 0, 98% 3%, 100% 10%, 98.8% 32%, 100% 52%, 98.5% 78%, 100% 94%,
+    97.5% 100%, 2% 97%, 0 88%, 1.2% 66%, 0 42%, 1% 18%
+  );
+  opacity: 0.9;
+}
+
 .home-travel-tape {
   position: absolute;
   top: var(--space-hero-overlap-sm);
@@ -587,9 +591,6 @@ a:focus-visible {
   z-index: 1;
   width: var(--hero-tape-width);
   height: var(--hero-tape-height);
-  background: var(--color-field-violet-soft);
-  box-shadow: var(--shadow-tape);
-  opacity: 0.7;
   transform: translateX(-50%) rotate(-1deg);
 }
 
@@ -605,7 +606,7 @@ a:focus-visible {
   background-color: var(--color-paper-raised);
   background-image: repeating-linear-gradient(to bottom, transparent 0, transparent var(--space-lg), var(--color-paper-line) calc(var(--space-lg) + var(--hero-pattern-line)));
   box-shadow: var(--shadow-note);
-  transform: rotate(1.25deg);
+  transform: rotate(2.5deg);
 }
 
 .home-note-tape {
@@ -615,9 +616,6 @@ a:focus-visible {
   z-index: 1;
   width: calc(var(--hero-tape-width) * 0.66);
   height: var(--hero-tape-height);
-  background: var(--color-field-violet-soft);
-  box-shadow: var(--shadow-tape);
-  opacity: 0.7;
   transform: rotate(75deg);
 }
 
@@ -628,25 +626,11 @@ a:focus-visible {
   opacity: 0.74;
 }
 
-.home-field-note figcaption {
-  display: grid;
-  gap: var(--space-2xs);
-  margin-top: var(--space-md);
-  padding-left: var(--space-sm);
-  border-bottom: var(--border-width) solid var(--color-field-violet);
-  font-family: var(--font-body);
-  font-size: var(--text-hero-note);
-  font-style: italic;
-  font-weight: 500;
-  line-height: var(--leading-snug);
-  transform: rotate(-1deg);
-}
-
 .home-journal-band {
   display: grid;
-  gap: var(--space-xl);
+  gap: var(--space-lg);
   min-height: var(--hero-band-min-height);
-  padding: var(--space-xl) var(--space-hero-gutter);
+  padding: var(--space-lg) var(--space-hero-gutter);
   color: var(--color-on-aubergine);
   background: var(--color-aubergine);
 }
@@ -658,36 +642,12 @@ a:focus-visible {
   gap: var(--space-md);
   align-content: start;
   padding-left: var(--space-lg);
-  border-left: var(--border-width) solid var(--color-collegiate-coral);
-}
-
-.home-journal-copy h2,
-.home-journal-copy p {
-  margin-bottom: 0;
-}
-
-.home-journal-copy h2 {
-  position: relative;
-  padding-bottom: var(--space-md);
-  font-size: var(--text-hero-band);
-  font-weight: 500;
-  letter-spacing: var(--tracking-tight);
-  line-height: var(--leading-snug);
-  text-transform: uppercase;
-}
-
-.home-journal-copy h2::after {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: var(--space-xl);
-  height: var(--hero-pattern-line);
-  background: var(--color-collegiate-coral);
-  content: "";
+  border-left: var(--border-width) solid var(--color-collegiate-coral-soft);
 }
 
 .home-journal-copy p {
   max-width: var(--max-width-intro);
+  margin-bottom: 0;
   color: var(--color-on-aubergine);
   font-size: var(--text-lg);
 }
@@ -720,7 +680,7 @@ a:focus-visible {
 
 .home-archive-links a:hover {
   color: var(--color-paper);
-  border-color: var(--color-collegiate-coral);
+  border-color: var(--color-collegiate-coral-soft);
 }
 
 .home-journal-glimpse {
@@ -1110,13 +1070,13 @@ a:focus-visible {
   }
 
   .home-travel-print {
-    width: 78%;
+    width: 68%;
     justify-self: end;
   }
 
   .home-field-note {
-    width: 64%;
-    margin-top: var(--space-hero-overlap-sm);
+    width: 60%;
+    margin-top: calc(var(--space-xl) * -1);
     margin-left: var(--space-lg);
     justify-self: start;
   }
@@ -1224,7 +1184,7 @@ a:focus-visible {
 
   .home-journal-band {
     grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
-    padding-block: var(--space-lg);
+    padding-block: var(--space-md);
   }
 
   .home-journal-glimpse {

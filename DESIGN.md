@@ -14,7 +14,7 @@ Approachable personal field journal with a contemporary college-notebook feel. I
 - Soft Charcoal `#252129` for light-theme text
 - Deep Aubergine `#2D2742` for the committed dark journal band
 - Field Violet `#5D4099` for the single primary accent and route details
-- Collegiate Coral `#C2604E` for secondary emphasis
+- Collegiate Coral `#C62615` for secondary emphasis on paper, with `#EF7552` as its lighter companion on the aubergine band
 
 The cream and both purple roles are sampled from the approved homepage direction. Field Violet is the only primary purple and drives shared accent, focus, link, and route-detail tokens. Deep Aubergine is its dark surface companion, not a competing accent. Paper remains creamy and clean, without sepia, vignette, staining, or darkened corners.
 
@@ -38,8 +38,9 @@ The lower aubergine band introduces Kyle's academic and personal interests and k
 
 ## Signature details
 
-- Sparse dashed mapped routes, outlined nodes, and violet crosses on both paper and purple fields
-- Clean notebook perforations and ruled paper
+- Sparse fine dashed mapped routes, outlined nodes, and violet crosses on the paper field
+- A fine stitched diamond lattice with rings and crosses giving the aubergine band a journal-cover feel
+- Torn spiral-binding stubs above panel and note top edges, with ruled paper
 - Pale violet tape and crisp off-white print borders
 - Slight, controlled overlap between the travel print and field note, with the note descending into the aubergine band and the band print rising to meet it
 

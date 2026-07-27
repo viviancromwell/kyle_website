@@ -1,3 +1,4 @@
+<!-- Standalone asset: colors mirror the DESIGN.md palette (Warm Paper #F4EDE2, Field Violet #5D4099); keep in sync with tokens.css. -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
   <rect width="32" height="32" rx="6" fill="#F4EDE2"/>
   <path d="M5 23Q11 9 17 17T29 11" fill="none" stroke="#5D4099" stroke-width="2" stroke-dasharray="3 3" stroke-linecap="round"/>

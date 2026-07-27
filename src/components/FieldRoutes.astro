@@ -13,48 +13,51 @@ const isDark = variant === 'dark';
   {
     isDark ? (
       <>
-        <g class="field-routes__lines">
-          <path d="M-100 520 250 160 590 500 920 150 1290 520" />
-          <path d="M-90 210 240 540 555 215 880 545 1190 220 1300 330" />
-          <path d="M20 700 365 350 705 700" />
-          <path d="M665 40 1000 375 1260 105" />
-        </g>
+        <defs>
+          <pattern id="field-routes-lattice" width="104" height="104" patternUnits="userSpaceOnUse">
+            <path class="field-routes__lines" d="M0 52 52 0l52 52M0 52l52 52 52-52" />
+          </pattern>
+        </defs>
+        <rect class="field-routes__lattice" width="1200" height="720" fill="url(#field-routes-lattice)" />
         <g class="field-routes__nodes">
-          <circle cx="250" cy="160" r="10" />
-          <circle cx="240" cy="540" r="9" />
-          <circle cx="590" cy="500" r="11" />
-          <circle cx="555" cy="215" r="8" />
-          <circle cx="880" cy="545" r="10" />
-          <circle cx="920" cy="150" r="8" />
-          <circle cx="1190" cy="220" r="7" />
+          <circle cx="416" cy="156" r="7" />
+          <circle cx="728" cy="260" r="8" />
+          <circle cx="1040" cy="104" r="6" />
+          <circle cx="208" cy="416" r="7" />
+          <circle cx="624" cy="520" r="6" />
+          <circle cx="936" cy="572" r="7" />
+          <circle cx="1144" cy="364" r="8" />
         </g>
         <g class="field-routes__accents">
-          <path d="m1050 565 18 18m0-18-18 18" />
-          <path d="m740 115 14 14m0-14-14 14" />
+          <path d="m520 416 12 12m0-12-12 12" />
+          <path d="m884 130 10 10m0-10-10 10" />
+          <path d="m164 600 10 10m0-10-10 10" />
         </g>
       </>
     ) : (
       <>
         <g class="field-routes__lines">
-          <path d="M-80 105C45 25 120 170 245 95S455 45 565 125s210 105 330-10 225-80 365-25" />
-          <path d="M-60 500c120-125 235 75 355-25s260-145 385-20 285 125 430 10 190-95 245-60" />
-          <path d="M265-45c85 95 110 190 45 280s-25 180 70 245" />
-          <path d="M940-35c-70 110-45 205 40 285s105 175 35 275" />
+          <path d="M-40 88c70-34 128 26 198 4s130-44 200-10 138 40 208 8 140-36 210-4 132 34 202 6" />
+          <path d="M-30 470c76-40 140 24 212 0s136-38 206-6 138 36 208 6 138-32 208-2 130 30 200 4" />
+          <path d="M300-30c40 62 30 118-12 168s-50 104-8 158" />
+          <path d="M905-25c-36 58-28 112 12 160s52 100 16 154" />
         </g>
         <g class="field-routes__nodes">
-          <circle cx="78" cy="89" r="8" />
-          <circle cx="245" cy="95" r="9" />
-          <circle cx="565" cy="125" r="10" />
-          <circle cx="895" cy="115" r="8" />
-          <circle cx="295" cy="475" r="9" />
-          <circle cx="680" cy="455" r="8" />
-          <circle cx="1110" cy="465" r="10" />
+          <circle cx="158" cy="80" r="5.5" />
+          <circle cx="358" cy="86" r="6" />
+          <circle cx="566" cy="98" r="5" />
+          <circle cx="774" cy="92" r="6" />
+          <circle cx="982" cy="96" r="5" />
+          <circle cx="182" cy="452" r="6" />
+          <circle cx="600" cy="470" r="5.5" />
+          <circle cx="1006" cy="472" r="6" />
         </g>
         <g class="field-routes__accents">
-          <path d="m175 52 16 16m0-16-16 16" />
-          <path d="M498 48v28m-14-14h28" />
-          <path d="m620 350 18 18m0-18-18 18" />
-          <path d="m1085 75 17 17m0-17-17 17" />
+          <path d="m262 60 11 11m0-11-11 11" />
+          <path d="M478 52v18m-9-9h18" />
+          <path d="m700 350 11 11m0-11-11 11" />
+          <path d="m1076 64 11 11m0-11-11 11" />
+          <path d="m86 540 10 10m0-10-10 10" />
         </g>
       </>
     )
