@@ -763,23 +763,21 @@ a:focus-visible {
   border-color: var(--color-on-aubergine);
 }
 
-/* Journal ground continues under the footer on the home route. */
+/* Thin cream strip below the band on the home route. */
 .home-route .site-footer {
   max-width: none;
-  padding-block: var(--space-lg);
+  padding-block: var(--space-md);
   padding-inline: var(--space-hero-gutter);
   border-top: none;
-  color: var(--color-on-aubergine-muted);
-  background: var(--color-aubergine);
+  color: var(--color-caption-ink);
+  background: var(--color-paper);
   font-family: var(--font-body);
   letter-spacing: normal;
   text-transform: none;
 }
 
 .home-route .site-footer a {
-  --color-focus: var(--color-collegiate-coral-soft);
-
-  color: var(--color-on-aubergine);
+  color: var(--color-field-violet);
 }
 
 .home-journal-glimpse {
