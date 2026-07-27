@@ -1,25 +1,33 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
+import machuPicchu from '../assets/places/machu-picchu-peru.jpeg';
 
 const colors = [
-  ['ds-chip--bg-deep', '--color-bg-deep', 'Deep background', 'page depth'],
-  ['ds-chip--bg', '--color-bg', 'Background', 'atmosphere'],
-  ['ds-chip--surface', '--color-surface', 'Surface', 'cards, panels'],
-  ['ds-chip--raised', '--color-surface-raised', 'Raised surface', 'hover depth'],
-  ['ds-chip--text', '--color-text', 'Text', 'headings, body'],
-  ['ds-chip--secondary', '--color-text-secondary', 'Secondary text', 'supporting copy'],
-  ['ds-chip--border', '--color-border', 'Border', 'dividers, outlines'],
-  ['ds-chip--accent', '--color-accent', 'Purple accent', 'links, status, focus'],
-  ['ds-chip--accent-soft', '--color-accent-soft', 'Lavender tint', 'highlights, labels'],
+  ['ds-chip--paper', '--color-paper', 'Warm Paper', 'main notebook ground'],
+  ['ds-chip--paper-raised', '--color-paper-raised', 'Paper Raised', 'notepads, prints, tabs'],
+  ['ds-chip--paper-muted', '--color-paper-muted', 'Paper Muted', 'panel borders'],
+  ['ds-chip--paper-line', '--color-paper-line', 'Paper Line', 'ruled note lines'],
+  ['ds-chip--charcoal', '--color-soft-charcoal', 'Soft Charcoal', 'light-theme text'],
+  ['ds-chip--caption', '--color-caption-ink', 'Caption Ink', 'print captions'],
+  ['ds-chip--aubergine', '--color-aubergine', 'Deep Aubergine', 'journal-cover band'],
+  ['ds-chip--violet', '--color-field-violet', 'Field Violet', 'primary accent, countries, focus'],
+  ['ds-chip--violet-soft', '--color-field-violet-soft', 'Field Violet Soft', 'washi tape, dark-route accents'],
+  ['ds-chip--coral', '--color-collegiate-coral', 'Collegiate Coral', 'places accent on paper'],
+  ['ds-chip--coral-soft', '--color-collegiate-coral-soft', 'Coral Soft', 'links and focus on aubergine'],
+  ['ds-chip--on-aubergine', '--color-on-aubergine', 'On Aubergine', 'band text'],
+  ['ds-chip--on-aubergine-muted', '--color-on-aubergine-muted', 'On Aubergine Muted', 'band labels'],
+  ['ds-chip--route-light', '--color-route-light', 'Route Light', 'paper route strokes'],
+  ['ds-chip--route-dark', '--color-route-dark', 'Route Dark', 'band lattice strokes'],
 ];
 
-const sizes = [
-  ['ds-type-sample--xs', '--text-xs'],
-  ['ds-type-sample--sm', '--text-sm'],
-  ['ds-type-sample--base', '--text-base'],
-  ['ds-type-sample--lg', '--text-lg'],
-  ['ds-type-sample--xl', '--text-xl'],
-  ['ds-type-sample--2xl', '--text-2xl'],
+const typeRoles = [
+  ['ds-type--display', '--text-hero-name', 'Display · Cormorant SC 500', 'Kyle Cromwell'],
+  ['ds-type--headline', '--text-hero-destination', 'Headline · Cormorant SC 500, uppercase', 'Visited Countries'],
+  ['ds-type--kicker', '--text-hero-kicker', 'Kicker · Cormorant SC 600, Field Violet', 'Personal Journal'],
+  ['ds-type--body', '--text-base', 'Body · Avenir Next 400', 'A growing record of countries visited, places worth remembering.'],
+  ['ds-type--label', '--text-sm', 'Label · Avenir Next 600, tracked uppercase', 'Older archives'],
+  ['ds-type--caption', '--text-sm', 'Caption · Avenir Next italic, Caption Ink', 'Machu Picchu, Peru'],
 ];
 
 const spaces = [
@@ -33,19 +41,27 @@ const spaces = [
 ];
 
 const radii = [
-  ['ds-radius-demo--sm', '--radius-sm', 'tags and focusable controls'],
+  ['ds-radius-demo--print', '--radius-print', 'photographic prints'],
+  ['ds-radius-demo--note', '--radius-note', 'notepads, tabs, the field note'],
+  ['ds-radius-demo--sm', '--radius-sm', 'small controls'],
   ['ds-radius-demo--md', '--radius-md', 'compact surfaces'],
-  ['ds-radius-demo--lg', '--radius-lg', 'atlas cards and navigation'],
+  ['ds-radius-demo--lg', '--radius-lg', 'interior-page cards'],
+];
+
+const shadows = [
+  ['ds-shadow-demo--paper', '--shadow-paper', 'prints; hover state of pressables'],
+  ['ds-shadow-demo--note', '--shadow-note', 'notepads and tabs at rest'],
+  ['ds-shadow-demo--tape', '--shadow-tape', 'washi tape pieces'],
 ];
 
 const navSections = [
-  ['Foundations', [['#color', 'Color'], ['#typography', 'Typography'], ['#spacing', 'Spacing']]],
-  ['Attributes', [['#radius', 'Radius']]],
-  ['Components', [['#component-nav', 'Navigation'], ['#component-portal', 'Portal Card'], ['#component-status', 'Status']]],
+  ['Foundations', [['#color', 'Color'], ['#typography', 'Typography'], ['#spacing', 'Spacing'], ['#radius', 'Radius'], ['#elevation', 'Elevation']]],
+  ['Journal components', [['#component-panel', 'Notepad Panel'], ['#component-tab', 'About Tab'], ['#component-print', 'Travel Print'], ['#component-band', 'Band + Archives']]],
+  ['Interior shell', [['#component-nav', 'Navigation']]],
 ];
 ---
 
-<Base title="Kyle’s Field Atlas — Design System">
+<Base title="Kyle Cromwell — Design System">
   <div class="ds-layout">
     <nav class="ds-nav" aria-label="Design system contents">
       {navSections.map(([group, links]) => (
@@ -62,10 +78,11 @@ const navSections = [
 
     <article>
       <header class="ds-header">
-        <p class="eyebrow">System reference · 2026</p>
-        <h1>Kyle’s<br />Field Atlas</h1>
+        <h1>The College<br />Field Journal</h1>
         <p class="ds-intro">
-          A white, neutral foundation keeps the content clear; purple is reserved for navigation states, status, focus, and small moments of emphasis.
+          Cream notepads, taped prints, ruled paper, and one aubergine journal-cover band. Violet
+          carries countries, coral carries places, and every value below renders live from
+          <code>tokens.css</code>.
         </p>
       </header>
 
@@ -88,16 +105,26 @@ const navSections = [
             </tbody>
           </table>
         </div>
+        <p class="ds-note">
+          The Dark-Band Coral Rule: on Deep Aubergine, interactive affordances use Coral Soft, never
+          Field Violet.
+        </p>
       </section>
 
       <section id="typography">
         <h2>Typography</h2>
-        <p class="ds-note">Avenir Next carries the large editorial voice; the system mono face labels the archive.</p>
+        <p class="ds-note">
+          Two families only: Cormorant SC for display and Avenir Next for everything else. The
+          notebook character comes from composition and materials, not a handwriting font.
+        </p>
         <div class="ds-type-scale">
-          {sizes.map(([className, token]) => (
+          {typeRoles.map(([className, token, role, sample]) => (
             <div class="ds-type-row">
-              <code>{token}</code>
-              <p class:list={['ds-type-sample', className]}>Field notes from elsewhere</p>
+              <div class="ds-type-meta">
+                <code>{token}</code>
+                <span class="ds-use">{role}</span>
+              </div>
+              <p class:list={['ds-type-sample', className]}>{sample}</p>
             </div>
           ))}
         </div>
@@ -130,8 +157,109 @@ const navSections = [
         </div>
       </section>
 
+      <section id="elevation">
+        <h2>Elevation</h2>
+        <p class="ds-note">
+          The Whisper-Shadow Rule: shadow opacity never exceeds 0.09. Depth comes from overlap,
+          rotation, and tape, not lift.
+        </p>
+        <div class="ds-radius-grid">
+          {shadows.map(([className, token, use]) => (
+            <figure class="ds-radius-card">
+              <div class:list={['ds-shadow-demo', className]}></div>
+              <figcaption>
+                <code>{token}</code>
+                <span class="ds-use">{use}</span>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </section>
+
+      <section id="component-panel">
+        <h2>Notepad Panel</h2>
+        <div class="ds-demo ds-demo--paper ds-demo--roomy">
+          <a class="home-destination home-destination--countries ds-panel-demo" href="/countries/">
+            <svg class="home-destination-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"></circle>
+              <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"></path>
+            </svg>
+            <span class="home-destination-title">Visited<br />Countries</span>
+            <span class="home-destination-arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+        <p class="ds-note">
+          A sheet torn from a spiral notebook: binding keyholes along the top edge, role-colored
+          icon, uppercase Cormorant title with inline arrow, and a rule with a ring node. Hover
+          lifts; press scales down.
+        </p>
+      </section>
+
+      <section id="component-tab">
+        <h2>About Tab</h2>
+        <div class="ds-demo ds-demo--paper">
+          <a class="home-about-tab" href="/about/">
+            <span class="home-about-tab-label">About me</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="8" r="4"></circle>
+              <path d="M4.5 21c.5-4.2 3-6.5 7.5-6.5s7 2.3 7.5 6.5"></path>
+            </svg>
+          </a>
+        </div>
+        <p class="ds-note">
+          The quieter bookmark. Vertical with a violet cap at desktop widths (tucked behind the
+          countries panel on the homepage, sliding out on hover and focus); a horizontal chip below
+          72rem.
+        </p>
+      </section>
+
+      <section id="component-print">
+        <h2>Travel Print</h2>
+        <div class="ds-demo ds-demo--paper ds-demo--roomy">
+          <figure class="home-travel-print ds-print-demo">
+            <span class="home-travel-tape" aria-hidden="true"></span>
+            <Image
+              src={machuPicchu}
+              alt="Machu Picchu emerging through low clouds in Peru"
+              widths={[480]}
+              sizes="20rem"
+              loading="lazy"
+            />
+            <figcaption>Machu Picchu, Peru</figcaption>
+          </figure>
+        </div>
+        <p class="ds-note">
+          A photograph as a physical object: white border, sampled washi tape with torn clip-path
+          ends, controlled rotation, and a Caption Ink label. On the homepage the three prints
+          shuffle per visit and fade in only after the replacement has decoded.
+        </p>
+      </section>
+
+      <section id="component-band">
+        <h2>Band + Archives</h2>
+        <div class="ds-demo ds-demo--aubergine">
+          <p class="ds-band-copy">Political science, great food, video games, and time with friends.</p>
+          <nav class="home-archive-links" aria-label="Archive links demo">
+            <span class="home-archive-label">Older archives</span>
+            <span class="home-archive-pair">
+              <span class="home-archive-sep" aria-hidden="true">·</span>
+              <a href="/chocolate/">Chocolate</a>
+            </span>
+            <span class="home-archive-pair">
+              <span class="home-archive-sep" aria-hidden="true">·</span>
+              <a href="/poems/">Poems</a>
+            </span>
+          </nav>
+        </div>
+        <p class="ds-note">
+          The journal-cover band. Real links carry a plain Coral Soft underline; the label stays
+          muted and unlinked; separators are bound to their links so a wrap cannot strand them.
+          Focus rings re-scope to Coral Soft on this ground.
+        </p>
+      </section>
+
       <section id="component-nav">
-        <h2>Navigation</h2>
+        <h2>Navigation (interior shell)</h2>
         <div class="ds-demo ds-nav-demo">
           <a href="#component-nav" class="nav-name">Kyle Cromwell</a>
           <div class="nav-links">
@@ -140,30 +268,10 @@ const navSections = [
             <a href="#component-nav">About Me</a>
           </div>
         </div>
-        <p class="ds-note">One identity anchor and three top-level destinations. Retired hobbies remain contextual links inside About Me.</p>
-      </section>
-
-      <section id="component-portal">
-        <h2>Portal Card</h2>
-        <div class="ds-demo">
-          <a class="portal-card" href="#component-portal">
-            <span class="archive-index">Atlas · 01</span>
-            <div>
-              <h2>Visited Countries</h2>
-              <p>Passport stamps, field notes, and the details that stayed.</p>
-            </div>
-            <span class="portal-link">Open the atlas</span>
-          </a>
-        </div>
-        <p class="ds-note">Primary destination cards combine an archive index, editorial title, short description, and directional action.</p>
-      </section>
-
-      <section id="component-status">
-        <h2>Status</h2>
-        <div class="ds-demo">
-          <span class="status-label">Field notes in progress</span>
-        </div>
-        <p class="ds-note">Coming-soon content stays honest and intentional through the mono status treatment.</p>
+        <p class="ds-note">
+          Starter shell, still monospace: functional on interior pages but outside the Two-Family
+          Rule. Slated for replacement as each page is redesigned; not a pattern for new work.
+        </p>
       </section>
     </article>
   </div>
@@ -267,37 +375,83 @@ const navSections = [
     border-radius: var(--radius-sm);
   }
 
-  .ds-chip--bg-deep { background: var(--color-bg-deep); }
-  .ds-chip--bg { background: var(--color-bg); }
-  .ds-chip--surface { background: var(--color-surface); }
-  .ds-chip--raised { background: var(--color-surface-raised); }
-  .ds-chip--text { background: var(--color-text); }
-  .ds-chip--secondary { background: var(--color-text-secondary); }
-  .ds-chip--border { background: var(--color-border); }
-  .ds-chip--accent { background: var(--color-accent); }
-  .ds-chip--accent-soft { background: var(--color-accent-soft); }
+  .ds-chip--paper { background: var(--color-paper); }
+  .ds-chip--paper-raised { background: var(--color-paper-raised); }
+  .ds-chip--paper-muted { background: var(--color-paper-muted); }
+  .ds-chip--paper-line { background: var(--color-paper-line); }
+  .ds-chip--charcoal { background: var(--color-soft-charcoal); }
+  .ds-chip--caption { background: var(--color-caption-ink); }
+  .ds-chip--aubergine { background: var(--color-aubergine); }
+  .ds-chip--violet { background: var(--color-field-violet); }
+  .ds-chip--violet-soft { background: var(--color-field-violet-soft); }
+  .ds-chip--coral { background: var(--color-collegiate-coral); }
+  .ds-chip--coral-soft { background: var(--color-collegiate-coral-soft); }
+  .ds-chip--on-aubergine { background: var(--color-on-aubergine); }
+  .ds-chip--on-aubergine-muted { background: var(--color-on-aubergine-muted); }
+  .ds-chip--route-light { background: var(--color-route-light); }
+  .ds-chip--route-dark { background: var(--color-route-dark); }
 
   .ds-type-row,
   .ds-space-row {
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-columns: minmax(12rem, auto) minmax(0, 1fr);
     gap: var(--space-md);
     align-items: center;
-    padding-block: var(--space-xs);
+    padding-block: var(--space-sm);
     border-bottom: var(--border-width) solid var(--color-border);
+  }
+
+  .ds-type-meta {
+    display: grid;
+    gap: var(--space-2xs);
   }
 
   .ds-type-sample {
     margin: 0;
-    line-height: var(--leading-tight);
+    overflow-wrap: anywhere;
+    line-height: var(--leading-snug);
   }
 
-  .ds-type-sample--xs { font-size: var(--text-xs); }
-  .ds-type-sample--sm { font-size: var(--text-sm); }
-  .ds-type-sample--base { font-size: var(--text-base); }
-  .ds-type-sample--lg { font-size: var(--text-lg); }
-  .ds-type-sample--xl { font-size: var(--text-xl); }
-  .ds-type-sample--2xl { font-size: var(--text-2xl); }
+  .ds-type--display {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-weight: 500;
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .ds-type--headline {
+    font-family: var(--font-display);
+    font-size: var(--text-hero-destination);
+    font-weight: 500;
+    letter-spacing: var(--tracking-tight);
+    text-transform: uppercase;
+  }
+
+  .ds-type--kicker {
+    color: var(--color-field-violet);
+    font-family: var(--font-display);
+    font-size: var(--text-hero-kicker);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+  }
+
+  .ds-type--body {
+    font-size: var(--text-base);
+  }
+
+  .ds-type--label {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+  }
+
+  .ds-type--caption {
+    color: var(--color-caption-ink);
+    font-size: var(--text-sm);
+    font-style: italic;
+  }
 
   .ds-space-scale {
     display: grid;
@@ -307,7 +461,7 @@ const navSections = [
   .ds-space-bar {
     height: var(--space-sm);
     border-radius: var(--radius-pill);
-    background: var(--gradient-accent);
+    background: var(--color-field-violet);
   }
 
   .ds-space-bar--2xs { width: var(--space-2xs); }
@@ -333,22 +487,71 @@ const navSections = [
   .ds-radius-demo {
     height: var(--space-2xl);
     border: var(--border-width) solid var(--color-border);
-    background: var(--gradient-surface);
+    background: var(--color-paper-raised);
   }
 
+  .ds-radius-demo--print { border-radius: var(--radius-print); }
+  .ds-radius-demo--note { border-radius: var(--radius-note); }
   .ds-radius-demo--sm { border-radius: var(--radius-sm); }
   .ds-radius-demo--md { border-radius: var(--radius-md); }
   .ds-radius-demo--lg { border-radius: var(--radius-lg); }
+
+  .ds-shadow-demo {
+    height: var(--space-2xl);
+    border-radius: var(--radius-note);
+    background: var(--color-paper-raised);
+  }
+
+  .ds-shadow-demo--paper { box-shadow: var(--shadow-paper); }
+  .ds-shadow-demo--note { box-shadow: var(--shadow-note); }
+  .ds-shadow-demo--tape { box-shadow: var(--shadow-tape); }
 
   .ds-radius-card figcaption {
     display: grid;
   }
 
   .ds-demo {
+    position: relative;
+    isolation: isolate;
     padding: var(--space-lg);
     border: var(--border-width) solid var(--color-border);
     border-radius: var(--radius-lg);
     background: var(--color-bg-subtle);
+  }
+
+  .ds-demo--paper {
+    background: var(--color-paper);
+  }
+
+  .ds-demo--roomy {
+    padding-top: var(--space-xl);
+  }
+
+  .ds-demo--aubergine {
+    display: grid;
+    gap: var(--space-md);
+    color: var(--color-on-aubergine);
+    background: var(--color-aubergine);
+  }
+
+  .ds-band-copy {
+    margin: 0;
+    font-size: var(--text-lg);
+  }
+
+  .ds-panel-demo {
+    max-width: var(--max-width-narrow);
+  }
+
+  /* The homepage's desktop layout rules position the print absolutely;
+     the demo copy stays in flow. */
+  .ds-print-demo {
+    position: static;
+    top: auto;
+    right: auto;
+    width: 100%;
+    max-width: 20rem;
+    margin-inline: auto;
   }
 
   .ds-nav-demo {
@@ -357,10 +560,6 @@ const navSections = [
     gap: var(--space-lg);
     align-items: center;
     justify-content: space-between;
-  }
-
-  .ds-demo .portal-card {
-    min-height: var(--min-height-card);
   }
 
   @media (min-width: 52rem) {
