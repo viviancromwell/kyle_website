@@ -1,50 +1,107 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
+import machuPicchu from '../assets/places/machu-picchu-peru.jpeg';
+import mostarBridge from '../assets/places/mostar-bridge-bosnia.jpeg';
+import baiPeople from '../assets/places/bai-people-china.jpeg';
 ---
 
-<Base>
-  <section class="home-hero reveal">
-    <div class="home-hero-copy">
-      <p class="eyebrow">Personal field atlas · Est. 2026</p>
-      <h1 class="display-title">Kyle<br /><span>Cromwell</span></h1>
-      <p class="lede">
-        A growing record of countries visited, places worth remembering, and the interests that still leave a trace.
-      </p>
+<Base
+  title="Kyle Cromwell — Personal Field Journal"
+  description="Meet Kyle Cromwell through the countries he has visited, places he remembers, and interests that still leave a trace."
+>
+  <section class="home-hero-journal" aria-labelledby="home-title">
+    <div class="home-hero-paper">
+      <div class="home-field-pattern" aria-hidden="true"></div>
+
+      <header class="home-hero-copy">
+        <h1 id="home-title">Kyle Cromwell</h1>
+        <p class="home-hero-kicker">Personal field journal</p>
+        <p class="home-hero-intro">
+          A growing record of countries visited, places worth remembering, and the interests that still leave a trace.
+        </p>
+      </header>
+
+      <nav class="home-destinations" aria-label="Explore Kyle's journal">
+        <a class="home-about-tab" href="/about/">
+          <span>About me</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="8" r="4"></circle>
+            <path d="M4.5 21c.5-4.2 3-6.5 7.5-6.5s7 2.3 7.5 6.5"></path>
+          </svg>
+        </a>
+
+        <a class="home-destination home-destination--countries" href="/countries/">
+          <svg class="home-destination-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="9"></circle>
+            <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"></path>
+          </svg>
+          <span class="home-destination-title">Visited<br />Countries</span>
+          <span class="home-destination-arrow" aria-hidden="true">→</span>
+        </a>
+
+        <a class="home-destination home-destination--places" href="/places/">
+          <svg class="home-destination-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 22s7-6.4 7-13a7 7 0 1 0-14 0c0 6.6 7 13 7 13Z"></path>
+            <circle cx="12" cy="9" r="2.5"></circle>
+          </svg>
+          <span class="home-destination-title">Interesting<br />Places</span>
+          <span class="home-destination-arrow" aria-hidden="true">→</span>
+        </a>
+      </nav>
+
+      <div class="home-hero-media">
+        <figure class="home-travel-print">
+          <span class="home-travel-tape" aria-hidden="true"></span>
+          <Image
+            src={machuPicchu}
+            alt="Machu Picchu emerging through low clouds in Peru"
+            widths={[480, 720, 960]}
+            sizes="(min-width: 64rem) 38vw, (min-width: 48rem) 48vw, 88vw"
+            loading="eager"
+          />
+        </figure>
+
+        <figure class="home-field-note">
+          <Image
+            src={mostarBridge}
+            alt="The arched Old Bridge crossing the Neretva River in Mostar"
+            widths={[320, 480]}
+            sizes="(min-width: 64rem) 19vw, (min-width: 48rem) 27vw, 74vw"
+            loading="eager"
+          />
+          <figcaption>
+            <span>stone bridges</span>
+            <span>mountain paths</span>
+            <span>shared meals</span>
+            <span>loud markets</span>
+            <span>quiet mornings</span>
+          </figcaption>
+        </figure>
+      </div>
     </div>
 
-    <div class="home-hero-orbit" aria-hidden="true">
-      <span class="orbit-label orbit-label--north">Countries</span>
-      <span class="orbit-label orbit-label--east">Places</span>
-      <span class="orbit-label orbit-label--south">Side quests</span>
+    <div class="home-journal-band">
+      <div class="home-band-pattern" aria-hidden="true"></div>
+      <div class="home-journal-copy">
+        <h2>A personal<br />field journal</h2>
+        <p>Political science, great food,<br />video games, and time with friends.</p>
+        <nav class="home-archive-links" aria-label="Older archives">
+          <span>Older archives</span>
+          <a href="/chocolate/">Chocolate</a>
+          <a href="/poems/">Poems</a>
+        </nav>
+      </div>
+
+      <figure class="home-journal-glimpse">
+        <Image
+          src={baiPeople}
+          alt="Lunch with a Bai family near Dali in Yunnan, China"
+          widths={[360, 540]}
+          sizes="(min-width: 64rem) 27vw, (min-width: 48rem) 38vw, 82vw"
+          loading="eager"
+        />
+      </figure>
     </div>
-  </section>
-
-  <section class="portal-grid reveal reveal--late" aria-label="Explore Kyle's site">
-    <a class="portal-card" href="/countries/">
-      <span class="archive-index">Atlas · 01</span>
-      <div>
-        <h2>Visited Countries</h2>
-        <p>Passport stamps, field notes, and the details that stayed long after the flight home.</p>
-      </div>
-      <span class="portal-link">Open the atlas</span>
-    </a>
-
-    <a class="portal-card" href="/places/">
-      <span class="archive-index">Index · 02</span>
-      <div>
-        <h2>Interesting Places</h2>
-        <p>Specific corners of the world that deserve their own pin, story, or return visit.</p>
-      </div>
-      <span class="portal-link">Browse the index</span>
-    </a>
-
-    <a class="portal-card" href="/about/">
-      <span class="archive-index">Profile · 03</span>
-      <div>
-        <h2>About Me</h2>
-        <p>The person behind the atlas, plus a cabinet of retired hobbies and former obsessions.</p>
-      </div>
-      <span class="portal-link">Read the profile</span>
-    </a>
   </section>
 </Base>

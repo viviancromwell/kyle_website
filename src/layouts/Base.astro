@@ -8,6 +8,7 @@ const {
 } = Astro.props;
 
 const pathname = Astro.url.pathname;
+const isHome = pathname === '/';
 const isCurrent = (route) => pathname === route || pathname.startsWith(route);
 ---
 
@@ -18,8 +19,14 @@ const isCurrent = (route) => pathname === route || pathname.startsWith(route);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;600;700&family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600&display=swap"
+      rel="stylesheet"
+    />
   </head>
-  <body>
+  <body class:list={{ 'home-route': isHome }}>
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="site-header">
       <nav class="site-nav" aria-label="Main">
