@@ -773,10 +773,13 @@ a:focus-visible {
     box-shadow var(--duration-fast) var(--ease-out);
 }
 
-.home-about-tab:hover,
-.home-destination:hover {
-  box-shadow: var(--shadow-paper);
-  transform: translateY(var(--hover-lift));
+/* Hover-capable pointers only; on touch the lift would stick after tap. */
+@media (hover: hover) {
+  .home-about-tab:hover,
+  .home-destination:hover {
+    box-shadow: var(--shadow-paper);
+    transform: translateY(var(--hover-lift));
+  }
 }
 
 .portal-grid,
@@ -1145,8 +1148,7 @@ a:focus-visible {
     text-orientation: upright;
   }
 
-  /* Tucked under the countries panel; slides out on hover/focus. */
-  .home-about-tab:hover,
+  /* Tucked under the countries panel; slides out on keyboard focus. */
   .home-about-tab:focus-visible {
     transform: translateX(calc(var(--space-sm) * -1));
   }
@@ -1176,6 +1178,12 @@ a:focus-visible {
     align-self: start;
     justify-self: end;
     margin-top: var(--space-hero-band-overlap);
+  }
+}
+
+@media (min-width: 48rem) and (hover: hover) {
+  .home-about-tab:hover {
+    transform: translateX(calc(var(--space-sm) * -1));
   }
 
   .portal-grid {

@@ -132,6 +132,6 @@
   /* motion */
   --duration-fast: 160ms;
   --duration-medium: 260ms;
-  --duration-slow: 700ms;
+  --duration-slow: 400ms;
   --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
