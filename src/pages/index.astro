@@ -1,10 +1,31 @@
 ---
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import FieldRoutes from '../components/FieldRoutes.astro';
+import { interestingPlaces } from '../data/interestingPlaces.mjs';
 import machuPicchu from '../assets/places/machu-picchu-peru.jpeg';
 import mostarBridge from '../assets/places/mostar-bridge-bosnia.jpeg';
 import baiPeople from '../assets/places/bai-people-china.jpeg';
+
+const placeImages = import.meta.glob('../assets/places/*.{jpeg,png}', { eager: true });
+
+// Pool for the per-visit shuffle; the statically rendered images above stay
+// as the no-JS fallback.
+const heroPool = await Promise.all(
+  interestingPlaces
+    .filter((place) => placeImages[`../assets/places/${place.image}`])
+    .map(async (place) => {
+      const optimized = await getImage({
+        src: placeImages[`../assets/places/${place.image}`].default,
+        widths: [480, 720, 960],
+        format: 'webp',
+      });
+      return { src: optimized.src, srcset: optimized.srcSet.attribute, alt: place.title };
+    })
+);
+
+const placeTitle = (file, fallback) =>
+  interestingPlaces.find((place) => place.image === file)?.title ?? fallback;
 ---
 
 <Base
@@ -61,6 +82,7 @@ import baiPeople from '../assets/places/bai-people-china.jpeg';
             sizes="(min-width: 64rem) 38vw, (min-width: 48rem) 48vw, 88vw"
             loading="eager"
           />
+          <figcaption>{placeTitle('machu-picchu-peru.jpeg', 'Machu Picchu, Peru')}</figcaption>
         </figure>
 
         <figure class="home-field-note">
@@ -72,6 +94,7 @@ import baiPeople from '../assets/places/bai-people-china.jpeg';
             sizes="(min-width: 64rem) 19vw, (min-width: 48rem) 27vw, 74vw"
             loading="eager"
           />
+          <figcaption>{placeTitle('mostar-bridge-bosnia.jpeg', 'Mostar Bridge, Bosnia')}</figcaption>
         </figure>
       </div>
     </div>
@@ -97,7 +120,25 @@ import baiPeople from '../assets/places/bai-people-china.jpeg';
           sizes="(min-width: 64rem) 27vw, (min-width: 48rem) 38vw, 82vw"
           loading="eager"
         />
+        <figcaption>{placeTitle('bai-people-china.jpeg', 'Near Dali in Yunnan, China')}</figcaption>
       </figure>
     </div>
   </section>
+
+  <script is:inline define:vars={{ heroPool }}>
+    const figures = ['.home-travel-print', '.home-field-note', '.home-journal-glimpse']
+      .map((selector) => document.querySelector(selector))
+      .filter(Boolean);
+    const picks = [...heroPool].sort(() => Math.random() - 0.5).slice(0, figures.length);
+    figures.forEach((figure, i) => {
+      const pick = picks[i];
+      if (!pick) return;
+      const img = figure.querySelector('img');
+      const caption = figure.querySelector('figcaption');
+      img.src = pick.src;
+      img.srcset = pick.srcset;
+      img.alt = pick.alt;
+      if (caption) caption.textContent = pick.alt;
+    });
+  </script>
 </Base>

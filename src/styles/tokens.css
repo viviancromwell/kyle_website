@@ -113,6 +113,7 @@
   --header-offset: 1rem;
   --hover-lift: -0.25rem;
   --hero-paper-min-height: 36rem;
+  --hero-fill-height: min(100svh, 64rem);
   --hero-band-min-height: 16rem;
   --hero-media-height: clamp(27rem, 35vw, 34rem);
   --hero-note-min-height: 16rem;

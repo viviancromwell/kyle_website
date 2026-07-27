@@ -32,7 +32,7 @@ The hero uses one horizontal composition with four clear zones:
 1. Kyle's name, the journal kicker, and a short introduction
 2. Two prominent notebook navigation panels for Visited Countries and Interesting Places
 3. A quieter attached About Me tab
-4. A travel-print and field-note cluster using existing project imagery
+4. A travel-print and field-note cluster using existing project imagery; on each visit the three prints shuffle from the Interesting Places pool, each labeled with a small muted place caption
 
 The lower aubergine band introduces Kyle's academic and personal interests and keeps Chocolate and Poems available as secondary archives.
 
@@ -40,7 +40,7 @@ The lower aubergine band introduces Kyle's academic and personal interests and k
 
 - Sparse fine dashed mapped routes, outlined nodes, and violet crosses on the paper field
 - A fine stitched diamond lattice with rings and crosses giving the aubergine band a journal-cover feel
-- Torn spiral-binding stubs above panel and note top edges, with ruled paper
+- Ball-head binding pins above panel and note top edges, with ruled paper
 - Pale violet tape and crisp off-white print borders
 - Slight, controlled overlap between the travel print and field note, with the note descending into the aubergine band and the band print rising to meet it
 
