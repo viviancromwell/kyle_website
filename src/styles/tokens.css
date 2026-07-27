@@ -85,7 +85,7 @@
   --space-hero-card: clamp(1.25rem, 2.2vw, 2.25rem);
   --space-hero-overlap: -7rem;
   --space-hero-overlap-sm: -1rem;
-  --space-hero-band-overlap: -4.5rem;
+  --space-hero-band-overlap: -2.5rem;
 
   /* radius and borders */
   --radius-sm: 0.5rem;
@@ -122,8 +122,8 @@
   --hero-tab-width: 4.5rem;
   --hero-pattern-line: 0.08rem;
   --hero-ring-hole: 0.3rem;
-  --hero-binding-height: 1.35rem;
-  --hero-binding-gap: 1.8rem;
+  --hero-binding-height: 1.5rem;
+  --hero-binding-gap: 1.3rem;
   --hero-tape-width: 9rem;
   --hero-tape-height: 2.6rem;
   --hero-glimpse-width: clamp(18rem, 31vw, 31rem);

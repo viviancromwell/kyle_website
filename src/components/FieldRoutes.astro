@@ -1,6 +1,12 @@
 ---
 const { variant = 'light' } = Astro.props;
 const isDark = variant === 'dark';
+
+// Continuous diagonals for the leather-cover lattice; per-tile patterns
+// restart the dash cycle at every seam and read as chevron ticks.
+const PITCH = 104;
+const downRight = Array.from({ length: 20 }, (_, i) => -728 + i * PITCH);
+const downLeft = Array.from({ length: 20 }, (_, i) => 56 + i * PITCH);
 ---
 
 <svg
@@ -13,25 +19,24 @@ const isDark = variant === 'dark';
   {
     isDark ? (
       <>
-        <defs>
-          <pattern id="field-routes-lattice" width="104" height="104" patternUnits="userSpaceOnUse">
-            <path class="field-routes__lines" d="M0 52 52 0l52 52M0 52l52 52 52-52" />
-          </pattern>
-        </defs>
-        <rect class="field-routes__lattice" width="1200" height="720" fill="url(#field-routes-lattice)" />
+        <g class="field-routes__lines">
+          {downRight.map((x) => (
+            <path d={`M${x} 0l720 720`} />
+          ))}
+          {downLeft.map((x) => (
+            <path d={`M${x} 0l-720 720`} />
+          ))}
+        </g>
         <g class="field-routes__nodes">
-          <circle cx="416" cy="156" r="7" />
-          <circle cx="728" cy="260" r="8" />
-          <circle cx="1040" cy="104" r="6" />
-          <circle cx="208" cy="416" r="7" />
-          <circle cx="624" cy="520" r="6" />
-          <circle cx="936" cy="572" r="7" />
-          <circle cx="1144" cy="364" r="8" />
+          <circle cx="628" cy="312" r="7" />
+          <circle cx="836" cy="416" r="8" />
+          <circle cx="1044" cy="312" r="6" />
+          <circle cx="1148" cy="416" r="7" />
         </g>
         <g class="field-routes__accents">
-          <path d="m520 416 12 12m0-12-12 12" />
-          <path d="m884 130 10 10m0-10-10 10" />
-          <path d="m164 600 10 10m0-10-10 10" />
+          <path d="m728 412 11 11m0-11-11 11" />
+          <path d="m944 302 10 10m0-10-10 10" />
+          <path d="m1090 366 10 10m0-10-10 10" />
         </g>
       </>
     ) : (
