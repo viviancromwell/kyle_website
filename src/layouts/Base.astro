@@ -19,31 +19,48 @@ const isCurrent = (route) => pathname === route || pathname.startsWith(route);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@400;500;600&display=swap"
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@500;600&display=swap"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@500;600&display=swap"
       rel="stylesheet"
     />
   </head>
   <body class:list={{ 'home-route': isHome }}>
     <a class="skip-link" href="#main">Skip to content</a>
-    <header class="site-header">
-      <nav class="site-nav" aria-label="Main">
-        <a href="/" class="nav-name">Kyle Cromwell</a>
-        <div class="nav-links">
-          <a href="/countries/" aria-current={isCurrent('/countries/') ? 'page' : undefined}>Visited Countries</a>
-          <a href="/places/" aria-current={isCurrent('/places/') ? 'page' : undefined}>Interesting Places</a>
-          <a href="/about/" aria-current={isCurrent('/about/') ? 'page' : undefined}>About Me</a>
-        </div>
-      </nav>
-    </header>
+    {
+      !isHome && (
+        <header class="site-header">
+          <nav class="site-nav" aria-label="Main">
+            <a href="/" class="nav-name">Kyle Cromwell</a>
+            <div class="nav-links">
+              <a href="/countries/" aria-current={isCurrent('/countries/') ? 'page' : undefined}>Visited Countries</a>
+              <a href="/places/" aria-current={isCurrent('/places/') ? 'page' : undefined}>Interesting Places</a>
+              <a href="/about/" aria-current={isCurrent('/about/') ? 'page' : undefined}>About Me</a>
+            </div>
+          </nav>
+        </header>
+      )
+    }
     <main id="main" class="page">
       <slot />
     </main>
     <footer class="site-footer">
       <p>&copy; 2026 Kyle Cromwell</p>
-      <p>Personal field atlas · Always in progress</p>
+      <p>
+        kylecromwell2023 [at] gmail [dot] com ·
+        <a href="https://www.linkedin.com/in/kylecromwell/">LinkedIn</a>
+      </p>
     </footer>
   </body>
 </html>

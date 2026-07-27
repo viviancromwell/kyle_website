@@ -11,6 +11,28 @@ html {
   scroll-behavior: smooth;
 }
 
+::-webkit-scrollbar {
+  width: var(--space-2xs);
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: var(--radius-pill);
+  background: var(--color-border);
+}
+
+::-webkit-scrollbar-track {
+  background: none;
+}
+
+/* Firefox only: the standard properties would disable the hairline
+   ::-webkit-scrollbar styling in Chromium if set unconditionally. */
+@supports (-moz-appearance: none) {
+  html {
+    scrollbar-color: var(--color-border) transparent;
+    scrollbar-width: thin;
+  }
+}
+
 body {
   min-height: 100vh;
   margin: 0;
@@ -247,24 +269,27 @@ a:focus-visible {
 }
 
 .home-hero-journal {
-  min-height: 100svh;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  min-height: var(--hero-fill-height);
   color: var(--color-soft-charcoal);
   background: var(--color-paper);
 }
 
+/* The field note and glimpse print cross the paper/band boundary in both
+   directions, so neither section may isolate or raise itself: the sections
+   stay unstacked and the crossing elements carry their own z-index. */
 .home-hero-paper,
 .home-journal-band {
   position: relative;
-  isolation: isolate;
-  overflow: hidden;
 }
 
 .home-hero-paper {
   display: grid;
   grid-template-areas:
     "copy"
-    "media"
-    "destinations";
+    "destinations"
+    "media";
   gap: var(--space-hero-section);
   min-height: var(--hero-paper-min-height);
   padding: var(--space-hero-gutter);
@@ -274,7 +299,6 @@ a:focus-visible {
 .field-routes {
   position: absolute;
   inset: 0;
-  z-index: -1;
   width: 100%;
   height: 100%;
   pointer-events: none;
@@ -293,7 +317,7 @@ a:focus-visible {
 }
 
 .field-routes__lines {
-  stroke-dasharray: 9 9;
+  stroke-dasharray: 6 7;
   stroke-linecap: round;
   stroke-width: 1.2;
 }
@@ -317,7 +341,7 @@ a:focus-visible {
 }
 
 .field-routes--light .field-routes__accents {
-  stroke: var(--color-field-violet);
+  stroke: var(--color-field-violet-soft);
 }
 
 .field-routes--dark .field-routes__lines,
@@ -330,7 +354,7 @@ a:focus-visible {
 }
 
 .field-routes--dark .field-routes__accents {
-  stroke: var(--color-field-violet-soft);
+  stroke: var(--color-route-dark);
 }
 
 .home-hero-copy {
@@ -338,7 +362,7 @@ a:focus-visible {
   z-index: 1;
   display: grid;
   grid-area: copy;
-  gap: var(--space-lg);
+  gap: var(--space-md);
   align-content: start;
   max-width: var(--max-width-copy);
 }
@@ -349,12 +373,42 @@ a:focus-visible {
 }
 
 .home-hero-copy h1 {
-  padding-bottom: var(--space-lg);
+  position: relative;
+  width: fit-content;
+  padding-right: var(--space-xl);
+  padding-bottom: var(--space-md);
   border-bottom: var(--border-width) solid var(--color-field-violet);
   font-size: var(--text-hero-name);
   font-weight: 500;
   letter-spacing: var(--tracking-tight);
   line-height: var(--leading-tight);
+}
+
+.home-hero-copy h1::after {
+  position: absolute;
+  right: 0;
+  bottom: calc(var(--hero-ring-hole) * -1);
+  width: calc(var(--hero-ring-hole) * 2);
+  height: calc(var(--hero-ring-hole) * 2);
+  border: var(--border-width) solid var(--color-field-violet);
+  border-radius: var(--radius-pill);
+  background: var(--color-paper);
+  content: "";
+}
+
+.home-hero-kicker {
+  color: var(--color-field-violet);
+  font-family: var(--font-display);
+  font-size: var(--text-hero-kicker);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+}
+
+.home-hero-intro {
+  max-width: var(--max-width-intro);
+  font-size: var(--text-lg);
+  line-height: var(--leading-normal);
 }
 
 .home-destinations {
@@ -375,11 +429,13 @@ a:focus-visible {
 }
 
 .home-about-tab {
+  position: relative;
   display: inline-flex;
   gap: var(--space-sm);
   align-items: center;
   width: fit-content;
   padding: var(--space-sm) var(--space-md);
+  overflow: hidden;
   border: var(--border-width) solid var(--color-paper-muted);
   border-radius: var(--radius-note);
   color: var(--color-aubergine);
@@ -389,37 +445,56 @@ a:focus-visible {
   text-transform: uppercase;
 }
 
+.home-about-tab::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: var(--space-xs);
+  background: var(--color-field-violet);
+  content: "";
+}
+
 .home-about-tab svg {
+  flex: 0 0 auto;
   width: var(--space-lg);
   height: var(--space-lg);
+  padding: var(--space-2xs);
+  border: var(--border-width) solid currentColor;
+  border-radius: var(--radius-pill);
   fill: none;
   stroke: currentColor;
-  stroke-width: var(--border-width);
+  stroke-width: var(--hero-icon-stroke);
 }
 
 .home-destination {
   position: relative;
   display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   grid-template-rows: auto 1fr;
   gap: var(--space-md);
   min-height: var(--hero-destination-min-height);
   padding: var(--space-hero-card);
-  padding-top: var(--space-xl);
-  overflow: hidden;
+  padding-top: calc(var(--space-hero-card) + var(--space-md));
+  padding-bottom: calc(var(--space-lg) * 2);
   border: var(--border-width) solid var(--color-paper-muted);
   border-radius: var(--radius-note);
-  clip-path: polygon(0 0, 94% 0, 100% 13%, 100% 100%, 0 100%);
 }
 
-.home-destination::before {
+/* Spiral-binding keyholes punched below the top edge, per the approved
+   direction: a stem descends from the edge into a soft grey shadow dot.
+   Embedded greys sit between --color-paper-raised and --color-note-hole. */
+.home-destination::before,
+.home-field-note::before {
   position: absolute;
-  top: var(--space-xs);
+  top: var(--border-width);
   right: var(--space-md);
   left: var(--space-md);
-  height: var(--space-sm);
-  background-image: radial-gradient(circle, var(--color-note-hole) 0 var(--hero-note-hole-size), transparent calc(var(--hero-note-hole-size) + var(--hero-pattern-line)));
-  background-position: left center;
-  background-size: var(--hero-note-hole-gap) var(--hero-note-hole-gap);
+  height: calc(var(--hero-binding-gap) * 0.79);
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2028%2022'%3E%3Cpath%20d='M14.6%200c-.3%203-1.2%205-.9%208.6'%20stroke='%23CFC8BA'%20stroke-width='1.2'%20fill='none'/%3E%3Ccircle%20cx='13.9'%20cy='14'%20r='5'%20fill='%23DFD8CB'/%3E%3Ccircle%20cx='13.9'%20cy='14.4'%20r='3.8'%20fill='%23B5AC9D'/%3E%3Ccircle%20cx='13.9'%20cy='13.6'%20r='3.8'%20fill='%23C6BDAF'/%3E%3C/svg%3E");
+  background-position: left top;
+  background-repeat: round no-repeat;
+  background-size: var(--hero-binding-gap) 100%;
   content: "";
 }
 
@@ -428,8 +503,18 @@ a:focus-visible {
   right: var(--space-hero-card);
   bottom: var(--space-lg);
   left: var(--space-hero-card);
-  height: var(--hero-pattern-line);
-  background: currentColor;
+  height: calc(var(--hero-ring-hole) * 2);
+  background-image:
+    radial-gradient(
+      circle at var(--hero-ring-hole) center,
+      transparent 0 calc(var(--hero-ring-hole) - var(--hero-pattern-line)),
+      currentColor calc(var(--hero-ring-hole) - var(--hero-pattern-line)) var(--hero-ring-hole),
+      transparent var(--hero-ring-hole)
+    ),
+    linear-gradient(currentColor, currentColor);
+  background-position: left center, right center;
+  background-repeat: no-repeat;
+  background-size: auto, calc(100% - var(--hero-ring-hole) * 2) var(--hero-pattern-line);
   content: "";
 }
 
@@ -441,7 +526,7 @@ a:focus-visible {
   stroke: currentColor;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-width: var(--border-width);
+  stroke-width: var(--hero-icon-stroke);
 }
 
 .home-destination-title {
@@ -455,11 +540,9 @@ a:focus-visible {
 }
 
 .home-destination-arrow {
-  position: absolute;
-  right: var(--space-hero-card);
-  bottom: var(--space-xl);
-  font-size: var(--text-2xl);
-  line-height: 1;
+  align-self: end;
+  font-size: var(--text-hero-destination);
+  line-height: var(--leading-tight);
 }
 
 .home-destination--countries {
@@ -477,7 +560,7 @@ a:focus-visible {
 
 .home-hero-media {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: grid;
   grid-area: media;
   gap: var(--space-md);
@@ -491,6 +574,7 @@ a:focus-visible {
 
 .home-travel-print {
   position: relative;
+  z-index: 2;
   width: 92%;
   padding: var(--space-sm);
   justify-self: end;
@@ -507,10 +591,37 @@ a:focus-visible {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: opacity var(--duration-medium) var(--ease-out);
+}
+
+.home-travel-print figcaption,
+.home-field-note figcaption,
+.home-journal-glimpse figcaption {
+  position: relative;
+  z-index: 2;
+  padding-top: var(--space-xs);
+  color: var(--color-caption-ink);
+  font-size: var(--text-sm);
+  font-style: italic;
+  text-align: center;
 }
 
 .home-travel-print img {
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 1 / 1;
+}
+
+/* Washi-tape material shared by both tape pieces: the texture is cropped
+   straight from the approved direction (design/directions/03-direction-v5.png),
+   torn ends via clip-path. */
+.home-travel-tape,
+.home-note-tape {
+  background: url("../assets/home/tape-washi.png") center / cover no-repeat;
+  box-shadow: var(--shadow-tape);
+  clip-path: polygon(
+    0 8%, 1.5% 0, 98% 3%, 100% 10%, 98.8% 32%, 100% 52%, 98.5% 78%, 100% 94%,
+    97.5% 100%, 2% 97%, 0 88%, 1.2% 66%, 0 42%, 1% 18%
+  );
+  opacity: 0.9;
 }
 
 .home-travel-tape {
@@ -520,24 +631,33 @@ a:focus-visible {
   z-index: 1;
   width: var(--hero-tape-width);
   height: var(--hero-tape-height);
-  background: var(--color-field-violet-soft);
-  box-shadow: var(--shadow-tape);
-  opacity: 0.7;
   transform: translateX(-50%) rotate(-1deg);
 }
 
 .home-field-note {
   position: relative;
+  z-index: 1;
   width: 82%;
   min-height: var(--hero-note-min-height);
   padding: var(--space-lg);
+  padding-top: calc(var(--space-lg) + var(--space-md));
   justify-self: start;
   border: var(--border-width) solid var(--color-paper-line);
   border-radius: var(--radius-note);
   background-color: var(--color-paper-raised);
   background-image: repeating-linear-gradient(to bottom, transparent 0, transparent var(--space-lg), var(--color-paper-line) calc(var(--space-lg) + var(--hero-pattern-line)));
   box-shadow: var(--shadow-note);
-  transform: rotate(-1.25deg);
+  transform: rotate(4.5deg);
+}
+
+.home-note-tape {
+  position: absolute;
+  right: calc(var(--space-lg) * -1);
+  bottom: var(--space-xl);
+  z-index: 1;
+  width: calc(var(--hero-tape-width) * 0.66);
+  height: var(--hero-tape-height);
+  transform: rotate(75deg);
 }
 
 .home-field-note img {
@@ -547,25 +667,15 @@ a:focus-visible {
   opacity: 0.74;
 }
 
-.home-field-note figcaption {
-  display: grid;
-  gap: var(--space-2xs);
-  margin-top: var(--space-md);
-  padding-left: var(--space-sm);
-  border-bottom: var(--border-width) solid var(--color-field-violet);
-  font-family: var(--font-body);
-  font-size: var(--text-hero-note);
-  font-style: italic;
-  font-weight: 500;
-  line-height: var(--leading-snug);
-  transform: rotate(-1deg);
-}
-
+/* Field violet is invisible on aubergine (1.8:1); the coral companion
+   carries links and focus on the dark ground. */
 .home-journal-band {
+  --color-focus: var(--color-collegiate-coral-soft);
+
   display: grid;
-  gap: var(--space-xl);
+  gap: var(--space-lg);
   min-height: var(--hero-band-min-height);
-  padding: var(--space-xl) var(--space-hero-gutter);
+  padding: var(--space-lg) var(--space-hero-gutter);
   color: var(--color-on-aubergine);
   background: var(--color-aubergine);
 }
@@ -577,35 +687,12 @@ a:focus-visible {
   gap: var(--space-md);
   align-content: start;
   padding-left: var(--space-lg);
-  border-left: var(--border-width) solid var(--color-collegiate-coral);
+  border-left: calc(var(--border-width) * 2) solid var(--color-collegiate-coral-soft);
 }
 
-.home-journal-copy h2,
 .home-journal-copy p {
+  max-width: var(--max-width-intro);
   margin-bottom: 0;
-}
-
-.home-journal-copy h2 {
-  position: relative;
-  padding-bottom: var(--space-md);
-  font-size: var(--text-hero-band);
-  font-weight: 500;
-  letter-spacing: var(--tracking-tight);
-  line-height: var(--leading-snug);
-  text-transform: uppercase;
-}
-
-.home-journal-copy h2::after {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: var(--space-xl);
-  height: var(--hero-pattern-line);
-  background: var(--color-collegiate-coral);
-  content: "";
-}
-
-.home-journal-copy p {
   color: var(--color-on-aubergine);
   font-size: var(--text-lg);
 }
@@ -622,13 +709,48 @@ a:focus-visible {
   text-transform: uppercase;
 }
 
-.home-archive-links span,
+.home-archive-label,
 .home-archive-links a {
   display: inline-flex;
   align-items: center;
   min-height: var(--hero-touch-target);
   padding-bottom: var(--space-xs);
-  border-bottom: var(--border-width) solid var(--color-field-violet);
+}
+
+/* Only the real links carry the underline-and-rings affordance; the label
+   stays plain so it doesn't invite a dead tap. */
+.home-archive-label {
+  color: var(--color-on-aubergine-muted);
+}
+
+.home-archive-links a {
+  position: relative;
+  border-bottom: var(--border-width) solid var(--color-collegiate-coral-soft);
+}
+
+.home-archive-links a::before,
+.home-archive-links a::after {
+  position: absolute;
+  bottom: calc(var(--hero-ring-hole) * -0.75);
+  width: calc(var(--hero-ring-hole) * 1.5);
+  height: calc(var(--hero-ring-hole) * 1.5);
+  border: var(--border-width) solid var(--color-collegiate-coral-soft);
+  border-radius: var(--radius-pill);
+  background: var(--color-aubergine);
+  content: "";
+}
+
+.home-archive-links a::before {
+  left: calc(var(--hero-ring-hole) * -0.75);
+}
+
+.home-archive-links a::after {
+  right: calc(var(--hero-ring-hole) * -0.75);
+}
+
+.home-archive-sep {
+  color: var(--color-collegiate-coral-soft);
+  font-weight: 700;
 }
 
 .home-archive-links a {
@@ -638,7 +760,26 @@ a:focus-visible {
 
 .home-archive-links a:hover {
   color: var(--color-paper);
-  border-color: var(--color-collegiate-coral);
+  border-color: var(--color-on-aubergine);
+}
+
+/* Journal ground continues under the footer on the home route. */
+.home-route .site-footer {
+  max-width: none;
+  padding-block: var(--space-lg);
+  padding-inline: var(--space-hero-gutter);
+  border-top: none;
+  color: var(--color-on-aubergine-muted);
+  background: var(--color-aubergine);
+  font-family: var(--font-body);
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.home-route .site-footer a {
+  --color-focus: var(--color-collegiate-coral-soft);
+
+  color: var(--color-on-aubergine);
 }
 
 .home-journal-glimpse {
@@ -653,13 +794,28 @@ a:focus-visible {
 }
 
 .home-journal-glimpse img {
-  aspect-ratio: 3 / 1;
+  aspect-ratio: 2 / 1;
 }
 
-.home-about-tab:hover,
-.home-destination:hover {
-  color: var(--color-field-violet);
-  transform: translateY(var(--hover-lift));
+.home-about-tab,
+.home-destination {
+  transition:
+    transform var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+/* Hover-capable pointers only; on touch the lift would stick after tap. */
+@media (hover: hover) {
+  .home-about-tab:hover,
+  .home-destination:hover {
+    box-shadow: var(--shadow-paper);
+    transform: translateY(var(--hover-lift));
+  }
+}
+
+.home-about-tab:active,
+.home-destination:active {
+  transform: scale(0.985);
 }
 
 .portal-grid,
@@ -967,6 +1123,10 @@ a:focus-visible {
   animation-delay: var(--duration-fast);
 }
 
+.reveal--later {
+  animation-delay: var(--duration-medium);
+}
+
 @keyframes reveal {
   from {
     opacity: 0;
@@ -1004,18 +1164,30 @@ a:focus-visible {
   }
 
   .home-destinations {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: calc(var(--hero-tab-width) - var(--space-lg)) repeat(2, minmax(0, 1fr));
     align-items: stretch;
   }
 
   .home-about-tab {
-    grid-column: 1 / -1;
-    flex-direction: row;
-    writing-mode: horizontal-tb;
+    z-index: -1;
+    flex-direction: column;
+    gap: var(--space-md);
+    align-items: center;
+    align-self: start;
+    order: -1;
+    width: var(--hero-tab-width);
+    margin-top: var(--space-md);
+    padding-block: calc(var(--space-md) + var(--space-xs)) var(--space-md);
+    padding-inline: var(--space-sm);
   }
 
-  .home-about-tab svg {
-    flex: 0 0 auto;
+  .home-about-tab-label {
+    writing-mode: vertical-rl;
+  }
+
+  /* Tucked under the countries panel; slides out on keyboard focus. */
+  .home-about-tab:focus-visible {
+    transform: translateX(calc(var(--space-sm) * -1));
   }
 
   .home-hero-media {
@@ -1023,24 +1195,32 @@ a:focus-visible {
   }
 
   .home-travel-print {
-    width: 78%;
+    width: 68%;
     justify-self: end;
   }
 
   .home-field-note {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    width: 64%;
+    width: 60%;
+    margin-top: calc(var(--space-xl) * -1);
+    margin-left: var(--space-lg);
+    justify-self: start;
   }
 
   .home-journal-band {
-    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: center;
   }
 
   .home-journal-glimpse {
+    align-self: start;
     justify-self: end;
+    margin-top: var(--space-hero-band-overlap);
+  }
+}
+
+@media (min-width: 48rem) and (hover: hover) {
+  .home-about-tab:hover {
+    transform: translateX(calc(var(--space-sm) * -1));
   }
 
   .portal-grid {
@@ -1079,29 +1259,15 @@ a:focus-visible {
     grid-template-areas:
       "copy media"
       "destinations media";
-    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
     grid-template-rows: auto 1fr;
     gap: var(--space-xl) var(--space-hero-section);
-    align-items: center;
+    align-items: start;
     padding-block: var(--space-xl);
   }
 
-  .home-hero-copy {
-    align-self: end;
-  }
-
   .home-destinations {
-    align-self: start;
-    grid-template-columns: var(--hero-tab-width) repeat(2, minmax(0, 1fr));
-  }
-
-  .home-about-tab {
-    grid-column: auto;
-    flex-direction: column;
-    justify-content: center;
-    width: var(--hero-tab-width);
-    padding-inline: var(--space-sm);
-    writing-mode: vertical-rl;
+    align-self: end;
   }
 
   .home-destination {
@@ -1116,19 +1282,25 @@ a:focus-visible {
   .home-travel-print {
     position: absolute;
     top: 0;
-    right: 7%;
-    width: 76%;
+    right: 22%;
+    width: 66%;
   }
 
   .home-field-note {
+    position: absolute;
     right: 0;
     bottom: var(--space-hero-overlap);
     width: 58%;
+    margin: 0;
   }
 
   .home-journal-band {
     grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
-    padding-block: var(--space-lg);
+    padding-block: var(--space-md);
+  }
+
+  .home-journal-glimpse {
+    justify-self: center;
   }
 }
 

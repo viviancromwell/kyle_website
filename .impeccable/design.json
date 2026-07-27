@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-27T06:25:00Z",
+  "title": "Design System: Kyle Cromwell — Personal Journal",
+  "extensions": {
+    "colorMeta": {
+      "warm-paper": { "role": "neutral", "displayName": "Warm Paper", "canonical": "oklch(0.9486 0.0165 79.35)", "tonalRamp": ["oklch(0.15 0.0165 79.35)", "oklch(0.27 0.0165 79.35)", "oklch(0.39 0.0165 79.35)", "oklch(0.51 0.0165 79.35)", "oklch(0.63 0.0165 79.35)", "oklch(0.75 0.0165 79.35)", "oklch(0.87 0.0165 79.35)", "oklch(0.95 0.0165 79.35)"] },
+      "paper-raised": { "role": "neutral", "displayName": "Paper Raised", "canonical": "oklch(0.975 0.009 84.58)", "tonalRamp": ["oklch(0.15 0.009 84.58)", "oklch(0.27 0.009 84.58)", "oklch(0.39 0.009 84.58)", "oklch(0.51 0.009 84.58)", "oklch(0.63 0.009 84.58)", "oklch(0.75 0.009 84.58)", "oklch(0.87 0.009 84.58)", "oklch(0.975 0.009 84.58)"] },
+      "soft-charcoal": { "role": "neutral", "displayName": "Soft Charcoal", "canonical": "oklch(0.2556 0.0159 307.77)", "tonalRamp": ["oklch(0.15 0.0159 307.77)", "oklch(0.26 0.0159 307.77)", "oklch(0.37 0.0159 307.77)", "oklch(0.48 0.0159 307.77)", "oklch(0.59 0.0159 307.77)", "oklch(0.71 0.0159 307.77)", "oklch(0.83 0.0159 307.77)", "oklch(0.95 0.0159 307.77)"] },
+      "deep-aubergine": { "role": "primary", "displayName": "Deep Aubergine", "canonical": "oklch(0.2924 0.0488 293.35)", "tonalRamp": ["oklch(0.15 0.0488 293.35)", "oklch(0.26 0.0488 293.35)", "oklch(0.37 0.0488 293.35)", "oklch(0.48 0.0488 293.35)", "oklch(0.59 0.0488 293.35)", "oklch(0.71 0.0488 293.35)", "oklch(0.83 0.0488 293.35)", "oklch(0.95 0.0488 293.35)"] },
+      "field-violet": { "role": "primary", "displayName": "Field Violet", "canonical": "oklch(0.4502 0.1397 295.24)", "tonalRamp": ["oklch(0.15 0.1397 295.24)", "oklch(0.26 0.1397 295.24)", "oklch(0.37 0.1397 295.24)", "oklch(0.45 0.1397 295.24)", "oklch(0.57 0.12 295.24)", "oklch(0.69 0.1 295.24)", "oklch(0.82 0.06 295.24)", "oklch(0.94 0.03 295.24)"] },
+      "collegiate-coral": { "role": "secondary", "displayName": "Collegiate Coral", "canonical": "oklch(0.5356 0.1971 30.4)", "tonalRamp": ["oklch(0.15 0.12 30.4)", "oklch(0.26 0.16 30.4)", "oklch(0.37 0.19 30.4)", "oklch(0.48 0.1971 30.4)", "oklch(0.6 0.18 30.4)", "oklch(0.72 0.14 30.4)", "oklch(0.84 0.09 30.4)", "oklch(0.95 0.04 30.4)"] },
+      "collegiate-coral-soft": { "role": "secondary", "displayName": "Collegiate Coral Soft", "canonical": "oklch(0.6985 0.1589 36.85)", "tonalRamp": ["oklch(0.15 0.1 36.85)", "oklch(0.26 0.13 36.85)", "oklch(0.38 0.15 36.85)", "oklch(0.5 0.1589 36.85)", "oklch(0.62 0.1589 36.85)", "oklch(0.7 0.1589 36.85)", "oklch(0.83 0.1 36.85)", "oklch(0.95 0.04 36.85)"] },
+      "caption-ink": { "role": "neutral", "displayName": "Caption Ink", "canonical": "oklch(0.5 0.02 60)", "tonalRamp": ["oklch(0.15 0.02 60)", "oklch(0.26 0.02 60)", "oklch(0.38 0.02 60)", "oklch(0.5 0.02 60)", "oklch(0.62 0.02 60)", "oklch(0.74 0.02 60)", "oklch(0.85 0.02 60)", "oklch(0.95 0.02 60)"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Kyle's name only; Cormorant SC small caps." },
+      "headline": { "displayName": "Headline", "purpose": "Notepad panel titles, uppercase." },
+      "kicker": { "displayName": "Kicker", "purpose": "The Personal Journal line, Field Violet, wide tracking." },
+      "body": { "displayName": "Body", "purpose": "Copy and intro; intro measure capped at 24rem." },
+      "label": { "displayName": "Label", "purpose": "Archive links and the About tab, uppercase tracked." }
+    },
+    "shadows": [
+      { "name": "shadow-paper", "value": "0 0.5rem 1.5rem oklch(0.2556 0.0159 307.77 / 0.07)", "purpose": "Prints; hover state of pressables." },
+      { "name": "shadow-note", "value": "0 0.25rem 0.75rem oklch(0.2556 0.0159 307.77 / 0.09)", "purpose": "Notepads, tabs, field note at rest." },
+      { "name": "shadow-tape", "value": "0 0.15rem 0.4rem oklch(0.2556 0.0159 307.77 / 0.05)", "purpose": "Washi tape pieces." }
+    ],
+    "motion": [
+      { "name": "duration-fast", "value": "160ms", "purpose": "Hover and press transitions." },
+      { "name": "duration-medium", "value": "260ms", "purpose": "Image fade-in on decode; stagger step." },
+      { "name": "duration-slow", "value": "400ms", "purpose": "Entrance reveals; the ceiling for all motion." },
+      { "name": "ease-out", "value": "cubic-bezier(0.2, 0.8, 0.2, 1)", "purpose": "The only easing in the system." }
+    ],
+    "breakpoints": [
+      { "name": "tablet", "value": "48rem" },
+      { "name": "wide", "value": "64rem" },
+      { "name": "desktop", "value": "72rem" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Notepad Panel",
+      "kind": "card",
+      "refersTo": "destination-card",
+      "description": "Primary destination card styled as a torn spiral-notebook sheet.",
+      "html": "<a class=\"ds-notepad\" href=\"#\"><svg class=\"ds-notepad-icon\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"9\"></circle><path d=\"M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18\"></path></svg><span class=\"ds-notepad-title\">Visited<br/>Countries</span><span class=\"ds-notepad-arrow\" aria-hidden=\"true\">→</span></a>",
+      "css": ".ds-notepad { position: relative; display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto 1fr; gap: var(--space-md, 1rem); min-height: 11.5rem; padding: 1.5rem; padding-top: 2.5rem; padding-bottom: 3rem; border: 1px solid var(--color-paper-muted, oklch(0.9 0.014 84.58)); border-radius: var(--radius-note, 0.4rem); background: var(--color-paper-raised, oklch(0.975 0.009 84.58)); color: var(--color-field-violet, oklch(0.4502 0.1397 295.24)); box-shadow: var(--shadow-note, 0 0.25rem 0.75rem oklch(0.2556 0.0159 307.77 / 0.09)); text-decoration: none; transition: transform 160ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 160ms cubic-bezier(0.2, 0.8, 0.2, 1); } .ds-notepad::after { content: \"\"; position: absolute; right: 1.5rem; bottom: 1.5rem; left: 1.5rem; height: 0.6rem; background-image: radial-gradient(circle at 0.3rem center, transparent 0 0.22rem, currentColor 0.22rem 0.3rem, transparent 0.3rem), linear-gradient(currentColor, currentColor); background-position: left center, right center; background-repeat: no-repeat; background-size: auto, calc(100% - 0.6rem) 1px; } .ds-notepad-icon { grid-column: 1 / -1; width: 3.4rem; height: 3.4rem; fill: none; stroke: currentColor; stroke-width: 1.1; stroke-linecap: round; } .ds-notepad-title { align-self: end; color: var(--color-soft-charcoal, oklch(0.2556 0.0159 307.77)); font-family: 'Cormorant SC', Georgia, serif; font-size: 1.85rem; font-weight: 500; letter-spacing: -0.045em; line-height: 0.96; text-transform: uppercase; } .ds-notepad-arrow { align-self: end; font-size: 1.85rem; line-height: 0.96; } .ds-notepad:hover { box-shadow: var(--shadow-paper, 0 0.5rem 1.5rem oklch(0.2556 0.0159 307.77 / 0.07)); transform: translateY(-0.25rem); } .ds-notepad:active { transform: scale(0.985); } .ds-notepad:focus-visible { outline: 0.125rem solid var(--color-field-violet, oklch(0.4502 0.1397 295.24)); outline-offset: 0.25rem; }"
+    },
+    {
+      "name": "About Tab",
+      "kind": "nav",
+      "refersTo": "about-tab",
+      "description": "Vertical bookmark tab with a violet cap; tucks behind the first panel.",
+      "html": "<a class=\"ds-about-tab\" href=\"#\"><span class=\"ds-about-tab-label\">About me</span><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"8\" r=\"4\"></circle><path d=\"M4.5 21c.5-4.2 3-6.5 7.5-6.5s7 2.3 7.5 6.5\"></path></svg></a>",
+      "css": ".ds-about-tab { position: relative; display: inline-flex; flex-direction: column; gap: 1rem; align-items: center; width: 4.5rem; padding: 1.5rem 0.75rem 1rem; overflow: hidden; border: 1px solid var(--color-paper-muted, oklch(0.9 0.014 84.58)); border-radius: var(--radius-note, 0.4rem); background: var(--color-paper-raised, oklch(0.975 0.009 84.58)); color: var(--color-aubergine, oklch(0.2924 0.0488 293.35)); font-size: 0.875rem; font-weight: 600; letter-spacing: 0.12em; text-decoration: none; text-transform: uppercase; transition: transform 160ms cubic-bezier(0.2, 0.8, 0.2, 1); } .ds-about-tab::before { content: \"\"; position: absolute; top: 0; right: 0; left: 0; height: 0.5rem; background: var(--color-field-violet, oklch(0.4502 0.1397 295.24)); } .ds-about-tab-label { writing-mode: vertical-rl; } .ds-about-tab svg { width: 1.5rem; height: 1.5rem; padding: 0.25rem; border: 1px solid currentColor; border-radius: 999rem; fill: none; stroke: currentColor; stroke-width: 1.1; } .ds-about-tab:hover, .ds-about-tab:focus-visible { transform: translateX(-0.75rem); }"
+    },
+    {
+      "name": "Archive Link",
+      "kind": "chip",
+      "refersTo": "archive-link",
+      "description": "Band link with coral underline and ring ornaments; only real links get the underline.",
+      "html": "<div class=\"ds-band-row\"><span class=\"ds-archive-label\">Older archives</span><span class=\"ds-archive-sep\" aria-hidden=\"true\">·</span><a class=\"ds-archive-link\" href=\"#\">Chocolate</a></div>",
+      "css": ".ds-band-row { display: flex; gap: 1.5rem; align-items: center; padding: 1.5rem; background: var(--color-aubergine, oklch(0.2924 0.0488 293.35)); color: var(--color-on-aubergine, oklch(0.94 0.015 84.58)); font-size: 0.875rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; } .ds-archive-label { color: var(--color-on-aubergine-muted, oklch(0.78 0.025 310)); } .ds-archive-sep { color: var(--color-collegiate-coral-soft, oklch(0.6985 0.1589 36.85)); font-weight: 700; } .ds-archive-link { position: relative; padding-bottom: 0.5rem; border-bottom: 1px solid var(--color-collegiate-coral-soft, oklch(0.6985 0.1589 36.85)); color: inherit; text-decoration: none; } .ds-archive-link::before, .ds-archive-link::after { content: \"\"; position: absolute; bottom: -0.225rem; width: 0.45rem; height: 0.45rem; border: 1px solid var(--color-collegiate-coral-soft, oklch(0.6985 0.1589 36.85)); border-radius: 999rem; background: var(--color-aubergine, oklch(0.2924 0.0488 293.35)); } .ds-archive-link::before { left: -0.225rem; } .ds-archive-link::after { right: -0.225rem; } .ds-archive-link:hover { color: var(--color-paper, oklch(0.9486 0.0165 79.35)); border-color: var(--color-on-aubergine, oklch(0.94 0.015 84.58)); } .ds-archive-link:focus-visible { outline: 0.125rem solid var(--color-collegiate-coral-soft, oklch(0.6985 0.1589 36.85)); outline-offset: 0.25rem; }"
+    },
+    {
+      "name": "Travel Print",
+      "kind": "custom",
+      "refersTo": "destination-card",
+      "description": "White-bordered photographic print with washi tape and a caption label.",
+      "html": "<figure class=\"ds-print\"><span class=\"ds-print-tape\" aria-hidden=\"true\"></span><div class=\"ds-print-photo\"></div><figcaption>Machu Picchu, Peru</figcaption></figure>",
+      "css": ".ds-print { position: relative; width: 14rem; margin: 1.5rem; padding: 0.75rem; border-radius: var(--radius-print, 0.2rem); background: var(--color-paper-raised, oklch(0.975 0.009 84.58)); box-shadow: var(--shadow-paper, 0 0.5rem 1.5rem oklch(0.2556 0.0159 307.77 / 0.07)); transform: rotate(1.25deg); } .ds-print-photo { aspect-ratio: 1 / 1; background: linear-gradient(160deg, oklch(0.72 0.06 250), oklch(0.5 0.08 150)); } .ds-print-tape { position: absolute; top: -1rem; left: 50%; width: 5.5rem; height: 2.6rem; background: var(--color-field-violet-soft, oklch(0.72 0.07 295.24)); clip-path: polygon(0 8%, 1.5% 0, 98% 3%, 100% 10%, 98.8% 32%, 100% 52%, 98.5% 78%, 100% 94%, 97.5% 100%, 2% 97%, 0 88%, 1.2% 66%, 0 42%, 1% 18%); opacity: 0.9; transform: translateX(-50%) rotate(-1deg); } .ds-print figcaption { position: relative; padding-top: 0.5rem; color: var(--color-caption-ink, oklch(0.5 0.02 60)); font-size: 0.875rem; font-style: italic; text-align: center; }"
+    },
+    {
+      "name": "Kicker",
+      "kind": "custom",
+      "refersTo": "destination-card",
+      "description": "The violet small-caps kicker with the name rule and its ring terminal.",
+      "html": "<div class=\"ds-kicker-block\"><h1 class=\"ds-name\">Kyle Cromwell</h1><p class=\"ds-kicker\">Personal Journal</p></div>",
+      "css": ".ds-kicker-block { padding: 1.5rem; background: var(--color-paper, oklch(0.9486 0.0165 79.35)); } .ds-name { position: relative; width: fit-content; margin: 0; padding-right: 3rem; padding-bottom: 1rem; border-bottom: 1px solid var(--color-field-violet, oklch(0.4502 0.1397 295.24)); color: var(--color-soft-charcoal, oklch(0.2556 0.0159 307.77)); font-family: 'Cormorant SC', Georgia, serif; font-size: 3rem; font-weight: 500; letter-spacing: -0.045em; line-height: 0.96; } .ds-name::after { content: \"\"; position: absolute; right: 0; bottom: -0.3rem; width: 0.6rem; height: 0.6rem; border: 1px solid var(--color-field-violet, oklch(0.4502 0.1397 295.24)); border-radius: 999rem; background: var(--color-paper, oklch(0.9486 0.0165 79.35)); } .ds-kicker { margin: 0.75rem 0 0; color: var(--color-field-violet, oklch(0.4502 0.1397 295.24)); font-family: 'Cormorant SC', Georgia, serif; font-size: 1.1rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The College Field Journal",
+    "overview": "Everything on this site behaves like a physical object in a well-kept travel journal: cream notepads with spiral-binding keyholes, photographic prints with white borders and washi tape, ruled note paper, dashed map routes with ring nodes and crosses, and one deep aubergine journal-cover band with a stitched diamond lattice. Warmth and tactility come from material detail, never from aging effects. The system rejects the antique and the corporate in equal measure: no parchment, sepia, vignettes, or distressed textures on one side; no SaaS cards, dashboard shells, or hero-metric templates on the other.",
+    "keyCharacteristics": [
+      "Materials are sampled or hand-drawn, never synthesized generically",
+      "Asymmetric collage layout with controlled overlap across section boundaries",
+      "Closed set of grounds: Warm Paper, Paper Raised, Deep Aubergine",
+      "Color is role-coded: violet = countries, coral = places",
+      "Motion is restrained: entrance and hover only, nothing over 400ms"
+    ],
+    "rules": [
+      { "name": "The Closed-Ground Rule", "body": "Surfaces are Warm Paper, Paper Raised, or Deep Aubergine. A token scale step is not a sanctioned surface; propose new grounds, never apply them unilaterally.", "section": "colors" },
+      { "name": "The Dark-Band Coral Rule", "body": "On Deep Aubergine, interactive affordances (underlines, rings, focus) are Collegiate Coral Soft, never Field Violet (1.8:1, invisible).", "section": "colors" },
+      { "name": "The Two-Family Rule", "body": "Redesigned surfaces use exactly Cormorant SC and Avenir Next. The monospace in the interior pages' shell is starter residue slated for replacement and must not spread to new work.", "section": "typography" },
+      { "name": "The Whisper-Shadow Rule", "body": "Shadow opacity never exceeds 0.09. Depth comes from overlap and rotation, not from lift.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do source every color, size, spacing, and radius from src/styles/tokens.css via var(--*); new values land in tokens first.",
+      "Do keep every design-token change in sync with /showcase in the same change.",
+      "Do keep rotations between 1 and 4.5 degrees and overlaps deliberate; collage, not clutter.",
+      "Do gate hover transforms behind (hover: hover) and keep all motion within 400ms, entrance and hover only, honoring reduced motion.",
+      "Do keep About Me reachable but quieter than the two primary destinations on every breakpoint, per PRODUCT.md."
+    ],
+    "donts": [
+      "Don't use antique parchment, medieval manuscript styling, heavy vignette, or sepia photography.",
+      "Don't paint full-purple light sections; Deep Aubergine is the only committed dark ground.",
+      "Don't invent fake coordinates, telemetry, archive codes, or travel facts.",
+      "Don't hide navigation or gate it behind hover-only interactions.",
+      "Don't build generic SaaS cards or a conventional dashboard shell.",
+      "Don't put Field Violet affordances on the aubergine band (The Dark-Band Coral Rule).",
+      "Don't introduce a third type family on redesigned surfaces (The Two-Family Rule)."
+    ]
+  }
+}
