@@ -514,7 +514,7 @@ a:focus-visible {
     linear-gradient(currentColor, currentColor);
   background-position: left center, right center;
   background-repeat: no-repeat;
-  background-size: auto, calc(100% - var(--hero-ring-hole) * 2 - var(--space-xs)) var(--hero-pattern-line);
+  background-size: auto, calc(100% - var(--hero-ring-hole) * 2) var(--hero-pattern-line);
   content: "";
 }
 
