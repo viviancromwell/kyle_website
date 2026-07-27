@@ -123,8 +123,7 @@
   --hero-tab-width: 4.5rem;
   --hero-pattern-line: 0.08rem;
   --hero-ring-hole: 0.3rem;
-  --hero-binding-height: 1.5rem;
-  --hero-binding-gap: 1.3rem;
+  --hero-binding-gap: 1rem;
   --hero-tape-width: 9rem;
   --hero-tape-height: 2.6rem;
   --hero-glimpse-width: clamp(18rem, 31vw, 31rem);
