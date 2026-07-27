@@ -723,28 +723,7 @@ a:focus-visible {
 }
 
 .home-archive-links a {
-  position: relative;
   border-bottom: var(--border-width) solid var(--color-collegiate-coral-soft);
-}
-
-.home-archive-links a::before,
-.home-archive-links a::after {
-  position: absolute;
-  bottom: calc(var(--hero-ring-hole) * -0.75);
-  width: calc(var(--hero-ring-hole) * 1.5);
-  height: calc(var(--hero-ring-hole) * 1.5);
-  border: var(--border-width) solid var(--color-collegiate-coral-soft);
-  border-radius: var(--radius-pill);
-  background: var(--color-aubergine);
-  content: "";
-}
-
-.home-archive-links a::before {
-  left: calc(var(--hero-ring-hole) * -0.75);
-}
-
-.home-archive-links a::after {
-  right: calc(var(--hero-ring-hole) * -0.75);
 }
 
 /* Separator stays glued to its link so a wrap can't strand it. */
