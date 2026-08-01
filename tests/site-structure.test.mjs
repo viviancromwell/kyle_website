@@ -31,9 +31,17 @@ test('main navigation exposes only the personal atlas sections', () => {
   assert.doesNotMatch(navigation, /Work|Portraits|Maternity|Events|href="\/work\//);
 });
 
-test('the About Me route is blank while retired hobbies stay out of navigation', () => {
-  assert.match(about, /<Base[\s\S]*>\s*<\/Base>/);
-  assert.doesNotMatch(about, /<header|<section|<article|<h1|<h2|<p|href="\/(chocolate|poems)\//);
+test('the About Me route introduces Kyle and carries the retired hobby archives', () => {
+  assert.match(about, /political science/i);
+  assert.match(about, /chess/i);
+  assert.match(about, /href="\/chocolate\/"/);
+  assert.match(about, /href="\/poems\/"/);
+  assert.match(about, /kylecromwell2023/);
+
+  // First person: the site is Kyle speaking, never narrated about him.
+  assert.doesNotMatch(about, /\bKyle (is|was|has|loves|studies|enjoys)\b/);
+
+  // The archives stay secondary: reachable from About, never in the main nav.
   assert.doesNotMatch(layout, /href="\/(chocolate|poems)\//);
 });
 
@@ -61,7 +69,7 @@ test('the Visited Countries page renders the migrated regional country data', as
   const countryNames = visitedCountryRegions.flatMap((region) => region.countries);
 
   assert.equal(visitedCountryRegions.length, 7);
-  assert.equal(countryNames.length, 48);
+  assert.equal(countryNames.length, 49);
 
   for (const country of [
     'United Kingdom',
@@ -71,6 +79,7 @@ test('the Visited Countries page renders the migrated regional country data', as
     'Jordan',
     'New Zealand',
     'Tanzania',
+    'Ireland',
   ]) {
     assert.ok(countryNames.includes(country), `Expected migrated list to include ${country}`);
   }

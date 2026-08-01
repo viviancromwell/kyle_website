@@ -1,41 +1,640 @@
 ---
 import Base from '../layouts/Base.astro';
+import FieldRoutes from '../components/FieldRoutes.astro';
 import { visitedCountryRegions } from '../data/visitedCountries.mjs';
 
-const totalEntries = visitedCountryRegions.reduce(
-  (total, region) => total + region.countries.length,
-  0,
-);
+const regions = visitedCountryRegions.map((region) => ({
+  ...region,
+  id: `region-${region.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
+}));
+
+const totalEntries = regions.reduce((total, region) => total + region.countries.length, 0);
 ---
 
 <Base
   title="Visited Countries — Kyle Cromwell"
-  description="Kyle Cromwell’s growing archive of visited countries and travel field notes."
+  description="A record of the countries I have visited, grouped by region."
 >
-  <header class="page-header reveal">
-    <div>
-      <p class="eyebrow">Atlas · 01</p>
-      <h1 class="page-title">Visited<br /><span>Countries</span></h1>
-    </div>
-    <p class="lede">
-      {totalEntries} entries from Kyle’s travels, organized by region and preserved from his original country list.
-    </p>
-  </header>
+  <div class="countries-journal">
+    <div class="countries-paper">
+      <div class="countries-inner">
+        <header class="countries-masthead">
+          <FieldRoutes variant="light" />
 
-  <section class="collection-grid reveal reveal--late" aria-label="Country archive">
-    {visitedCountryRegions.map((region, index) => (
-      <article class:list={['archive-card', { 'archive-card--feature': index === 0 }]}>
-        <span class="archive-index">Region · {String(index + 1).padStart(2, '0')}</span>
-        <div>
-          <h2>{region.name}</h2>
-          <ul class="country-list">
-            {region.countries.map((country) => <li>{country}</li>)}
-          </ul>
+          <div class="countries-masthead-copy">
+            <p class="countries-kicker">Personal Journal</p>
+            <h1 class="countries-title">Visited Countries</h1>
+            <p class="countries-intro">
+              The countries I have been to, grouped by region and kept in the order of my
+              original list.
+            </p>
+          </div>
+
+          <aside class="countries-tally" aria-label="Totals">
+            <span class="countries-tally-tape" aria-hidden="true"></span>
+            <dl>
+              <div>
+                <dt>Entries</dt>
+                <dd>{totalEntries}</dd>
+              </div>
+              <div>
+                <dt>Regions</dt>
+                <dd>{regions.length}</dd>
+              </div>
+            </dl>
+          </aside>
+        </header>
+
+        <nav class="countries-tabs" aria-label="Regions">
+          {regions.map((region) => <a href={`#${region.id}`}>{region.name}</a>)}
+        </nav>
+
+        <div class="countries-sheets">
+          {regions.map((region) => (
+            <section
+              class="countries-sheet"
+              id={region.id}
+              tabindex="-1"
+              aria-labelledby={`${region.id}-title`}
+            >
+              <span class="countries-binding" aria-hidden="true"></span>
+              <span class="countries-sheet-tape" aria-hidden="true"></span>
+
+              <div class="countries-sheet-head">
+                <h2 id={`${region.id}-title`}>{region.name}</h2>
+                <p class="countries-count">
+                  {region.countries.length}
+                  <span class="countries-count-unit">
+                    {region.countries.length === 1 ? 'entry' : 'entries'}
+                  </span>
+                </p>
+              </div>
+              <span class="countries-rule" aria-hidden="true"></span>
+
+              <ul class="countries-list">
+                {region.countries.map((country) => <li>{country}</li>)}
+              </ul>
+            </section>
+          ))}
         </div>
-        <span class="status-label">
-          {region.countries.length} {region.countries.length === 1 ? 'entry' : 'entries'}
-        </span>
-      </article>
-    ))}
-  </section>
+      </div>
+    </div>
+
+    <div class="countries-band">
+      <FieldRoutes variant="dark" />
+      <div class="countries-band-inner">
+        <h2>Elsewhere in the journal</h2>
+        <nav class="countries-band-links" aria-label="More of the journal">
+          <a href="/places/">Interesting Places</a>
+          <a href="/about/">About Me</a>
+          <a href="/">Back to the shelf</a>
+        </nav>
+      </div>
+    </div>
+  </div>
 </Base>
+
+<style>
+  /* ---------------------------------------------------------------------
+     The page ground only. The header, nav and footer belong to the shared
+     interior shell in global.css and are deliberately left alone. Scoped
+     with :has() so nothing here can outlive this route; hoist into
+     global.css when interior grounds are migrated.
+     --------------------------------------------------------------------- */
+  :global(body:has(.countries-journal)) {
+    color: var(--color-soft-charcoal);
+    background: var(--color-paper);
+  }
+
+  /* The starter grid overlay, hidden the way the home and showcase routes
+     already hide it. */
+  :global(body:has(.countries-journal))::before {
+    display: none;
+  }
+
+  /* This page is full-bleed: the wall runs edge to edge and the measure is
+     held by .countries-inner instead. */
+  :global(body:has(.countries-journal) .page) {
+    max-width: none;
+    padding: 0;
+  }
+
+  /* --- The page ground: the same wall the home hero is pinned to. ------- */
+  .countries-journal {
+    display: grid;
+    color: var(--color-soft-charcoal);
+    background: var(--color-paper);
+  }
+
+  .countries-paper {
+    padding: var(--space-hero-gutter);
+    overflow-x: clip;
+    background: var(--color-paper) url("../assets/home/wall-white.jpg") left top / 64rem auto repeat;
+  }
+
+  .countries-inner {
+    display: grid;
+    gap: var(--space-hero-section);
+    width: 100%;
+    max-width: var(--max-width-page);
+    margin-inline: auto;
+  }
+
+  /* --- Masthead -------------------------------------------------------- */
+  .countries-masthead {
+    position: relative;
+    display: grid;
+    gap: var(--space-xl);
+    align-items: start;
+    min-height: var(--hero-note-min-height);
+    padding-block: var(--space-md) var(--space-xl);
+  }
+
+  .countries-masthead-copy,
+  .countries-tally {
+    position: relative;
+    z-index: 1;
+  }
+
+  .countries-masthead-copy {
+    display: grid;
+    gap: var(--space-md);
+    align-content: start;
+    max-width: var(--max-width-copy);
+  }
+
+  .countries-kicker,
+  .countries-title,
+  .countries-intro {
+    margin-bottom: 0;
+  }
+
+  .countries-kicker {
+    color: var(--color-field-violet);
+    font-family: var(--font-display);
+    font-size: var(--text-hero-kicker);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+  }
+
+  /* The name rule from the home hero, carried onto the page title: violet
+     hairline closed by a ring node. */
+  .countries-title {
+    position: relative;
+    width: fit-content;
+    padding-right: var(--space-xl);
+    padding-bottom: var(--space-md);
+    border-bottom: var(--border-width) solid var(--color-field-violet);
+    font-size: var(--text-2xl);
+    font-weight: 500;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-tight);
+  }
+
+  .countries-title::after {
+    position: absolute;
+    right: 0;
+    bottom: calc(var(--hero-ring-hole) * -1);
+    width: calc(var(--hero-ring-hole) * 2);
+    height: calc(var(--hero-ring-hole) * 2);
+    border: var(--border-width) solid var(--color-field-violet);
+    border-radius: var(--radius-pill);
+    background: var(--color-paper);
+    content: "";
+  }
+
+  .countries-intro {
+    max-width: var(--max-width-intro);
+    font-size: var(--text-lg);
+  }
+
+  /* A counted-up index card, taped down at an angle. */
+  .countries-tally {
+    width: fit-content;
+    padding: var(--space-md) var(--space-lg);
+    border: var(--border-width) solid var(--color-paper-muted);
+    border-radius: var(--radius-note);
+    background: var(--color-paper-raised);
+    box-shadow: var(--shadow-note);
+    transform: rotate(-2.5deg);
+  }
+
+  .countries-tally dl {
+    display: flex;
+    gap: var(--space-lg);
+    margin: 0;
+  }
+
+  .countries-tally dt {
+    color: var(--color-caption-ink);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+  }
+
+  .countries-tally dd {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 500;
+    line-height: var(--leading-tight);
+  }
+
+  /* --- Region tabs ----------------------------------------------------- */
+  .countries-tabs {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-top: calc(var(--space-xl) * -1);
+  }
+
+  .countries-tabs a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--hero-touch-target);
+    padding: var(--space-xs) var(--space-md);
+    padding-top: calc(var(--space-xs) + var(--space-2xs));
+    overflow: hidden;
+    border: var(--border-width) solid var(--color-paper-muted);
+    border-radius: var(--radius-note);
+    color: var(--color-aubergine);
+    background: var(--color-paper-raised);
+    box-shadow: var(--shadow-note);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition:
+      transform var(--duration-fast) var(--ease-out),
+      box-shadow var(--duration-fast) var(--ease-out);
+  }
+
+  .countries-tabs a::before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: var(--space-2xs);
+    background: var(--color-field-violet);
+    content: "";
+  }
+
+  .countries-tabs a:nth-child(odd) {
+    transform: rotate(-1deg);
+  }
+
+  .countries-tabs a:nth-child(even) {
+    transform: rotate(1deg);
+  }
+
+  /* --- Region sheets --------------------------------------------------- */
+  /* Sheets are placed by hand rather than flowed: the wide region across the
+     top, then two rows of three, so the pinboard has a composed bottom edge
+     instead of whatever a column balancer happens to produce. */
+  .countries-sheets {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: start;
+  }
+
+  .countries-sheet {
+    --sheet-rotate: 0deg;
+
+    position: relative;
+    padding: var(--space-lg);
+    padding-top: calc(var(--space-lg) + var(--space-md));
+    border: var(--border-width) solid var(--color-paper-line);
+    border-radius: var(--radius-note);
+    background: var(--color-paper-raised);
+    box-shadow: var(--shadow-note);
+    scroll-margin-top: calc(var(--space-2xl) + var(--space-md));
+    transform: rotate(var(--sheet-rotate));
+    animation: countries-pin var(--duration-slow) var(--ease-out) both;
+  }
+
+  .countries-sheet:target {
+    border-color: var(--color-field-violet);
+  }
+
+  .countries-sheet:focus-visible {
+    outline: var(--focus-ring-width) solid var(--color-focus);
+    outline-offset: var(--space-2xs);
+  }
+
+  .countries-sheet:nth-child(1) { --sheet-rotate: -1deg; }
+  .countries-sheet:nth-child(2) { --sheet-rotate: 1.25deg; }
+  .countries-sheet:nth-child(3) { --sheet-rotate: -1.5deg; }
+  .countries-sheet:nth-child(4) { --sheet-rotate: 1.75deg; }
+  .countries-sheet:nth-child(5) { --sheet-rotate: -1.25deg; }
+  .countries-sheet:nth-child(6) { --sheet-rotate: 2deg; }
+  .countries-sheet:nth-child(7) { --sheet-rotate: -1.75deg; }
+
+  .countries-sheet:nth-child(2) { animation-delay: calc(var(--duration-fast) * 0.25); }
+  .countries-sheet:nth-child(3) { animation-delay: calc(var(--duration-fast) * 0.5); }
+  .countries-sheet:nth-child(4) { animation-delay: calc(var(--duration-fast) * 0.75); }
+  .countries-sheet:nth-child(5) { animation-delay: var(--duration-fast); }
+  .countries-sheet:nth-child(6) { animation-delay: calc(var(--duration-fast) * 1.25); }
+  .countries-sheet:nth-child(7) { animation-delay: calc(var(--duration-fast) * 1.5); }
+
+  @keyframes countries-pin {
+    from {
+      opacity: 0;
+      transform: translateY(var(--space-sm)) rotate(var(--sheet-rotate));
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0) rotate(var(--sheet-rotate));
+    }
+  }
+
+  /* Spiral-binding keyholes punched below the top edge; the same embedded
+     tile the home notepads use, so the sheets read as the same notebook. */
+  .countries-binding {
+    position: absolute;
+    top: var(--border-width);
+    right: var(--space-md);
+    left: var(--space-md);
+    height: calc(var(--hero-binding-gap) * 0.79);
+    background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2028%2022'%3E%3Cpath%20d='M14.6%200c-.3%203-1.2%205-.9%208.6'%20stroke='%23CFC8BA'%20stroke-width='1.2'%20fill='none'/%3E%3Ccircle%20cx='13.9'%20cy='14'%20r='5'%20fill='%23DFD8CB'/%3E%3Ccircle%20cx='13.9'%20cy='14.4'%20r='3.8'%20fill='%23B5AC9D'/%3E%3Ccircle%20cx='13.9'%20cy='13.6'%20r='3.8'%20fill='%23C6BDAF'/%3E%3C/svg%3E");
+    background-position: left top;
+    background-repeat: round no-repeat;
+    background-size: var(--hero-binding-gap) 100%;
+  }
+
+  .countries-sheet-head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs) var(--space-md);
+    align-items: baseline;
+    justify-content: space-between;
+    margin-top: var(--space-md);
+  }
+
+  .countries-sheet-head h2 {
+    margin-bottom: 0;
+    font-size: var(--text-hero-destination);
+    font-weight: 500;
+    line-height: var(--leading-tight);
+    text-transform: uppercase;
+  }
+
+  .countries-count {
+    margin-bottom: 0;
+    color: var(--color-caption-ink);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+  }
+
+  /* The sheets show a bare numeral, the way a count gets written in a
+     margin. Screen readers still need the unit to make sense of it. */
+  .countries-count-unit {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* The role rule: a violet hairline anchored by a route ring node. */
+  .countries-rule {
+    display: block;
+    height: calc(var(--hero-ring-hole) * 2);
+    margin-top: var(--space-sm);
+    color: var(--color-field-violet);
+    background-image:
+      radial-gradient(
+        circle at var(--hero-ring-hole) center,
+        transparent 0 calc(var(--hero-ring-hole) - var(--hero-pattern-line)),
+        currentColor calc(var(--hero-ring-hole) - var(--hero-pattern-line)) var(--hero-ring-hole),
+        transparent var(--hero-ring-hole)
+      ),
+      linear-gradient(currentColor, currentColor);
+    background-position: left center, right center;
+    background-repeat: no-repeat;
+    background-size: auto, calc(100% - var(--hero-ring-hole) * 2) var(--hero-pattern-line);
+  }
+
+  /* Countries written on the ruling: every line box is one --space-lg row,
+     and the hairline lands on that row's baseline. Short regions keep six
+     ruled rows, so a two-entry sheet still reads as a page with room left. */
+  .countries-list {
+    min-height: calc(var(--space-lg) * 6);
+    margin: var(--space-lg) 0 0;
+    padding: 0;
+    columns: calc(var(--space-2xl) * 2);
+    column-gap: var(--space-lg);
+    list-style: none;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(var(--space-lg) - var(--hero-pattern-line)),
+      var(--color-paper-line) calc(var(--space-lg) - var(--hero-pattern-line)),
+      var(--color-paper-line) var(--space-lg)
+    );
+  }
+
+  /* Hanging indent rather than an absolutely positioned mark: inside a
+     multi-column list Chrome drops abspos pseudo-elements from the last row
+     of each column, which silently ate three of the checks. */
+  .countries-list li {
+    padding-left: var(--space-md);
+    line-height: var(--space-lg);
+    text-indent: calc(var(--space-md) * -1);
+    break-inside: avoid;
+  }
+
+  /* A violet check against each country: visited, ticked off by hand. */
+  .countries-list li::before {
+    display: inline-block;
+    width: var(--space-md);
+    color: var(--color-field-violet);
+    font-size: var(--text-sm);
+    line-height: 1;
+    text-indent: 0;
+    content: "✓";
+  }
+
+  /* Washi tape cropped from the approved direction, shared with the home
+     collage; torn ends via clip-path. */
+  .countries-tally-tape,
+  .countries-sheet-tape {
+    position: absolute;
+    z-index: 1;
+    background: url("../assets/home/tape-washi.png") center / cover no-repeat;
+    box-shadow: var(--shadow-tape);
+    clip-path: polygon(
+      0 8%, 1.5% 0, 98% 3%, 100% 10%, 98.8% 32%, 100% 52%, 98.5% 78%, 100% 94%,
+      97.5% 100%, 2% 97%, 0 88%, 1.2% 66%, 0 42%, 1% 18%
+    );
+    opacity: 0.9;
+  }
+
+  .countries-tally-tape {
+    top: calc(var(--hero-tape-height) * -0.45);
+    left: var(--space-lg);
+    width: calc(var(--hero-tape-width) * 0.5);
+    height: calc(var(--hero-tape-height) * 0.8);
+    transform: rotate(-6deg);
+  }
+
+  /* Only three sheets are taped; a strip on every one would read as a
+     pattern instead of a hand placing them. */
+  .countries-sheet-tape {
+    display: none;
+    width: calc(var(--hero-tape-width) * 0.55);
+    height: calc(var(--hero-tape-height) * 0.8);
+  }
+
+  .countries-sheet:nth-child(1) .countries-sheet-tape,
+  .countries-sheet:nth-child(4) .countries-sheet-tape,
+  .countries-sheet:nth-child(6) .countries-sheet-tape {
+    display: block;
+  }
+
+  .countries-sheet:nth-child(1) .countries-sheet-tape {
+    top: calc(var(--hero-tape-height) * -0.4);
+    left: calc(var(--space-lg) * -1);
+    transform: rotate(-18deg);
+  }
+
+  .countries-sheet:nth-child(4) .countries-sheet-tape {
+    top: calc(var(--hero-tape-height) * -0.4);
+    right: var(--space-xl);
+    transform: rotate(8deg);
+  }
+
+  .countries-sheet:nth-child(6) .countries-sheet-tape {
+    right: calc(var(--space-lg) * -1);
+    bottom: var(--space-xl);
+    transform: rotate(74deg);
+  }
+
+  /* --- The journal cover band ------------------------------------------ */
+  .countries-band {
+    --color-focus: var(--color-collegiate-coral-soft);
+
+    position: relative;
+    display: grid;
+    align-content: center;
+    min-height: var(--hero-band-min-height);
+    padding: var(--space-xl) var(--space-hero-gutter);
+    color: var(--color-on-aubergine);
+    background: var(--color-aubergine);
+  }
+
+  .countries-band-inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: var(--space-lg);
+    align-content: start;
+    width: 100%;
+    max-width: var(--max-width-page);
+    margin-inline: auto;
+    padding-left: var(--space-lg);
+    border-left: calc(var(--border-width) * 2) solid var(--color-collegiate-coral-soft);
+  }
+
+  .countries-band-inner h2 {
+    margin-bottom: 0;
+    font-size: var(--text-hero-destination);
+    font-weight: 500;
+    line-height: var(--leading-tight);
+    text-transform: uppercase;
+  }
+
+  .countries-band-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm) var(--space-xl);
+    align-items: center;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+  }
+
+  /* Field Violet is invisible on aubergine; coral carries the affordance. */
+  .countries-band-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--hero-touch-target);
+    padding-bottom: var(--space-xs);
+    border-bottom: var(--border-width) solid var(--color-collegiate-coral-soft);
+    color: var(--color-on-aubergine);
+    text-decoration: none;
+  }
+
+  .countries-band-links a:hover {
+    border-color: var(--color-on-aubergine);
+    color: var(--color-paper);
+  }
+
+  /* Hover-capable pointers only; on touch the lift sticks after a tap. */
+  @media (hover: hover) {
+    .countries-tabs a:hover {
+      box-shadow: var(--shadow-paper);
+      transform: translateY(var(--hover-lift)) rotate(0deg);
+    }
+  }
+
+  .countries-tabs a:active {
+    transform: scale(0.985);
+  }
+
+  @media (min-width: 48rem) {
+    .countries-masthead {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .countries-tally {
+      justify-self: end;
+      margin-top: var(--space-lg);
+    }
+
+    .countries-sheets {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+
+    /* The largest region takes the wide sheet across the top, its entries
+       set as a proper index rather than one long column. */
+    .countries-sheet:nth-child(1) {
+      grid-column: 1 / -1;
+      margin-bottom: var(--space-lg);
+    }
+
+    .countries-sheet:nth-child(1) .countries-list { columns: 3; }
+
+    .countries-sheet:nth-child(2) { grid-column: 1 / 4; }
+    .countries-sheet:nth-child(3) { grid-column: 4 / -1; }
+    .countries-sheet:nth-child(4) { grid-column: 1 / 4; }
+    .countries-sheet:nth-child(5) { grid-column: 4 / -1; }
+    .countries-sheet:nth-child(6) { grid-column: 1 / 4; }
+    .countries-sheet:nth-child(7) { grid-column: 4 / -1; }
+  }
+
+  @media (min-width: 72rem) {
+    .countries-sheet {
+      scroll-margin-top: var(--space-2xl);
+    }
+
+    .countries-sheet:nth-child(1) .countries-list { columns: 4; }
+
+    .countries-sheet:nth-child(2) { grid-column: 1 / 3; }
+    .countries-sheet:nth-child(3) { grid-column: 3 / 5; }
+    .countries-sheet:nth-child(4) { grid-column: 5 / -1; }
+    .countries-sheet:nth-child(5) { grid-column: 1 / 3; }
+    .countries-sheet:nth-child(6) { grid-column: 3 / 5; }
+    .countries-sheet:nth-child(7) { grid-column: 5 / -1; }
+  }
+</style>

@@ -1,4 +1,6 @@
 // Migrated from kylecromwell.com/countries-i-visited on July 21, 2026.
+// Ireland added August 1, 2026: visited summer 2026, appended to Europe so
+// the rest of the list keeps its original order.
 export const visitedCountryRegions = [
   {
     name: 'Europe',
@@ -22,6 +24,7 @@ export const visitedCountryRegions = [
       'Iceland',
       'Finland',
       'Vatican City',
+      'Ireland',
     ],
   },
   {

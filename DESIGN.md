@@ -15,8 +15,10 @@ colors:
   on-aubergine: "oklch(0.94 0.015 84.58)"
   on-aubergine-muted: "oklch(0.78 0.025 310)"
   caption-ink: "oklch(0.5 0.02 60)"
-  route-light: "oklch(0.82 0.012 79.35)"
+  route-light: "oklch(0.78 0.014 285)"
   route-dark: "oklch(0.42 0.05 295.24)"
+  shelf-wood: "color-mix(in oklab, {colors.caption-ink} 72%, {colors.soft-charcoal})"
+  shelf-wood-light: "color-mix(in oklab, {colors.caption-ink} 55%, {colors.warm-paper})"
 typography:
   display:
     fontFamily: "Cormorant SC, Georgia, Times New Roman, serif"
@@ -61,16 +63,16 @@ spacing:
   2xl: "6rem"
   3xl: "9rem"
 components:
-  destination-card:
-    backgroundColor: "{colors.paper-raised}"
-    textColor: "{colors.soft-charcoal}"
-    rounded: "{rounded.note}"
-    padding: "clamp(1.25rem, 2.2vw, 2.25rem)"
-  about-tab:
-    backgroundColor: "{colors.paper-raised}"
-    textColor: "{colors.deep-aubergine}"
-    rounded: "{rounded.note}"
-    width: "4.5rem"
+  book:
+    backgroundColor: "leather or cloth in {colors.field-violet} / {colors.collegiate-coral} / {colors.deep-aubergine}"
+    textColor: "{colors.on-aubergine}"
+    rounded: "0.125rem"
+    height: "clamp(18rem, 30vw, 26rem)"
+    spineWidth: "clamp(4.5rem, 6.5vw, 6rem)"
+  shelf-ledge:
+    backgroundColor: "{colors.shelf-wood}"
+    rounded: "{rounded.print}"
+    thickness: "1rem"
   archive-link:
     backgroundColor: "{colors.deep-aubergine}"
     textColor: "{colors.on-aubergine}"
@@ -122,12 +124,12 @@ A warm cream field with two saturated role accents and one committed dark band.
 - **Collegiate Coral Soft** (oklch(0.6985 0.1589 36.85)): the coral that works on aubergine (4.96:1). Carries every link underline, ring ornament, and focus ring inside the band.
 
 ### Neutral
-- **Warm Paper** (oklch(0.9486 0.0165 79.35)): the main notebook ground. Creamy and clean, never sepia, stained, or vignetted.
+- **Warm Paper** (oklch(0.9486 0.0165 79.35)): the main notebook ground. Creamy and clean, never sepia, stained, or vignetted. On the home hero it carries a sampled wall-paper texture (`src/assets/home/wall-white.jpg`, tiled at 64rem) with the token color underneath as the load fallback. The texture is a material on an existing ground, not a new ground.
 - **Paper Raised** (oklch(0.975 0.009 84.58)): notepads, prints, tabs, the field note.
 - **Soft Charcoal** (oklch(0.2556 0.0159 307.77)): light-theme text.
 - **Caption Ink** (oklch(0.5 0.02 60)): warm muted ink for print captions; replaces the cool starter gray, clears AA on Paper Raised.
 - **On Aubergine / On Aubergine Muted**: text roles on the dark band.
-- **Route Light / Route Dark**: the faded decorative route and lattice strokes on each ground (intentionally sub-contrast; decoration only).
+- **Route Light / Route Dark**: the faded decorative route and lattice strokes on each ground (intentionally sub-contrast; decoration only). Route Light was re-tuned cooler and one step darker so the web stays legible on the wall-paper ground.
 
 ### Named Rules
 **The Closed-Ground Rule.** Surfaces are Warm Paper, Paper Raised, or Deep Aubergine. A token scale step is not a sanctioned surface; propose new grounds, never apply them unilaterally.
@@ -143,7 +145,7 @@ A warm cream field with two saturated role accents and one committed dark band.
 
 ### Hierarchy
 - **Display** (500, clamp(3.25rem, 5.4vw, 5.5rem), 0.96): Kyle's name only.
-- **Headline** (500, clamp(1.5rem, 1.9vw, 1.85rem), 0.96, uppercase): notepad panel titles.
+- **Headline** (500, clamp(1.5rem, 1.9vw, 1.85rem), 0.96, uppercase): book spine and cover titles.
 - **Kicker** (600, clamp(1rem, 1.3vw, 1.25rem), 0.18em tracking, uppercase, Field Violet): the "Personal Journal" line.
 - **Body** (400, 1rem, 1.55): copy and the intro; intro measures capped at 24rem.
 - **Label** (600, 0.875rem, 0.12em tracking, uppercase): archive links, About tab.
@@ -160,29 +162,32 @@ Depth is conveyed by material stacking (overlap, rotation, tape) far more than b
 - **Paper** (`0 0.5rem 1.5rem oklch(0.2556 0.0159 307.77 / 0.07)`): photographic prints; also the hover state of pressables.
 - **Note** (`0 0.25rem 0.75rem oklch(0.2556 0.0159 307.77 / 0.09)`): notepads, tabs, the field note at rest.
 - **Tape** (`0 0.15rem 0.4rem oklch(0.2556 0.0159 307.77 / 0.05)`): washi tape pieces.
+- **Book board** (inset, top and bottom, 0.09): the head and tail edges of a book's boards, read as thickness rather than lift.
 
 ### Named Rules
-**The Whisper-Shadow Rule.** Shadow opacity never exceeds 0.09. Depth comes from overlap and rotation, not from lift.
+**The Whisper-Shadow Rule.** Shadow opacity never exceeds 0.09. Depth comes from overlap and rotation, not from lift. One sanctioned exception: the book contact shadow on the wooden ledge, which is invisible at the cap.
 
 ## 5. Components
 
-### Notepad Panel (destination card)
-- **Character:** a sheet torn from a spiral notebook, holding one destination.
-- **Shape:** softly rounded (0.4rem), Paper Raised on a 1px Paper Muted border, min-height 11.5rem.
-- **Binding:** keyhole strip along the top edge, inside the pad: a short curved stem descending from the edge into a soft grey shadow dot (embedded SVG tile, 1rem pitch).
-- **Content:** role-colored icon (1.1 stroke) top-left, uppercase Cormorant title bottom-left with an inline arrow, and a role-colored rule with a ring node at its left end connecting directly to the line.
-- **States:** hover lifts -0.25rem with the Paper shadow (hover-capable pointers only); active presses to scale(0.985); focus uses the global violet ring.
+### Bookshelf / Book (primary navigation)
+- **Character:** three closed volumes standing on a wooden shelf, spines out. Books are journal objects, so the shelf stays inside the field-journal north star while giving the site index real physical presence.
+- **Materials:** Visited Countries wears a sampled violet leather (`src/assets/textures/leather-violet.jpg`); Interesting Places wears a sampled leather whose grain and single stitched binding seam carry the texture while `--color-collegiate-coral-soft` supplies the color through luminosity blending (raw coral goes muddy against the leather's dark luminance, and the seam sits on the closed spine's left edge, on the cover's right); About Me is Deep Aubergine cloth under the rag-paper grain tile. The `--color-book-cloth-*` tokens (role accent mixed 70/30 toward Soft Charcoal) are the aged-cloth fallbacks beneath the leathers.
+- **Shape:** 0.125rem radius (`--radius-book`), height clamp(18rem, 30vw, 26rem), primary spines clamp(4.5rem, 6.5vw, 6rem). Titles are Cormorant SC in On Aubergine, vertical-rl on the spine and horizontal on the cover, set straight on the material with no label card.
+- **Hierarchy:** About Me is the thinner (2.75rem), shorter volume, keeping it quieter than the two primaries per PRODUCT.md without a rule change.
+- **States:** hover tips the book (hover-capable pointers only); the first activation pulls it off the shelf and turns it to face the viewer, presenting the cover clear of the other spines (left of the row on wide screens, centered over it on small ones); the second activation navigates. `aria-expanded` tracks the state, one book open at a time, Esc or click-away closes, and the shelf raises above the collage while a book is out. Without JS the books are plain links, so navigation is never gated. The turn is a single transform on `--ease-in-out` within the 400ms ceiling; reduced motion swaps instantly.
+- **Contact shadow:** a soft radial shadow grounds each book on the ledge, fading on hover and disappearing once the book is off the shelf. This is the one sanctioned exception to The Whisper-Shadow Rule: at 0.09 the shadow was invisible against the wood.
 
-### About Tab
-- **Character:** a quieter bookmark tucked behind the countries panel.
-- **Form (desktop, 72rem+):** 4.5rem-wide vertical tab, violet cap bar, rotated continuous "About me" label (vertical-rl), circled person icon below; tucked under the countries panel and slides out 0.75rem on hover/focus. Below 72rem it is a horizontal chip placed after the panels, per PRODUCT.md's quieter-secondary role.
+### Shelf Ledge
+- **Character:** an old wooden board, not a hairline rule: 1rem thick, lit top edge over a shaded front face, faint horizontal grain streaks, the rag-paper grain over it, and a tapered corbel bracket under each end.
+- **Color:** `--color-shelf-wood` and `--color-shelf-wood-light`, both mixed from the palette's warm Caption Ink so the wood introduces no raw new color.
 
-### Travel Print / Field Note / Band Print
+### Travel Print / Field Note / Mini Print / Band Print
 - **Character:** photographs as physical objects; each carries a centered italic Caption Ink label.
 - **Travel print:** white-bordered square print, washi tape at top, rotation 1.25deg.
+- **Mini print:** a smaller square print in the travel print's material, tilted -2.5deg with corner tape, filling the collage pocket between the note and the shelf.
 - **Field note:** ruled Paper Raised sheet (repeating 1px Paper Line), binding keyholes, grayscale-multiplied photo, rotation 4.5deg, descends into the band; corner tape at its lower right.
 - **Band print:** wide 2:1 print straddling the band's top edge.
-- **Behavior:** the three images shuffle per visit from the Interesting Places pool (Fisher-Yates). Each replacement decodes off-screen first, then the print fades out, swaps, and fades back in; nothing hides before its replacement is ready. Swapped images carry empty alt with the figcaption naming the place; the static SSR fallbacks keep their descriptive alts for no-JS.
+- **Behavior:** the four images shuffle per visit from the Interesting Places pool (Fisher-Yates). Each replacement decodes off-screen first, then the print fades out, swaps, and fades back in; nothing hides before its replacement is ready. Swapped images carry empty alt with the figcaption naming the place; the static SSR fallbacks keep their descriptive alts for no-JS.
 
 ### Archive Links (band)
 - **Style:** uppercase Label type in On Aubergine with a plain Collegiate Coral Soft underline; interpunct separators bound to their links so a wrap cannot strand them; the non-link "Older archives" label is plain On Aubergine Muted with no underline.

@@ -124,67 +124,79 @@ a:focus-visible {
   padding-inline: var(--space-md);
 }
 
+/* The site header is the journal's cover edge: a full-bleed Deep Aubergine
+   band carrying the same stitched diamond lattice as the home band, no card
+   and no border. Affordances are Collegiate Coral Soft per The Dark-Band
+   Coral Rule. */
 .site-header {
+  /* Field Violet is invisible on aubergine (1.8:1), so the whole band swaps
+     to the coral companion for focus, and hovers go to paper, not to the
+     global violet accent. */
+  --color-focus: var(--color-collegiate-coral-soft);
+
   position: sticky;
-  top: var(--header-offset);
+  top: 0;
   z-index: 10;
+  max-width: none;
+  padding-inline: 0;
+  overflow: hidden;
+  background: var(--color-aubergine);
+}
+
+.site-header a:hover {
+  color: var(--color-paper);
 }
 
 .site-nav {
+  position: relative;
+  z-index: 1;
   display: grid;
-  gap: var(--space-md);
+  gap: var(--space-sm);
   align-items: center;
-  margin-top: var(--space-md);
-  padding: var(--space-sm) var(--space-md);
-  border: var(--border-width) solid var(--color-border);
-  border-radius: var(--radius-lg);
-  background: var(--color-header);
-  box-shadow: var(--shadow-card);
-  backdrop-filter: blur(var(--space-lg));
+  width: 100%;
+  max-width: var(--max-width-page);
+  margin-inline: auto;
+  padding: var(--space-md);
 }
 
 .nav-name {
-  display: inline-flex;
-  gap: var(--space-xs);
-  align-items: center;
   width: fit-content;
-  font-weight: 700;
-  text-decoration: none;
+  color: var(--color-on-aubergine);
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 500;
   letter-spacing: var(--tracking-tight);
+  text-decoration: none;
 }
 
-.nav-name::before {
-  width: var(--size-orbit-dot);
-  height: var(--size-orbit-dot);
-  border-radius: var(--radius-pill);
-  background: var(--gradient-accent);
-  box-shadow: var(--shadow-glow);
-  content: "";
+.nav-name:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--color-collegiate-coral-soft);
+  text-underline-offset: var(--space-2xs);
 }
 
 .nav-links {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-xs);
+  gap: var(--space-md);
 }
 
 .nav-links a {
-  padding: var(--space-xs) var(--space-sm);
-  border: var(--border-width) solid transparent;
-  border-radius: var(--radius-pill);
-  color: var(--color-text-secondary);
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
+  padding-bottom: var(--space-2xs);
+  border-bottom: calc(var(--border-width) * 2) solid transparent;
+  color: var(--color-on-aubergine-muted);
+  font-size: var(--text-sm);
+  font-weight: 600;
   letter-spacing: var(--tracking-wide);
   text-decoration: none;
   text-transform: uppercase;
+  transition: color var(--duration-fast) var(--ease-out);
 }
 
 .nav-links a:hover,
 .nav-links a[aria-current="page"] {
-  border-color: var(--color-border);
-  color: var(--color-text);
-  background: var(--color-surface);
+  border-bottom-color: var(--color-collegiate-coral-soft);
+  color: var(--color-on-aubergine);
 }
 
 .page {
@@ -666,80 +678,9 @@ a:focus-visible {
   }
 }
 
-.home-destinations {
-  position: relative;
-  z-index: 2;
-  display: grid;
-  grid-area: destinations;
-  gap: var(--space-md);
-}
-
-.home-about-tab,
-.home-destination {
-  min-height: var(--hero-touch-target);
-  color: var(--color-soft-charcoal);
-  background: var(--color-paper-raised);
-  box-shadow: var(--shadow-note);
-  text-decoration: none;
-}
-
-.home-about-tab {
-  position: relative;
-  display: inline-flex;
-  gap: var(--space-sm);
-  align-items: center;
-  width: fit-content;
-  padding: var(--space-sm) var(--space-md);
-  overflow: hidden;
-  border: var(--border-width) solid var(--color-paper-muted);
-  border-radius: var(--radius-note);
-  color: var(--color-aubergine);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
-}
-
-.home-about-tab::before {
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  height: var(--space-xs);
-  background: var(--color-field-violet);
-  content: "";
-}
-
-.home-about-tab svg {
-  flex: 0 0 auto;
-  width: var(--space-lg);
-  height: var(--space-lg);
-  padding: var(--space-2xs);
-  border: var(--border-width) solid currentColor;
-  border-radius: var(--radius-pill);
-  fill: none;
-  stroke: currentColor;
-  stroke-width: var(--hero-icon-stroke);
-}
-
-.home-destination {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-rows: auto 1fr;
-  gap: var(--space-md);
-  min-height: var(--hero-destination-min-height);
-  padding: var(--space-hero-card);
-  padding-top: calc(var(--space-hero-card) + var(--space-md));
-  padding-bottom: calc(var(--space-lg) * 2);
-  border: var(--border-width) solid var(--color-paper-muted);
-  border-radius: var(--radius-note);
-}
-
 /* Spiral-binding keyholes punched below the top edge, per the approved
    direction: a stem descends from the edge into a soft grey shadow dot.
    Embedded greys are the warm binding tones sampled from the mock. */
-.home-destination::before,
 .home-field-note::before {
   position: absolute;
   top: var(--border-width);
@@ -751,66 +692,6 @@ a:focus-visible {
   background-repeat: round no-repeat;
   background-size: var(--hero-binding-gap) 100%;
   content: "";
-}
-
-.home-destination::after {
-  position: absolute;
-  right: var(--space-hero-card);
-  bottom: var(--space-lg);
-  left: var(--space-hero-card);
-  height: calc(var(--hero-ring-hole) * 2);
-  background-image:
-    radial-gradient(
-      circle at var(--hero-ring-hole) center,
-      transparent 0 calc(var(--hero-ring-hole) - var(--hero-pattern-line)),
-      currentColor calc(var(--hero-ring-hole) - var(--hero-pattern-line)) var(--hero-ring-hole),
-      transparent var(--hero-ring-hole)
-    ),
-    linear-gradient(currentColor, currentColor);
-  background-position: left center, right center;
-  background-repeat: no-repeat;
-  background-size: auto, calc(100% - var(--hero-ring-hole) * 2) var(--hero-pattern-line);
-  content: "";
-}
-
-.home-destination-icon {
-  grid-column: 1 / -1;
-  width: var(--hero-icon-size);
-  height: var(--hero-icon-size);
-  fill: none;
-  stroke: currentColor;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: var(--hero-icon-stroke);
-}
-
-.home-destination-title {
-  align-self: end;
-  font-family: var(--font-display);
-  font-size: var(--text-hero-destination);
-  font-weight: 500;
-  letter-spacing: var(--tracking-tight);
-  line-height: var(--leading-tight);
-  text-transform: uppercase;
-}
-
-.home-destination-arrow {
-  align-self: end;
-  font-size: var(--text-hero-destination);
-  line-height: var(--leading-tight);
-}
-
-.home-destination--countries {
-  color: var(--color-field-violet);
-}
-
-.home-destination--places {
-  color: var(--color-collegiate-coral);
-}
-
-.home-destination--countries .home-destination-title,
-.home-destination--places .home-destination-title {
-  color: var(--color-soft-charcoal);
 }
 
 .home-hero-media {
@@ -1069,27 +950,6 @@ a:focus-visible {
 
 .home-journal-glimpse img {
   aspect-ratio: 2 / 1;
-}
-
-.home-about-tab,
-.home-destination {
-  transition:
-    transform var(--duration-fast) var(--ease-out),
-    box-shadow var(--duration-fast) var(--ease-out);
-}
-
-/* Hover-capable pointers only; on touch the lift would stick after tap. */
-@media (hover: hover) {
-  .home-about-tab:hover,
-  .home-destination:hover {
-    box-shadow: var(--shadow-paper);
-    transform: translateY(var(--hover-lift));
-  }
-}
-
-.home-about-tab:active,
-.home-destination:active {
-  transform: scale(0.985);
 }
 
 .portal-grid,
@@ -1414,7 +1274,6 @@ a:focus-visible {
 }
 
 @media (min-width: 48rem) {
-  .site-header,
   .site-footer,
   .page {
     padding-inline: var(--space-lg);
@@ -1423,6 +1282,7 @@ a:focus-visible {
   .site-nav {
     display: flex;
     justify-content: space-between;
+    padding-inline: var(--space-lg);
   }
 
   .nav-links {

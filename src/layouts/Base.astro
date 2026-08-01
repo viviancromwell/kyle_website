@@ -1,10 +1,11 @@
 ---
 import '../styles/tokens.css';
 import '../styles/global.css';
+import FieldRoutes from '../components/FieldRoutes.astro';
 
 const {
   title = 'Kyle Cromwell — Personal Field Atlas',
-  description = 'Kyle Cromwell’s personal atlas of visited countries, interesting places, and retired hobbies.',
+  description = 'My personal atlas of visited countries, interesting places, and retired hobbies.',
 } = Astro.props;
 
 const pathname = Astro.url.pathname;
@@ -42,6 +43,7 @@ const isCurrent = (route) => pathname === route || pathname.startsWith(route);
     {
       !isHome && !isShowcase && (
         <header class="site-header">
+          <FieldRoutes variant="dark" />
           <nav class="site-nav" aria-label="Main">
             <a href="/" class="nav-name">Kyle Cromwell</a>
             <div class="nav-links">

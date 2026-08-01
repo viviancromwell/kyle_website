@@ -2,47 +2,633 @@
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import Base from '../layouts/Base.astro';
+import FieldRoutes from '../components/FieldRoutes.astro';
 import { poems } from '../data/poems.mjs';
 
 const poemImages = import.meta.glob('../assets/poems/*', {
   eager: true,
   import: 'default',
 }) as Record<string, ImageMetadata>;
+
+// Both originals are wider than the largest width requested (732px and 788px),
+// so nothing here is upscaled past its source.
+const ART_WIDTHS = [320, 480, 640];
+
+const entries = poems.map((poem) => ({
+  ...poem,
+  source: poemImages[`../assets/poems/${poem.image}`],
+  id: `poem-${poem.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
+}));
 ---
 
 <Base
-  title="Poems Archive — Kyle Cromwell"
-  description="Kyle Cromwell’s archive of a retired poetry practice."
+  title="Poems — Kyle Cromwell"
+  description="The two poems I wrote in 2020, kept with the artwork that went with them."
 >
-  <header class="page-header reveal">
-    <div>
-      <p class="eyebrow">Former practice · 02</p>
-      <h1 class="page-title">Poems<br /><span>Archive</span></h1>
-    </div>
-    <p class="lede">
-      Two poems preserved from Kyle’s original writing archive.
-    </p>
-  </header>
+  <div class="poems-journal">
+    <div class="poems-paper">
+      <FieldRoutes variant="light" />
 
-  <section class="memory-grid reveal reveal--late" aria-label="Poetry archive">
-    {poems.map((poem, index) => (
-      <article class="memory-card poem-card">
-        <Image
-          class="poem-card-media"
-          src={poemImages[`../assets/poems/${poem.image}`]}
-          alt={poem.alt}
-          loading="lazy"
-        />
-        <header class="poem-card-header">
-          <p class="archive-index">
-            Poem · {String(index + 1).padStart(2, '0')} · <time datetime={poem.published}>{poem.displayDate}</time>
-          </p>
-          <h2>{poem.title}</h2>
+      <div class="poems-inner">
+        <header class="poems-plate">
+          <div class="poems-plate-copy reveal">
+            <p class="poems-kicker">Personal Journal</p>
+            <h1>Poems</h1>
+            <p class="poems-intro">
+              I wrote poetry for a while and then stopped. Both poems are kept here as I
+              wrote them.
+            </p>
+          </div>
+
+          <aside class="poems-card" aria-label="About this archive">
+            <span class="poems-card-tape" aria-hidden="true"></span>
+            <p class="poems-card-label">Written</p>
+            <p class="poems-card-year">2020</p>
+            <p class="poems-card-note">Both of them. I have not written one since.</p>
+          </aside>
         </header>
-        <div class="poem-lines">
-          {poem.lines.map((line) => <p>{line}</p>)}
+
+        <div class="poems-entries">
+          {entries.map((poem, index) => (
+            <article
+              class:list={['poems-entry', 'reveal', { 'reveal--late': index === 1 }]}
+              aria-labelledby={poem.id}
+            >
+              <div class="poems-sheet">
+                <span class="poems-binding" aria-hidden="true"></span>
+
+                <div class="poems-sheet-head">
+                  <h2 id={poem.id}>{poem.title}</h2>
+                  <p class="poems-date">
+                    <time datetime={poem.published}>{poem.displayDate}</time>
+                  </p>
+                </div>
+                <span class="poems-rule" aria-hidden="true"></span>
+
+                {/* One block per authored line inside a single stanza, so the
+                    breaks Kyle wrote survive without JavaScript and a line that
+                    runs past the measure hangs indented instead of reading as a
+                    new line. */}
+                <p class="poems-verse">
+                  {poem.lines.map((line) => <span class="poems-line">{line}</span>)}
+                </p>
+              </div>
+
+              <figure class="poems-art">
+                <span class="poems-art-tape" aria-hidden="true"></span>
+                <Image
+                  src={poem.source}
+                  alt={poem.alt}
+                  widths={ART_WIDTHS}
+                  sizes="(min-width: 60rem) 21rem, (min-width: 40rem) 60vw, 86vw"
+                  loading="lazy"
+                />
+                <figcaption>Kept with the poem</figcaption>
+              </figure>
+            </article>
+          ))}
         </div>
-      </article>
-    ))}
-  </section>
+      </div>
+    </div>
+
+    <div class="poems-band">
+      <FieldRoutes variant="dark" />
+
+      <div class="poems-band-inner">
+        <h2 id="poems-elsewhere-title">Elsewhere in the journal</h2>
+
+        <nav class="poems-band-links" aria-labelledby="poems-elsewhere-title">
+          <a href="/about/">About Me</a>
+          <a href="/">Back to the shelf</a>
+        </nav>
+
+        <nav class="poems-archive-links" aria-labelledby="poems-archive-label">
+          <span class="poems-archive-label" id="poems-archive-label">The other archive</span>
+          <span class="poems-archive-pair">
+            <span class="poems-archive-sep" aria-hidden="true">·</span>
+            <a href="/chocolate/">Chocolate</a>
+          </span>
+        </nav>
+      </div>
+    </div>
+  </div>
 </Base>
+
+<style>
+  /* ---------------------------------------------------------------------
+     The page ground only. The header, nav and footer belong to the shared
+     interior shell in global.css and are deliberately left alone. Scoped
+     with :has() so nothing here can outlive this route; hoist into
+     global.css when interior grounds are migrated.
+     --------------------------------------------------------------------- */
+  :global(body:has(.poems-journal)) {
+    color: var(--color-soft-charcoal);
+    background: var(--color-paper);
+  }
+
+  /* The starter grid overlay, hidden the way the home and showcase routes
+     already hide it. */
+  :global(body:has(.poems-journal))::before {
+    display: none;
+  }
+
+  /* Full-bleed like the three sibling pages; the measure is held by
+     .poems-inner instead. */
+  :global(body:has(.poems-journal) .page) {
+    max-width: none;
+    padding: 0;
+  }
+
+  /* --- The page ground: the same wall the home hero is pinned to. ------- */
+  .poems-journal {
+    display: grid;
+    overflow-x: clip;
+    color: var(--color-soft-charcoal);
+    background: var(--color-paper);
+  }
+
+  .poems-paper {
+    position: relative;
+    padding: var(--space-hero-gutter) var(--space-hero-gutter) var(--space-2xl);
+    background: var(--color-paper) url("../assets/home/wall-white.jpg") left top / 64rem auto repeat;
+  }
+
+  .poems-inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: var(--space-hero-section);
+    width: 100%;
+    max-width: var(--max-width-page);
+    margin-inline: auto;
+  }
+
+  /* --- The title page --------------------------------------------------- */
+  .poems-plate {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: start;
+    padding-block: var(--space-md) var(--space-lg);
+  }
+
+  .poems-plate-copy {
+    display: grid;
+    gap: var(--space-md);
+    align-content: start;
+    max-width: var(--max-width-copy);
+  }
+
+  .poems-kicker,
+  .poems-intro,
+  .poems-plate-copy h1 {
+    margin-bottom: 0;
+  }
+
+  .poems-kicker {
+    color: var(--color-field-violet);
+    font-family: var(--font-display);
+    font-size: var(--text-hero-kicker);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+  }
+
+  /* The name rule from the home hero, carried onto the page title the way the
+     three sibling pages carry it: violet hairline closed by a ring node. */
+  .poems-plate-copy h1 {
+    position: relative;
+    width: fit-content;
+    padding-right: var(--space-xl);
+    padding-bottom: var(--space-md);
+    border-bottom: var(--border-width) solid var(--color-field-violet);
+    font-size: var(--text-2xl);
+    font-weight: 500;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-tight);
+  }
+
+  .poems-plate-copy h1::after {
+    position: absolute;
+    right: 0;
+    bottom: calc(var(--hero-ring-hole) * -1);
+    width: calc(var(--hero-ring-hole) * 2);
+    height: calc(var(--hero-ring-hole) * 2);
+    border: var(--border-width) solid var(--color-field-violet);
+    border-radius: var(--radius-pill);
+    background: var(--color-paper);
+    content: "";
+  }
+
+  .poems-intro {
+    max-width: var(--max-width-narrow);
+    font-size: var(--text-lg);
+  }
+
+  /* --- The dated card ---------------------------------------------------- */
+  /* The slip a folder carries to say what is inside it, taped down at an angle
+     the way the countries tally and the about address card are. */
+  .poems-card {
+    --poems-tilt: -2deg;
+
+    position: relative;
+    display: grid;
+    gap: var(--space-2xs);
+    width: fit-content;
+    padding: var(--space-md) var(--space-lg);
+    border: var(--border-width) solid var(--color-paper-muted);
+    border-radius: var(--radius-note);
+    background: var(--color-paper-raised);
+    box-shadow: var(--shadow-note);
+    transform: rotate(var(--poems-tilt));
+    animation: poems-lay var(--duration-slow) var(--ease-out) both;
+    animation-delay: var(--duration-fast);
+  }
+
+  /* The tipped card cannot use the shared .reveal utility: its keyframes set
+     transform, which would land the card flat. Its entrance carries the
+     rotation through instead, the way the about card's does. */
+  @keyframes poems-lay {
+    from {
+      opacity: 0;
+      transform: translateY(var(--space-md)) rotate(var(--poems-tilt));
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0) rotate(var(--poems-tilt));
+    }
+  }
+
+  .poems-card p {
+    margin: 0;
+  }
+
+  .poems-card-label {
+    color: var(--color-caption-ink);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+  }
+
+  .poems-card-year {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 500;
+    line-height: var(--leading-tight);
+  }
+
+  .poems-card-note {
+    max-width: var(--max-width-intro);
+    color: var(--color-caption-ink);
+    font-size: var(--text-sm);
+    font-style: italic;
+  }
+
+  /* --- The two entries --------------------------------------------------- */
+  /* Two poems, not an index: they are laid out as a pair of facing
+     arrangements rather than repeated cards, and the artwork changes sides
+     between them. */
+  .poems-entries {
+    display: grid;
+    gap: var(--space-2xl);
+  }
+
+  .poems-entry {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: start;
+  }
+
+  /* --- The poem sheet ---------------------------------------------------- */
+  /* Ruled notebook paper, set level and never rotated: verse is the one thing
+     on this site a reader has to follow line by line. */
+  .poems-sheet {
+    position: relative;
+    max-width: var(--max-width-copy);
+    padding: var(--space-lg);
+    padding-top: calc(var(--space-lg) + var(--space-md));
+    border: var(--border-width) solid var(--color-paper-line);
+    border-radius: var(--radius-note);
+    background: var(--color-paper-raised);
+    box-shadow: var(--shadow-note);
+  }
+
+  /* Spiral-binding keyholes punched below the top edge; the same embedded tile
+     the home notepads and the countries sheets use, so these read as pages out
+     of the same notebook. */
+  .poems-binding {
+    position: absolute;
+    top: var(--border-width);
+    right: var(--space-md);
+    left: var(--space-md);
+    height: calc(var(--hero-binding-gap) * 0.79);
+    background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2028%2022'%3E%3Cpath%20d='M14.6%200c-.3%203-1.2%205-.9%208.6'%20stroke='%23CFC8BA'%20stroke-width='1.2'%20fill='none'/%3E%3Ccircle%20cx='13.9'%20cy='14'%20r='5'%20fill='%23DFD8CB'/%3E%3Ccircle%20cx='13.9'%20cy='14.4'%20r='3.8'%20fill='%23B5AC9D'/%3E%3Ccircle%20cx='13.9'%20cy='13.6'%20r='3.8'%20fill='%23C6BDAF'/%3E%3C/svg%3E");
+    background-position: left top;
+    background-repeat: round no-repeat;
+    background-size: var(--hero-binding-gap) 100%;
+  }
+
+  .poems-sheet-head {
+    display: grid;
+    gap: var(--space-2xs);
+    margin-top: var(--space-md);
+  }
+
+  .poems-sheet-head h2 {
+    margin-bottom: 0;
+    font-size: var(--text-hero-destination);
+    font-weight: 500;
+    line-height: var(--leading-tight);
+    text-transform: uppercase;
+  }
+
+  .poems-date {
+    margin-bottom: 0;
+    color: var(--color-caption-ink);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+  }
+
+  /* The role rule: a violet hairline anchored by a route ring node, the same
+     signature the about and countries sheets carry. */
+  .poems-rule {
+    display: block;
+    height: calc(var(--hero-ring-hole) * 2);
+    margin-top: var(--space-sm);
+    color: var(--color-field-violet);
+    background-image:
+      radial-gradient(
+        circle at var(--hero-ring-hole) center,
+        transparent 0 calc(var(--hero-ring-hole) - var(--hero-pattern-line)),
+        currentColor calc(var(--hero-ring-hole) - var(--hero-pattern-line)) var(--hero-ring-hole),
+        transparent var(--hero-ring-hole)
+      ),
+      linear-gradient(currentColor, currentColor);
+    background-position: left center, right center;
+    background-repeat: no-repeat;
+    background-size: auto, calc(100% - var(--hero-ring-hole) * 2) var(--hero-pattern-line);
+  }
+
+  /* --- The verse --------------------------------------------------------- */
+  /* Body type, not display: Cormorant SC is the small-capitals cut, and it
+     would set every one of Kyle's lines in small caps. The verse is the
+     content of this page, so it keeps its own letters.
+
+     The ruling pitch and the verse leading are the same value, so every line
+     of the poem sits on a rule and a wrapped remainder lands on the next one
+     rather than drifting between them. */
+  .poems-verse {
+    --poems-rule-pitch: calc(var(--space-lg) * 1.25);
+
+    margin: var(--space-lg) 0 0;
+    font-size: var(--text-base);
+    line-height: var(--poems-rule-pitch);
+    text-align: left;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(var(--poems-rule-pitch) - var(--hero-pattern-line)),
+      var(--color-paper-line) calc(var(--poems-rule-pitch) - var(--hero-pattern-line)),
+      var(--color-paper-line) var(--poems-rule-pitch)
+    );
+  }
+
+  /* Each authored line is its own block, so the break is structural rather
+     than decorative. The hanging indent is the traditional runover: the line
+     starts flush and anything that will not fit the measure is set in, so a
+     wrap can never be mistaken for a line Kyle wrote. */
+  .poems-line {
+    display: block;
+    padding-left: var(--space-lg);
+    text-indent: calc(var(--space-lg) * -1);
+  }
+
+  /* --- The artwork ------------------------------------------------------- */
+  /* The art is tipped in beside the verse, never over it: it accompanies the
+     poem and must not crowd the measure. */
+  .poems-art {
+    --poems-art-tilt: 2deg;
+
+    position: relative;
+    width: 100%;
+    max-width: var(--max-width-intro);
+    margin: 0;
+    padding: var(--space-sm);
+    border-radius: var(--radius-print);
+    background: var(--color-paper-raised);
+    box-shadow: var(--shadow-paper);
+    transform: rotate(var(--poems-art-tilt));
+    transition: transform var(--duration-slow) var(--ease-out);
+  }
+
+  /* The Cost of War is not a poem to hang a jaunty angle on; its print sits at
+     the shallowest tilt the system allows. */
+  .poems-entry:nth-child(2) .poems-art {
+    --poems-art-tilt: -1deg;
+  }
+
+  .poems-art img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .poems-art figcaption {
+    padding-top: var(--space-xs);
+    color: var(--color-caption-ink);
+    font-size: var(--text-sm);
+    font-style: italic;
+    text-align: center;
+  }
+
+  /* Straightening the print, not lifting it: nothing here is pressable. */
+  @media (hover: hover) {
+    .poems-art:hover {
+      transform: rotate(0deg);
+    }
+  }
+
+  /* --- Washi tape -------------------------------------------------------- */
+  /* Cropped from the approved direction, shared with the home collage; torn
+     ends via clip-path. The sheets are bound rather than taped, so tape marks
+     only the things that were stuck in later. */
+  .poems-card-tape,
+  .poems-art-tape {
+    position: absolute;
+    z-index: 1;
+    background: url("../assets/home/tape-washi.png") center / cover no-repeat;
+    box-shadow: var(--shadow-tape);
+    clip-path: polygon(
+      0 8%, 1.5% 0, 98% 3%, 100% 10%, 98.8% 32%, 100% 52%, 98.5% 78%, 100% 94%,
+      97.5% 100%, 2% 97%, 0 88%, 1.2% 66%, 0 42%, 1% 18%
+    );
+    opacity: 0.9;
+  }
+
+  .poems-card-tape {
+    top: calc(var(--hero-tape-height) * -0.45);
+    left: var(--space-lg);
+    width: calc(var(--hero-tape-width) * 0.5);
+    height: calc(var(--hero-tape-height) * 0.8);
+    transform: rotate(-7deg);
+  }
+
+  .poems-art-tape {
+    top: calc(var(--hero-tape-height) * -0.4);
+    left: 50%;
+    width: calc(var(--hero-tape-width) * 0.66);
+    height: var(--hero-tape-height);
+    transform: translateX(-50%) rotate(-2.5deg);
+  }
+
+  .poems-entry:nth-child(2) .poems-art-tape {
+    left: var(--space-xl);
+    width: calc(var(--hero-tape-width) * 0.52);
+    transform: rotate(6deg);
+  }
+
+  /* --- The journal cover band -------------------------------------------- */
+  .poems-band {
+    /* Field Violet is invisible on aubergine (1.8:1); the coral companion
+       carries every underline and focus ring inside the band. */
+    --color-focus: var(--color-collegiate-coral-soft);
+
+    position: relative;
+    display: grid;
+    align-content: center;
+    min-height: var(--hero-band-min-height);
+    padding: var(--space-xl) var(--space-hero-gutter);
+    color: var(--color-on-aubergine);
+    background: var(--color-aubergine);
+  }
+
+  .poems-band-inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: var(--space-lg);
+    align-content: start;
+    width: 100%;
+    max-width: var(--max-width-page);
+    margin-inline: auto;
+    padding-left: var(--space-lg);
+    border-left: calc(var(--border-width) * 2) solid var(--color-collegiate-coral-soft);
+  }
+
+  .poems-band-inner h2 {
+    margin-bottom: 0;
+    font-size: var(--text-hero-destination);
+    font-weight: 500;
+    line-height: var(--leading-tight);
+    text-transform: uppercase;
+  }
+
+  .poems-band-links,
+  .poems-archive-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+  }
+
+  .poems-band-links {
+    gap: var(--space-sm) var(--space-xl);
+  }
+
+  .poems-band-links a,
+  .poems-archive-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--hero-touch-target);
+    border-bottom: var(--border-width) solid var(--color-collegiate-coral-soft);
+    color: var(--color-on-aubergine);
+    text-decoration: none;
+  }
+
+  .poems-band-links a {
+    padding-bottom: var(--space-xs);
+  }
+
+  .poems-band-links a:hover,
+  .poems-archive-links a:hover {
+    border-color: var(--color-on-aubergine);
+    color: var(--color-paper);
+  }
+
+  /* Chocolate is this page's peer, not its parent: it stays a footnote to the
+     nav above it, the way About lists both archives. */
+  .poems-archive-links {
+    gap: var(--space-sm) var(--space-lg);
+  }
+
+  .poems-archive-label {
+    color: var(--color-on-aubergine-muted);
+  }
+
+  .poems-archive-pair {
+    display: inline-flex;
+    gap: var(--space-lg);
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  .poems-archive-sep {
+    color: var(--color-collegiate-coral-soft);
+    font-weight: 700;
+  }
+
+  @media (min-width: 48rem) {
+    .poems-plate {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .poems-card {
+      justify-self: end;
+      margin-top: var(--space-lg);
+    }
+
+    /* The verse gets its comfortable measure and its generous leading once
+       there is room for it; the ruling widens with it. */
+    .poems-verse {
+      --poems-rule-pitch: calc(var(--space-lg) * 1.5);
+
+      font-size: var(--text-lg);
+    }
+  }
+
+  @media (min-width: 60rem) {
+    .poems-entry {
+      grid-template-columns: minmax(0, 1fr) minmax(0, var(--max-width-intro));
+      gap: var(--space-2xl);
+    }
+
+    /* The artwork changes sides between the two poems, so the pair reads as a
+       composed spread rather than the same block printed twice. */
+    .poems-entry:nth-child(2) {
+      grid-template-columns: minmax(0, var(--max-width-intro)) minmax(0, 1fr);
+    }
+
+    .poems-entry:nth-child(2) .poems-sheet {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .poems-entry:nth-child(2) .poems-art {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    /* Set down a little below the head of the page rather than square with
+       it, the way a hand places a print next to writing already there. */
+    .poems-art {
+      margin-top: var(--space-xl);
+      justify-self: center;
+    }
+  }
+</style>
