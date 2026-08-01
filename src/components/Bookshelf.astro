@@ -1,0 +1,72 @@
+---
+import { Image } from 'astro:assets';
+import mostarBridge from '../assets/places/mostar-bridge-bosnia.jpeg';
+import machuPicchu from '../assets/places/machu-picchu-peru.jpeg';
+---
+
+<nav class="home-shelf reveal reveal--late" aria-label="Explore Kyle's journal">
+  <div class="home-shelf-row">
+    <a class="book book--countries" href="/countries/" aria-expanded="false">
+      <span class="book-inner">
+        <span class="book-spine"><span class="book-spine-title">Visited Countries</span></span>
+        <span class="book-cover" aria-hidden="true">
+          <Image class="book-cover-print" src={mostarBridge} alt="" widths={[240, 360]} sizes="12.5rem" loading="eager" />
+          <span class="book-cover-label">
+            <span class="book-cover-title">Visited Countries</span>
+            <span class="book-cover-open">Open →</span>
+          </span>
+        </span>
+      </span>
+    </a>
+
+    <a class="book book--places" href="/places/" aria-expanded="false">
+      <span class="book-inner">
+        <span class="book-spine"><span class="book-spine-title">Interesting Places</span></span>
+        <span class="book-cover" aria-hidden="true">
+          <Image class="book-cover-print" src={machuPicchu} alt="" widths={[240, 360]} sizes="12.5rem" loading="eager" />
+          <span class="book-cover-label">
+            <span class="book-cover-title">Interesting Places</span>
+            <span class="book-cover-open">Open →</span>
+          </span>
+        </span>
+      </span>
+    </a>
+
+    <a class="book book--about" href="/about/" aria-expanded="false">
+      <span class="book-inner">
+        <span class="book-spine"><span class="book-spine-title">About Me</span></span>
+        <span class="book-cover" aria-hidden="true">
+          <span class="book-cover-label">
+            <span class="book-cover-title">About Me</span>
+            <span class="book-cover-open">Open →</span>
+          </span>
+        </span>
+      </span>
+    </a>
+  </div>
+  <span class="home-shelf-ledge" aria-hidden="true"></span>
+</nav>
+
+<script>
+  const shelf = document.querySelector('.home-shelf');
+  const books = shelf ? [...shelf.querySelectorAll('.book')] : [];
+  const closeAll = () => books.forEach((book) => book.setAttribute('aria-expanded', 'false'));
+
+  books.forEach((book) => {
+    book.addEventListener('click', (event) => {
+      if (book.getAttribute('aria-expanded') === 'true') return;
+      event.preventDefault();
+      closeAll();
+      book.setAttribute('aria-expanded', 'true');
+    });
+  });
+
+  document.addEventListener('click', (event) => {
+    if (event.target instanceof Element && event.target.closest('.book')) return;
+    closeAll();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeAll();
+  });
+</script>

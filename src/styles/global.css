@@ -420,6 +420,180 @@ a:focus-visible {
   line-height: var(--leading-normal);
 }
 
+/* Bookshelf: three cloth-bound journals on a drawn ledge. First activation
+   lifts and turns the book to its cover (aria-expanded), second navigates.
+   The About volume is thinner, shorter, and hinges the opposite way so its
+   cover opens inward over the shelf, never past the page edge. */
+.home-shelf {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-area: shelf;
+  align-content: end;
+  justify-content: center;
+  perspective: var(--shelf-perspective);
+}
+
+.home-shelf-row {
+  display: flex;
+  gap: var(--space-xs);
+  align-items: flex-end;
+  padding-inline: var(--space-lg);
+}
+
+.home-shelf-ledge {
+  height: var(--shelf-ledge-thickness);
+  border: var(--border-width) solid var(--color-paper-line);
+  border-radius: var(--radius-print);
+  background: var(--color-paper-raised);
+  box-shadow: var(--shadow-note);
+}
+
+.book {
+  position: relative;
+  display: block;
+  width: var(--book-spine-width);
+  height: var(--book-height);
+  text-decoration: none;
+}
+
+.book--about {
+  width: var(--book-spine-width-about);
+  height: var(--book-height-about);
+}
+
+.book[aria-expanded="true"] {
+  z-index: 3;
+}
+
+.book-inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-origin: right center;
+  transform-style: preserve-3d;
+  transition: transform var(--duration-slow) var(--ease-out);
+}
+
+.book--about .book-inner {
+  transform-origin: left center;
+}
+
+.book-spine,
+.book-cover {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-print);
+  backface-visibility: hidden;
+}
+
+.book-spine {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-note), var(--shadow-book-board);
+}
+
+.book-cover {
+  left: 100%;
+  display: grid;
+  gap: var(--space-md);
+  align-content: center;
+  justify-items: center;
+  width: var(--book-cover-width);
+  padding: var(--space-md);
+  box-shadow: var(--shadow-paper), var(--shadow-book-board);
+  transform: rotateY(90deg);
+  transform-origin: left center;
+}
+
+.book--about .book-cover {
+  right: 100%;
+  left: auto;
+  transform: rotateY(-90deg);
+  transform-origin: right center;
+}
+
+.book--countries .book-spine,
+.book--countries .book-cover {
+  background: var(--color-field-violet);
+}
+
+.book--places .book-spine,
+.book--places .book-cover {
+  background: var(--color-collegiate-coral);
+}
+
+.book--about .book-spine,
+.book--about .book-cover {
+  background: var(--color-aubergine);
+}
+
+.book-spine-title {
+  color: var(--color-on-aubergine);
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 500;
+  line-height: var(--leading-tight);
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+}
+
+.book-cover-print {
+  width: 100%;
+  height: auto;
+  padding: var(--space-2xs);
+  border-radius: var(--radius-print);
+  background: var(--color-paper-raised);
+}
+
+.book-cover-label {
+  display: grid;
+  gap: var(--space-2xs);
+  justify-items: center;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-note);
+  background: var(--color-paper-raised);
+  box-shadow: var(--shadow-note);
+  text-align: center;
+}
+
+.book-cover-title {
+  color: var(--color-soft-charcoal);
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 500;
+  line-height: var(--leading-tight);
+  text-transform: uppercase;
+}
+
+.book-cover-open {
+  color: var(--color-field-violet);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.book[aria-expanded="true"] .book-inner {
+  transform: translateY(var(--book-lift)) rotateY(-84deg);
+}
+
+.book--about[aria-expanded="true"] .book-inner {
+  transform: translateY(var(--book-lift)) rotateY(84deg);
+}
+
+@media (hover: hover) {
+  .book[aria-expanded="false"]:hover .book-inner {
+    transform: translateY(var(--hover-lift)) rotate(-1.5deg);
+  }
+
+  .book--about[aria-expanded="false"]:hover .book-inner {
+    transform: translateY(var(--hover-lift)) rotate(1.5deg);
+  }
+}
+
 .home-destinations {
   position: relative;
   z-index: 2;

@@ -50,3 +50,17 @@ test('tokens define the approved palette and two-family typography system', asyn
   assert.match(source, /--shelf-perspective:/);
   assert.match(source, /--shadow-book-board:/);
 });
+
+test('bookshelf renders three book links with the reveal contract', async () => {
+  const source = await readProjectFile('src/components/Bookshelf.astro');
+
+  assert.match(source, /class="book book--countries"/);
+  assert.match(source, /class="book book--places"/);
+  assert.match(source, /class="book book--about"/);
+  assert.match(source, /href="\/countries\/"/);
+  assert.match(source, /href="\/places\/"/);
+  assert.match(source, /href="\/about\/"/);
+  assert.match(source, /aria-expanded="false"/);
+  assert.match(source, /class="home-shelf-ledge"/);
+  assert.doesNotMatch(source, /home-destination/);
+});
