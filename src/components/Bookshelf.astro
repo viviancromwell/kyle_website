@@ -39,8 +39,7 @@ import machuPicchu from '../assets/places/machu-picchu-peru.jpeg';
 </nav>
 
 <script>
-  const shelf = document.querySelector('.home-shelf');
-  const books = shelf ? [...shelf.querySelectorAll('.book')] : [];
+  const books = [...document.querySelectorAll('.book')];
   const closeAll = () => books.forEach((book) => book.setAttribute('aria-expanded', 'false'));
 
   books.forEach((book) => {
