@@ -31,11 +31,10 @@ const PRINT_SPECS = {
 
 type PrintSpec = { widths: number[]; sizes: string };
 
-// Two things this settles. Several originals are only a few hundred pixels
-// wide, and asking for widths above the source ships an upscale carrying no
-// extra detail. And `width` caps the plain src too: left to itself Astro
-// falls back to the 2500px original, which is the one file none of these
-// frames is big enough to need.
+// Two originals are only a few hundred pixels wide, and asking for widths
+// above the source ships an upscale carrying no extra detail. `width` matters
+// as much as the srcset: left to itself Astro points the plain src at the
+// 2500px original, the one file no frame on this page is big enough to want.
 const frameFor = (source: ImageMetadata, spec: PrintSpec) => {
   const fitted = spec.widths.filter((width) => width <= source.width);
   const widths = fitted.length ? fitted : [source.width];
@@ -46,6 +45,8 @@ const frameFor = (source: ImageMetadata, spec: PrintSpec) => {
 // down, so only three editions are taped.
 const TAPED = new Set([0, 2, 5]);
 
+// Tilts run off one counter for the whole page rather than restarting per
+// edition, so no two prints that end up next to each other lean the same way.
 let printCount = 0;
 
 const editions = chocolateArchive.editions.map((edition, index) => {
@@ -179,7 +180,7 @@ const storyFrame = frameFor(storyImage, PRINT_SPECS.story);
                     ]}
                   >
                     {edition.taped && (
-                      <span class="chocolate-tape chocolate-tape--print" aria-hidden="true" />
+                      <span class="chocolate-tape chocolate-tape--print" aria-hidden="true"></span>
                     )}
                     <Image
                       src={edition.lead.source}
