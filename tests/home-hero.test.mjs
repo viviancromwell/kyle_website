@@ -59,7 +59,11 @@ test('bookshelf renders three book links with the reveal contract', async () => 
   assert.match(source, /href="\/countries\/"/);
   assert.match(source, /href="\/places\/"/);
   assert.match(source, /href="\/about\/"/);
-  assert.match(source, /aria-expanded="false"/);
+  assert.match(source, /data-open="false"/);
+  // Keyboard activation must navigate on the first press, never be gated
+  // behind a reveal that assistive tech cannot perceive.
+  assert.match(source, /if \(fromKeyboard\)/);
+  assert.doesNotMatch(source, /aria-expanded/);
   assert.match(source, /class="home-shelf-ledge"/);
   assert.doesNotMatch(source, /home-destination/);
 });

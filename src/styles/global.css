@@ -436,7 +436,7 @@ a:focus-visible {
 }
 
 /* Bookshelf: three cloth-bound journals on a drawn ledge. First activation
-   pulls the book off the shelf and turns it to its cover (aria-expanded),
+   pulls the book off the shelf and turns it to its cover (data-open),
    second navigates. The opened cover presents clear of the shelf: left of
    the row on wide screens, centered over it on small ones — --book-pos is
    each book's offset in the row, --book-shift the presentation slide. */
@@ -452,7 +452,7 @@ a:focus-visible {
 /* An opened book presents above the collage prints (the media block is a
    later sibling with the same z-index, so the shelf must outrank it while
    a book is out). */
-.home-shelf:has(.book[aria-expanded="true"]) {
+.home-shelf:has(.book[data-open="true"]) {
   z-index: 3;
 }
 
@@ -534,7 +534,7 @@ a:focus-visible {
   height: var(--book-height-about);
 }
 
-.book[aria-expanded="true"] {
+.book[data-open="true"] {
   z-index: 3;
 }
 
@@ -573,7 +573,7 @@ a:focus-visible {
   opacity: 0.6;
 }
 
-.book[aria-expanded="true"]::after {
+.book[data-open="true"]::after {
   opacity: 0;
 }
 
@@ -668,12 +668,12 @@ a:focus-visible {
   text-transform: uppercase;
 }
 
-.book[aria-expanded="true"] .book-inner {
+.book[data-open="true"] .book-inner {
   transform: translateX(var(--book-shift)) translateY(var(--book-lift)) rotate(-2deg) rotateY(84deg);
 }
 
 @media (hover: hover) {
-  .book[aria-expanded="false"]:hover .book-inner {
+  .book:not([data-open="true"]):hover .book-inner {
     transform: translateY(var(--hover-lift)) rotate(-1.5deg);
   }
 }

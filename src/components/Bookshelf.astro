@@ -6,7 +6,7 @@ import machuPicchu from '../assets/places/machu-picchu-peru.jpeg';
 
 <nav class="home-shelf reveal reveal--late" aria-label="Explore Kyle's journal">
   <div class="home-shelf-row">
-    <a class="book book--countries" href="/countries/" aria-expanded="false">
+    <a class="book book--countries" href="/countries/" data-open="false">
       <span class="book-inner">
         <span class="book-spine"><span class="book-spine-title">Visited Countries</span></span>
         <span class="book-cover" aria-hidden="true">
@@ -16,7 +16,7 @@ import machuPicchu from '../assets/places/machu-picchu-peru.jpeg';
       </span>
     </a>
 
-    <a class="book book--places" href="/places/" aria-expanded="false">
+    <a class="book book--places" href="/places/" data-open="false">
       <span class="book-inner">
         <span class="book-spine"><span class="book-spine-title">Interesting Places</span></span>
         <span class="book-cover" aria-hidden="true">
@@ -26,7 +26,7 @@ import machuPicchu from '../assets/places/machu-picchu-peru.jpeg';
       </span>
     </a>
 
-    <a class="book book--about" href="/about/" aria-expanded="false">
+    <a class="book book--about" href="/about/" data-open="false">
       <span class="book-inner">
         <span class="book-spine"><span class="book-spine-title">About Me</span></span>
         <span class="book-cover" aria-hidden="true">
@@ -40,14 +40,29 @@ import machuPicchu from '../assets/places/machu-picchu-peru.jpeg';
 
 <script>
   const books = [...document.querySelectorAll('.book')];
-  const closeAll = () => books.forEach((book) => book.setAttribute('aria-expanded', 'false'));
+  const closeAll = () => books.forEach((book) => book.setAttribute('data-open', 'false'));
 
   books.forEach((book) => {
+    // Keyboard activation navigates on the first press. The cover only repeats
+    // the spine title and is aria-hidden, so a two-stage press would gate the
+    // link behind a state assistive tech cannot perceive. Pointer input keeps
+    // the reveal, which is why the modality is tracked rather than inferred
+    // from click detail (touch clicks are not reliably distinguishable).
+    let fromKeyboard = false;
+
+    book.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') fromKeyboard = true;
+    });
+
     book.addEventListener('click', (event) => {
-      if (book.getAttribute('aria-expanded') === 'true') return;
+      if (fromKeyboard) {
+        fromKeyboard = false;
+        return;
+      }
+      if (book.getAttribute('data-open') === 'true') return;
       event.preventDefault();
       closeAll();
-      book.setAttribute('aria-expanded', 'true');
+      book.setAttribute('data-open', 'true');
     });
   });
 
