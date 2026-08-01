@@ -40,4 +40,13 @@ test('tokens define the approved palette and two-family typography system', asyn
   assert.match(source, /--font-display:\s*"Cormorant SC"/);
   assert.match(source, /--font-body:\s*"Avenir Next"/);
   assert.doesNotMatch(source, /--font-note:/);
+  assert.match(source, /--book-height:/);
+  assert.match(source, /--book-height-about:/);
+  assert.match(source, /--book-spine-width:/);
+  assert.match(source, /--book-spine-width-about:/);
+  assert.match(source, /--book-cover-width:/);
+  assert.match(source, /--book-lift:/);
+  assert.match(source, /--shelf-ledge-thickness:/);
+  assert.match(source, /--shelf-perspective:/);
+  assert.match(source, /--shadow-book-board:/);
 });

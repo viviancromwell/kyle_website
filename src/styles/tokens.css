@@ -24,6 +24,7 @@
   --shadow-paper: 0 0.5rem 1.5rem oklch(0.2556 0.0159 307.77 / 0.07);
   --shadow-note: 0 0.25rem 0.75rem oklch(0.2556 0.0159 307.77 / 0.09);
   --shadow-tape: 0 0.15rem 0.4rem oklch(0.2556 0.0159 307.77 / 0.05);
+  --shadow-book-board: inset 0 0.35rem 0.35rem -0.2rem oklch(0.2556 0.0159 307.77 / 0.09), inset 0 -0.35rem 0.35rem -0.2rem oklch(0.2556 0.0159 307.77 / 0.09);
 
   /* --- Typography: two families only (the Two-Family Rule) --- */
   --font-display: "Cormorant SC", Georgia, "Times New Roman", serif;
@@ -96,6 +97,14 @@
   --hero-tape-height: 2.6rem;
   --hero-glimpse-width: clamp(18rem, 31vw, 31rem);
   --hero-touch-target: 2.75rem;
+  --book-height: clamp(13rem, 22vw, 17rem);
+  --book-height-about: clamp(11rem, 18.5vw, 14rem);
+  --book-spine-width: clamp(3.25rem, 5vw, 3.75rem);
+  --book-spine-width-about: 2.75rem;
+  --book-cover-width: clamp(9rem, 40vw, 12.5rem);
+  --book-lift: -2.5rem;
+  --shelf-ledge-thickness: 0.4rem;
+  --shelf-perspective: 70rem;
 
   /* --- Motion: entrance and hover only, 400ms ceiling --- */
   --duration-fast: 160ms;
