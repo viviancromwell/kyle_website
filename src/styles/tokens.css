@@ -15,7 +15,7 @@
   --color-collegiate-coral-soft: oklch(0.6985 0.1589 36.85);
   --color-on-aubergine: oklch(0.94 0.015 84.58);
   --color-on-aubergine-muted: oklch(0.78 0.025 310);
-  --color-route-light: oklch(0.82 0.012 79.35);
+  --color-route-light: oklch(0.78 0.014 285);
   --color-route-dark: oklch(0.42 0.05 295.24);
   --color-focus: var(--color-field-violet);
   --color-selection: oklch(0.72 0.1 295.24 / 0.28);
@@ -72,6 +72,7 @@
   --radius-pill: 999rem;
   --radius-note: 0.4rem;
   --radius-print: 0.2rem;
+  --radius-book: 0.125rem;
   --border-width: 1px;
   --focus-ring-width: 0.125rem;
 
@@ -97,13 +98,20 @@
   --hero-tape-height: 2.6rem;
   --hero-glimpse-width: clamp(18rem, 31vw, 31rem);
   --hero-touch-target: 2.75rem;
-  --book-height: clamp(13rem, 22vw, 17rem);
-  --book-height-about: clamp(11rem, 18.5vw, 14rem);
-  --book-spine-width: clamp(3.25rem, 5vw, 3.75rem);
+  /* Aged cloth: the role accents muted toward charcoal so large book boards
+     sit quietly in the theme; the raw accents stay for small details. */
+  --color-book-cloth-violet: color-mix(in oklab, var(--color-field-violet) 70%, var(--color-soft-charcoal));
+  --color-book-cloth-coral: color-mix(in oklab, var(--color-collegiate-coral) 70%, var(--color-soft-charcoal));
+  --color-book-cloth-aubergine: var(--color-aubergine);
+  --color-shelf-wood: color-mix(in oklab, var(--color-caption-ink) 72%, var(--color-soft-charcoal));
+  --color-shelf-wood-light: color-mix(in oklab, var(--color-caption-ink) 55%, var(--color-paper));
+  --book-height: clamp(18rem, 30vw, 26rem);
+  --book-height-about: clamp(14rem, 24vw, 20rem);
+  --book-spine-width: clamp(4.5rem, 6.5vw, 6rem);
   --book-spine-width-about: 2.75rem;
-  --book-cover-width: clamp(9rem, 40vw, 12.5rem);
-  --book-lift: -2.5rem;
-  --shelf-ledge-thickness: 0.4rem;
+  --book-cover-width: clamp(12rem, 46vw, 17rem);
+  --book-lift: -3.5rem;
+  --shelf-ledge-thickness: 1rem;
   --shelf-perspective: 70rem;
 
   /* --- Motion: entrance and hover only, 400ms ceiling --- */
@@ -111,6 +119,7 @@
   --duration-medium: 260ms;
   --duration-slow: 400ms;
   --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 
   /* --- STARTER BRIDGE ------------------------------------------------------
      Consumed only by the not-yet-redesigned interior pages (about, countries,

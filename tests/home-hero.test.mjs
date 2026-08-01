@@ -5,20 +5,18 @@ import test from 'node:test';
 const readProjectFile = (path) =>
   readFile(new URL(`../${path}`, import.meta.url), 'utf8');
 
-test('homepage exposes the approved notebook hero destinations', async () => {
+test('homepage exposes the bookshelf hero and journal band', async () => {
   const source = await readProjectFile('src/pages/index.astro');
 
   assert.match(source, /class="home-hero-journal"/);
   assert.match(source, /class="home-hero-kicker"/);
   assert.match(source, /class="home-hero-intro"/);
-  assert.match(source, /class="home-destination home-destination--countries"/);
-  assert.match(source, /class="home-destination home-destination--places"/);
-  assert.match(source, /href="\/countries\/"/);
-  assert.match(source, /href="\/places\/"/);
-  assert.match(source, /href="\/about\/"/);
+  assert.match(source, /<Bookshelf \/>/);
   assert.match(source, /class="home-journal-band"/);
   assert.match(source, /<FieldRoutes variant="light" \/>/);
   assert.match(source, /<FieldRoutes variant="dark" \/>/);
+  assert.doesNotMatch(source, /home-destination/);
+  assert.doesNotMatch(source, /home-about-tab/);
 });
 
 test('homepage hero uses real travel assets with descriptive alternatives', async () => {
@@ -49,6 +47,7 @@ test('tokens define the approved palette and two-family typography system', asyn
   assert.match(source, /--shelf-ledge-thickness:/);
   assert.match(source, /--shelf-perspective:/);
   assert.match(source, /--shadow-book-board:/);
+  assert.match(source, /--ease-in-out:/);
 });
 
 test('bookshelf renders three book links with the reveal contract', async () => {

@@ -2,10 +2,12 @@
 import { Image, getImage } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import FieldRoutes from '../components/FieldRoutes.astro';
+import Bookshelf from '../components/Bookshelf.astro';
 import { interestingPlaces } from '../data/interestingPlaces.mjs';
 import machuPicchu from '../assets/places/machu-picchu-peru.jpeg';
 import mostarBridge from '../assets/places/mostar-bridge-bosnia.jpeg';
 import baiPeople from '../assets/places/bai-people-china.jpeg';
+import hagiaSophia from '../assets/places/hagia-sophia-istanbul.jpeg';
 
 const placeImages = import.meta.glob('../assets/places/*.{jpeg,png}', { eager: true });
 
@@ -44,33 +46,7 @@ const placeTitle = (file, fallback) =>
         </p>
       </header>
 
-      <nav class="home-destinations reveal reveal--late" aria-label="Explore Kyle's journal">
-        <a class="home-destination home-destination--countries" href="/countries/">
-          <svg class="home-destination-icon" viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="12" cy="12" r="9"></circle>
-            <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"></path>
-          </svg>
-          <span class="home-destination-title">Visited<br />Countries</span>
-          <span class="home-destination-arrow" aria-hidden="true">→</span>
-        </a>
-
-        <a class="home-destination home-destination--places" href="/places/">
-          <svg class="home-destination-icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M12 22s7-6.4 7-13a7 7 0 1 0-14 0c0 6.6 7 13 7 13Z"></path>
-            <circle cx="12" cy="9" r="2.5"></circle>
-          </svg>
-          <span class="home-destination-title">Interesting<br />Places</span>
-          <span class="home-destination-arrow" aria-hidden="true">→</span>
-        </a>
-
-        <a class="home-about-tab" href="/about/">
-          <span class="home-about-tab-label">About me</span>
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="12" cy="8" r="4"></circle>
-            <path d="M4.5 21c.5-4.2 3-6.5 7.5-6.5s7 2.3 7.5 6.5"></path>
-          </svg>
-        </a>
-      </nav>
+      <Bookshelf />
 
       <div class="home-hero-media reveal reveal--later">
         <figure class="home-travel-print">
@@ -96,13 +72,25 @@ const placeTitle = (file, fallback) =>
           />
           <figcaption>{placeTitle('mostar-bridge-bosnia.jpeg', 'Mostar Bridge, Bosnia')}</figcaption>
         </figure>
+
+        <figure class="home-mini-print">
+          <span class="home-mini-tape" aria-hidden="true"></span>
+          <Image
+            src={hagiaSophia}
+            alt="Hagia Sophia's domes and minarets rising over Istanbul"
+            widths={[320, 480]}
+            sizes="(min-width: 64rem) 16vw, (min-width: 48rem) 24vw, 46vw"
+            loading="eager"
+          />
+          <figcaption>{placeTitle('hagia-sophia-istanbul.jpeg', 'Hagia Sophia, Istanbul')}</figcaption>
+        </figure>
       </div>
     </div>
 
     <div class="home-journal-band" role="region" aria-label="Kyle's interests">
       <FieldRoutes variant="dark" />
       <div class="home-journal-copy">
-        <p>Political science, great food, video games, and time with friends.</p>
+        <p>Political science, history, chess, great food, video games, and time with friends.</p>
         <nav class="home-archive-links" aria-labelledby="archive-label">
           <span class="home-archive-label" id="archive-label">Older archives</span>
           <span class="home-archive-pair">
@@ -130,7 +118,7 @@ const placeTitle = (file, fallback) =>
   </section>
 
   <script is:inline define:vars={{ heroPool }}>
-    const figures = ['.home-travel-print', '.home-field-note', '.home-journal-glimpse']
+    const figures = ['.home-travel-print', '.home-field-note', '.home-mini-print', '.home-journal-glimpse']
       .map((selector) => document.querySelector(selector))
       .filter(Boolean);
     const pool = [...heroPool];

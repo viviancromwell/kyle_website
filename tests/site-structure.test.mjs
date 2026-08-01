@@ -3,7 +3,10 @@ import { access, readFile } from 'node:fs/promises';
 import test from 'node:test';
 
 const layout = await readFile(new URL('../src/layouts/Base.astro', import.meta.url), 'utf8');
-const home = await readFile(new URL('../src/pages/index.astro', import.meta.url), 'utf8');
+const bookshelf = await readFile(
+  new URL('../src/components/Bookshelf.astro', import.meta.url),
+  'utf8',
+);
 const about = await readFile(new URL('../src/pages/about.astro', import.meta.url), 'utf8');
 const chocolatePage = await readFile(new URL('../src/pages/chocolate.astro', import.meta.url), 'utf8');
 const countriesPage = await readFile(new URL('../src/pages/countries.astro', import.meta.url), 'utf8');
@@ -50,7 +53,7 @@ test('all personal atlas routes and the supplied reference exist', async () => {
 test('the Visited Countries page renders the migrated regional country data', async () => {
   assert.match(countriesPage, /import \{ visitedCountryRegions \} from '\.\.\/data\/visitedCountries\.mjs';/);
   assert.match(countriesPage, /visitedCountryRegions\.map/);
-  assert.match(home, /href="\/countries\/"/);
+  assert.match(bookshelf, /href="\/countries\/"/);
 
   const { visitedCountryRegions } = await import(
     new URL('../src/data/visitedCountries.mjs', import.meta.url)
@@ -78,7 +81,7 @@ test('the Interesting Places page renders all migrated writing and local images'
   assert.match(placesPage, /interestingPlaces\.map/);
   assert.match(placesPage, /import \{ Image \} from 'astro:assets';/);
   assert.match(placesPage, /loading="lazy"/);
-  assert.match(home, /href="\/places\/"/);
+  assert.match(bookshelf, /href="\/places\/"/);
 
   const { interestingPlaces } = await import(
     new URL('../src/data/interestingPlaces.mjs', import.meta.url)
