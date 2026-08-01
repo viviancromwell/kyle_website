@@ -25,7 +25,7 @@ export const chocolateArchive = {
   ],
   aboutImage: {
     file: 'kyle-childhood-chocolate-festival.jpeg',
-    alt: 'Kyle at a chocolate festival when he was six or seven years old',
+    alt: 'Me at a chocolate festival when I was six or seven years old',
   },
   editions: [
     {

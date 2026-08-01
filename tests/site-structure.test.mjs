@@ -3,7 +3,10 @@ import { access, readFile } from 'node:fs/promises';
 import test from 'node:test';
 
 const layout = await readFile(new URL('../src/layouts/Base.astro', import.meta.url), 'utf8');
-const home = await readFile(new URL('../src/pages/index.astro', import.meta.url), 'utf8');
+const bookshelf = await readFile(
+  new URL('../src/components/Bookshelf.astro', import.meta.url),
+  'utf8',
+);
 const about = await readFile(new URL('../src/pages/about.astro', import.meta.url), 'utf8');
 const chocolatePage = await readFile(new URL('../src/pages/chocolate.astro', import.meta.url), 'utf8');
 const countriesPage = await readFile(new URL('../src/pages/countries.astro', import.meta.url), 'utf8');
@@ -28,9 +31,17 @@ test('main navigation exposes only the personal atlas sections', () => {
   assert.doesNotMatch(navigation, /Work|Portraits|Maternity|Events|href="\/work\//);
 });
 
-test('the About Me route is blank while retired hobbies stay out of navigation', () => {
-  assert.match(about, /<Base[\s\S]*>\s*<\/Base>/);
-  assert.doesNotMatch(about, /<header|<section|<article|<h1|<h2|<p|href="\/(chocolate|poems)\//);
+test('the About Me route introduces Kyle and carries the retired hobby archives', () => {
+  assert.match(about, /political science/i);
+  assert.match(about, /chess/i);
+  assert.match(about, /href="\/chocolate\/"/);
+  assert.match(about, /href="\/poems\/"/);
+  assert.match(about, /kylecromwell2023/);
+
+  // First person: the site is Kyle speaking, never narrated about him.
+  assert.doesNotMatch(about, /\bKyle (is|was|has|loves|studies|enjoys)\b/);
+
+  // The archives stay secondary: reachable from About, never in the main nav.
   assert.doesNotMatch(layout, /href="\/(chocolate|poems)\//);
 });
 
@@ -50,7 +61,7 @@ test('all personal atlas routes and the supplied reference exist', async () => {
 test('the Visited Countries page renders the migrated regional country data', async () => {
   assert.match(countriesPage, /import \{ visitedCountryRegions \} from '\.\.\/data\/visitedCountries\.mjs';/);
   assert.match(countriesPage, /visitedCountryRegions\.map/);
-  assert.match(home, /href="\/countries\/"/);
+  assert.match(bookshelf, /href="\/countries\/"/);
 
   const { visitedCountryRegions } = await import(
     new URL('../src/data/visitedCountries.mjs', import.meta.url)
@@ -58,7 +69,7 @@ test('the Visited Countries page renders the migrated regional country data', as
   const countryNames = visitedCountryRegions.flatMap((region) => region.countries);
 
   assert.equal(visitedCountryRegions.length, 7);
-  assert.equal(countryNames.length, 48);
+  assert.equal(countryNames.length, 49);
 
   for (const country of [
     'United Kingdom',
@@ -68,6 +79,7 @@ test('the Visited Countries page renders the migrated regional country data', as
     'Jordan',
     'New Zealand',
     'Tanzania',
+    'Ireland',
   ]) {
     assert.ok(countryNames.includes(country), `Expected migrated list to include ${country}`);
   }
@@ -78,7 +90,7 @@ test('the Interesting Places page renders all migrated writing and local images'
   assert.match(placesPage, /interestingPlaces\.map/);
   assert.match(placesPage, /import \{ Image \} from 'astro:assets';/);
   assert.match(placesPage, /loading="lazy"/);
-  assert.match(home, /href="\/places\/"/);
+  assert.match(bookshelf, /href="\/places\/"/);
 
   const { interestingPlaces } = await import(
     new URL('../src/data/interestingPlaces.mjs', import.meta.url)

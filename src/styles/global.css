@@ -124,67 +124,79 @@ a:focus-visible {
   padding-inline: var(--space-md);
 }
 
+/* The site header is the journal's cover edge: a full-bleed Deep Aubergine
+   band carrying the same stitched diamond lattice as the home band, no card
+   and no border. Affordances are Collegiate Coral Soft per The Dark-Band
+   Coral Rule. */
 .site-header {
+  /* Field Violet is invisible on aubergine (1.8:1), so the whole band swaps
+     to the coral companion for focus, and hovers go to paper, not to the
+     global violet accent. */
+  --color-focus: var(--color-collegiate-coral-soft);
+
   position: sticky;
-  top: var(--header-offset);
+  top: 0;
   z-index: 10;
+  max-width: none;
+  padding-inline: 0;
+  overflow: hidden;
+  background: var(--color-aubergine);
+}
+
+.site-header a:hover {
+  color: var(--color-paper);
 }
 
 .site-nav {
+  position: relative;
+  z-index: 1;
   display: grid;
-  gap: var(--space-md);
+  gap: var(--space-sm);
   align-items: center;
-  margin-top: var(--space-md);
-  padding: var(--space-sm) var(--space-md);
-  border: var(--border-width) solid var(--color-border);
-  border-radius: var(--radius-lg);
-  background: var(--color-header);
-  box-shadow: var(--shadow-card);
-  backdrop-filter: blur(var(--space-lg));
+  width: 100%;
+  max-width: var(--max-width-page);
+  margin-inline: auto;
+  padding: var(--space-md);
 }
 
 .nav-name {
-  display: inline-flex;
-  gap: var(--space-xs);
-  align-items: center;
   width: fit-content;
-  font-weight: 700;
-  text-decoration: none;
+  color: var(--color-on-aubergine);
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 500;
   letter-spacing: var(--tracking-tight);
+  text-decoration: none;
 }
 
-.nav-name::before {
-  width: var(--size-orbit-dot);
-  height: var(--size-orbit-dot);
-  border-radius: var(--radius-pill);
-  background: var(--gradient-accent);
-  box-shadow: var(--shadow-glow);
-  content: "";
+.nav-name:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--color-collegiate-coral-soft);
+  text-underline-offset: var(--space-2xs);
 }
 
 .nav-links {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-xs);
+  gap: var(--space-md);
 }
 
 .nav-links a {
-  padding: var(--space-xs) var(--space-sm);
-  border: var(--border-width) solid transparent;
-  border-radius: var(--radius-pill);
-  color: var(--color-text-secondary);
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
+  padding-bottom: var(--space-2xs);
+  border-bottom: calc(var(--border-width) * 2) solid transparent;
+  color: var(--color-on-aubergine-muted);
+  font-size: var(--text-sm);
+  font-weight: 600;
   letter-spacing: var(--tracking-wide);
   text-decoration: none;
   text-transform: uppercase;
+  transition: color var(--duration-fast) var(--ease-out);
 }
 
 .nav-links a:hover,
 .nav-links a[aria-current="page"] {
-  border-color: var(--color-border);
-  color: var(--color-text);
-  background: var(--color-surface);
+  border-bottom-color: var(--color-collegiate-coral-soft);
+  color: var(--color-on-aubergine);
 }
 
 .page {
@@ -297,12 +309,15 @@ a:focus-visible {
   display: grid;
   grid-template-areas:
     "copy"
-    "destinations"
+    "shelf"
     "media";
   gap: var(--space-hero-section);
   min-height: var(--hero-paper-min-height);
   padding: var(--space-hero-gutter);
-  background: var(--color-paper);
+  overflow-x: clip;
+  /* Vivian's wall-paper trial ground; --color-paper stays underneath as the
+     load/fallback color. */
+  background: var(--color-paper) url("../assets/home/wall-white.jpg") left top / 64rem auto repeat;
 }
 
 .field-routes {
@@ -420,80 +435,252 @@ a:focus-visible {
   line-height: var(--leading-normal);
 }
 
-.home-destinations {
+/* Bookshelf: three cloth-bound journals on a drawn ledge. First activation
+   pulls the book off the shelf and turns it to its cover (data-open),
+   second navigates. The opened cover presents clear of the shelf: left of
+   the row on wide screens, centered over it on small ones — --book-pos is
+   each book's offset in the row, --book-shift the presentation slide. */
+.home-shelf {
   position: relative;
   z-index: 2;
   display: grid;
-  grid-area: destinations;
-  gap: var(--space-md);
+  grid-area: shelf;
+  align-content: end;
+  perspective: var(--shelf-perspective);
 }
 
-.home-about-tab,
-.home-destination {
-  min-height: var(--hero-touch-target);
-  color: var(--color-soft-charcoal);
-  background: var(--color-paper-raised);
-  box-shadow: var(--shadow-note);
-  text-decoration: none;
+/* An opened book presents above the collage prints (the media block is a
+   later sibling with the same z-index, so the shelf must outrank it while
+   a book is out). */
+.home-shelf:has(.book[data-open="true"]) {
+  z-index: 3;
 }
 
-.home-about-tab {
+.home-shelf-row {
+  --shelf-row-width: calc(var(--book-spine-width) * 2 + var(--book-spine-width-about) + var(--space-xs) * 2);
+
+  display: flex;
+  gap: var(--space-xs);
+  align-items: flex-end;
+  justify-content: center;
+  padding-inline: var(--space-lg);
+}
+
+/* An old wooden board: lit top edge, shaded front face, faint grain
+   streaks, and a corbel bracket under each end. Wood tones are mixed from
+   the palette's warm Caption Ink, no new raw colors. */
+.home-shelf-ledge {
   position: relative;
-  display: inline-flex;
-  gap: var(--space-sm);
-  align-items: center;
-  width: fit-content;
-  padding: var(--space-sm) var(--space-md);
-  overflow: hidden;
-  border: var(--border-width) solid var(--color-paper-muted);
-  border-radius: var(--radius-note);
-  color: var(--color-aubergine);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
+  height: var(--shelf-ledge-thickness);
+  border-radius: var(--radius-print);
+  background-image:
+    url("../assets/textures/rag-paper.svg"),
+    repeating-linear-gradient(
+      178deg,
+      transparent 0,
+      transparent 0.22rem,
+      color-mix(in oklab, var(--color-soft-charcoal) 14%, transparent) 0.22rem,
+      color-mix(in oklab, var(--color-soft-charcoal) 14%, transparent) 0.26rem
+    ),
+    linear-gradient(
+      to bottom,
+      var(--color-shelf-wood-light) 0,
+      var(--color-shelf-wood-light) 22%,
+      var(--color-shelf-wood) 30%,
+      color-mix(in oklab, var(--color-shelf-wood) 80%, var(--color-soft-charcoal)) 100%
+    );
+  box-shadow: var(--shadow-note);
 }
 
-.home-about-tab::before {
+.home-shelf-ledge::before,
+.home-shelf-ledge::after {
   position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  height: var(--space-xs);
-  background: var(--color-field-violet);
+  top: 100%;
+  width: var(--space-lg);
+  height: var(--space-sm);
+  background: color-mix(in oklab, var(--color-shelf-wood) 84%, var(--color-soft-charcoal));
+  box-shadow: var(--shadow-tape);
+  clip-path: polygon(0 0, 100% 0, 76% 100%, 24% 100%);
   content: "";
 }
 
-.home-about-tab svg {
-  flex: 0 0 auto;
-  width: var(--space-lg);
-  height: var(--space-lg);
-  padding: var(--space-2xs);
-  border: var(--border-width) solid currentColor;
-  border-radius: var(--radius-pill);
-  fill: none;
-  stroke: currentColor;
-  stroke-width: var(--hero-icon-stroke);
+.home-shelf-ledge::before {
+  left: var(--space-xl);
 }
 
-.home-destination {
+.home-shelf-ledge::after {
+  right: var(--space-xl);
+}
+
+.book {
+  --book-pos: 0rem;
+  --book-shift: calc(var(--shelf-row-width) / 2 - var(--book-pos) + var(--book-cover-width) / 2);
+
   position: relative;
+  display: block;
+  width: var(--book-spine-width);
+  height: var(--book-height);
+  text-decoration: none;
+}
+
+.book--places {
+  --book-pos: calc(var(--book-spine-width) + var(--space-xs));
+}
+
+.book--about {
+  --book-pos: calc((var(--book-spine-width) + var(--space-xs)) * 2);
+
+  width: var(--book-spine-width-about);
+  height: var(--book-height-about);
+}
+
+.book[data-open="true"] {
+  z-index: 3;
+}
+
+.book-inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  transition: transform var(--duration-slow) var(--ease-in-out);
+}
+
+.book-spine,
+.book-cover {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-book);
+  backface-visibility: hidden;
+}
+
+/* Contact shadow grounding each book on the ledge; it fades as the book
+   lifts on hover and disappears once pulled off the shelf. */
+.book::after {
+  position: absolute;
+  right: calc(var(--space-2xs) * -1);
+  bottom: calc(var(--space-2xs) * -1);
+  left: calc(var(--space-2xs) * -1);
+  height: var(--space-xs);
+  background: radial-gradient(50% 100% at 50% 20%, color-mix(in oklab, var(--color-soft-charcoal) 16%, transparent), transparent 72%);
+  content: "";
+  transition: opacity var(--duration-medium) var(--ease-out);
+}
+
+.book:hover::after {
+  opacity: 0.6;
+}
+
+.book[data-open="true"]::after {
+  opacity: 0;
+}
+
+.book-spine {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-note), var(--shadow-book-board);
+}
+
+.book-cover {
+  right: 100%;
+  left: auto;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-rows: auto 1fr;
   gap: var(--space-md);
-  min-height: var(--hero-destination-min-height);
-  padding: var(--space-hero-card);
-  padding-top: calc(var(--space-hero-card) + var(--space-md));
-  padding-bottom: calc(var(--space-lg) * 2);
-  border: var(--border-width) solid var(--color-paper-muted);
-  border-radius: var(--radius-note);
+  align-content: center;
+  justify-items: center;
+  width: var(--book-cover-width);
+  padding: var(--space-md);
+  box-shadow: var(--shadow-paper), var(--shadow-book-board);
+  transform: rotateY(-90deg);
+  transform-origin: right center;
+}
+
+/* Cloth material: aged role color under the repo's rag-paper grain tile. */
+.book-spine,
+.book-cover {
+  background-image: url("../assets/textures/rag-paper.svg");
+}
+
+/* Book 1 wears Vivian's sampled violet leather; the cloth token stays
+   underneath as the loading fallback. */
+.book--countries .book-spine,
+.book--countries .book-cover {
+  background-color: var(--color-book-cloth-violet);
+  background-image: url("../assets/textures/leather-violet.jpg");
+  background-position: center;
+  background-size: cover;
+}
+
+/* Book 2: Vivian's stitched leather carries the texture while the brand's
+   soft coral token supplies the color via luminosity blending. The seam
+   sits at the asset's right edge; a mirrored copy puts it on the closed
+   spine's LEFT edge, and the front cover keeps it on the hinge side. */
+.book--places .book-spine,
+.book--places .book-cover {
+  background-color: var(--color-collegiate-coral-soft);
+  background-size: cover;
+  background-blend-mode: luminosity;
+}
+
+.book--places .book-spine {
+  background-image: url("../assets/textures/leather-stitched-left.jpg");
+  background-position: left center;
+}
+
+.book--places .book-cover {
+  background-image: url("../assets/textures/leather-stitched.jpg");
+  background-position: right center;
+}
+
+.book--about .book-spine,
+.book--about .book-cover {
+  background-color: var(--color-book-cloth-aubergine);
+}
+
+.book-spine-title {
+  color: var(--color-on-aubergine);
+  font-family: var(--font-display);
+  font-size: var(--text-hero-destination);
+  font-weight: 500;
+  line-height: var(--leading-tight);
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+}
+
+.book-cover-print {
+  width: 100%;
+  height: auto;
+  padding: var(--space-2xs);
+  border-radius: var(--radius-print);
+  background: var(--color-paper-raised);
+}
+
+.book-cover-title {
+  color: var(--color-on-aubergine);
+  font-family: var(--font-display);
+  font-size: var(--text-hero-destination);
+  font-weight: 500;
+  line-height: var(--leading-tight);
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.book[data-open="true"] .book-inner {
+  transform: translateX(var(--book-shift)) translateY(var(--book-lift)) rotate(-2deg) rotateY(84deg);
+}
+
+@media (hover: hover) {
+  .book:not([data-open="true"]):hover .book-inner {
+    transform: translateY(var(--hover-lift)) rotate(-1.5deg);
+  }
 }
 
 /* Spiral-binding keyholes punched below the top edge, per the approved
    direction: a stem descends from the edge into a soft grey shadow dot.
    Embedded greys are the warm binding tones sampled from the mock. */
-.home-destination::before,
 .home-field-note::before {
   position: absolute;
   top: var(--border-width);
@@ -507,66 +694,6 @@ a:focus-visible {
   content: "";
 }
 
-.home-destination::after {
-  position: absolute;
-  right: var(--space-hero-card);
-  bottom: var(--space-lg);
-  left: var(--space-hero-card);
-  height: calc(var(--hero-ring-hole) * 2);
-  background-image:
-    radial-gradient(
-      circle at var(--hero-ring-hole) center,
-      transparent 0 calc(var(--hero-ring-hole) - var(--hero-pattern-line)),
-      currentColor calc(var(--hero-ring-hole) - var(--hero-pattern-line)) var(--hero-ring-hole),
-      transparent var(--hero-ring-hole)
-    ),
-    linear-gradient(currentColor, currentColor);
-  background-position: left center, right center;
-  background-repeat: no-repeat;
-  background-size: auto, calc(100% - var(--hero-ring-hole) * 2) var(--hero-pattern-line);
-  content: "";
-}
-
-.home-destination-icon {
-  grid-column: 1 / -1;
-  width: var(--hero-icon-size);
-  height: var(--hero-icon-size);
-  fill: none;
-  stroke: currentColor;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: var(--hero-icon-stroke);
-}
-
-.home-destination-title {
-  align-self: end;
-  font-family: var(--font-display);
-  font-size: var(--text-hero-destination);
-  font-weight: 500;
-  letter-spacing: var(--tracking-tight);
-  line-height: var(--leading-tight);
-  text-transform: uppercase;
-}
-
-.home-destination-arrow {
-  align-self: end;
-  font-size: var(--text-hero-destination);
-  line-height: var(--leading-tight);
-}
-
-.home-destination--countries {
-  color: var(--color-field-violet);
-}
-
-.home-destination--places {
-  color: var(--color-collegiate-coral);
-}
-
-.home-destination--countries .home-destination-title,
-.home-destination--places .home-destination-title {
-  color: var(--color-soft-charcoal);
-}
-
 .home-hero-media {
   position: relative;
   z-index: 2;
@@ -577,6 +704,7 @@ a:focus-visible {
 
 .home-travel-print,
 .home-field-note,
+.home-mini-print,
 .home-journal-glimpse {
   margin: 0;
 }
@@ -595,6 +723,7 @@ a:focus-visible {
 
 .home-travel-print img,
 .home-field-note img,
+.home-mini-print img,
 .home-journal-glimpse img {
   display: block;
   width: 100%;
@@ -605,6 +734,7 @@ a:focus-visible {
 
 .home-travel-print figcaption,
 .home-field-note figcaption,
+.home-mini-print figcaption,
 .home-journal-glimpse figcaption {
   position: relative;
   z-index: 2;
@@ -615,15 +745,42 @@ a:focus-visible {
   text-align: center;
 }
 
-.home-travel-print img {
+.home-travel-print img,
+.home-mini-print img {
   aspect-ratio: 1 / 1;
+}
+
+/* A smaller print in the same material as the travel print, filling the
+   collage gap between the note and the shelf. */
+.home-mini-print {
+  position: relative;
+  z-index: 0;
+  width: 46%;
+  margin-top: calc(var(--space-xl) * -1);
+  padding: var(--space-sm);
+  justify-self: end;
+  border-radius: var(--radius-print);
+  background: var(--color-paper-raised);
+  box-shadow: var(--shadow-paper);
+  transform: rotate(-2.5deg);
+}
+
+.home-mini-tape {
+  position: absolute;
+  top: calc(var(--hero-tape-height) * -0.4);
+  right: var(--space-lg);
+  z-index: 1;
+  width: calc(var(--hero-tape-width) * 0.55);
+  height: calc(var(--hero-tape-height) * 0.85);
+  transform: rotate(-14deg);
 }
 
 /* Washi-tape material shared by both tape pieces: the texture is cropped
    straight from the approved direction (design/directions/03-direction-v5.png),
    torn ends via clip-path. */
 .home-travel-tape,
-.home-note-tape {
+.home-note-tape,
+.home-mini-tape {
   background: url("../assets/home/tape-washi.png") center / cover no-repeat;
   box-shadow: var(--shadow-tape);
   clip-path: polygon(
@@ -793,27 +950,6 @@ a:focus-visible {
 
 .home-journal-glimpse img {
   aspect-ratio: 2 / 1;
-}
-
-.home-about-tab,
-.home-destination {
-  transition:
-    transform var(--duration-fast) var(--ease-out),
-    box-shadow var(--duration-fast) var(--ease-out);
-}
-
-/* Hover-capable pointers only; on touch the lift would stick after tap. */
-@media (hover: hover) {
-  .home-about-tab:hover,
-  .home-destination:hover {
-    box-shadow: var(--shadow-paper);
-    transform: translateY(var(--hover-lift));
-  }
-}
-
-.home-about-tab:active,
-.home-destination:active {
-  transform: scale(0.985);
 }
 
 .portal-grid,
@@ -1138,7 +1274,6 @@ a:focus-visible {
 }
 
 @media (min-width: 48rem) {
-  .site-header,
   .site-footer,
   .page {
     padding-inline: var(--space-lg);
@@ -1147,42 +1282,57 @@ a:focus-visible {
   .site-nav {
     display: flex;
     justify-content: space-between;
+    padding-inline: var(--space-lg);
   }
 
   .nav-links {
     justify-content: flex-end;
   }
 
-  /* Panels stack under the copy so the media column can't strand them
-     below a dead stretch of paper. */
+  /* Prints stack under the copy on the left; the shelf owns the right
+     column full-height so the books sit low, near the band. */
   .home-hero-paper {
     grid-template-areas:
-      "copy media"
-      "destinations media";
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      "copy shelf"
+      "media shelf";
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
     grid-template-rows: auto 1fr;
     align-items: start;
   }
 
-  .home-destinations {
-    align-self: start;
-    grid-template-columns: minmax(0, 1fr);
+  /* The shelf fills the right column, raised so the book tops sit level
+     with the Personal Journal kicker. */
+  .home-shelf {
+    align-self: stretch;
+    align-content: start;
+    padding-top: var(--space-2xl);
   }
 
-  .home-hero-media {
-    min-height: var(--hero-media-height);
+  /* Wide screens: the opened cover presents in the clear paper left of the
+     shelf row instead of centered over it. */
+  .book {
+    --book-shift: calc(-1 * var(--book-pos) - var(--space-md));
   }
 
   .home-travel-print {
-    width: 68%;
-    justify-self: end;
-  }
-
-  .home-field-note {
-    width: 60%;
-    margin-top: calc(var(--space-xl) * -1);
+    width: 52%;
     margin-left: var(--space-lg);
     justify-self: start;
+  }
+
+  /* The note tucks under the travel print's lower-right corner: the two
+     always overlap, like the original collage. */
+  .home-field-note {
+    width: 46%;
+    margin-top: calc(var(--space-xl) * -3);
+    margin-left: 36%;
+    justify-self: start;
+  }
+
+  .home-mini-print {
+    width: 38%;
+    margin-top: calc(var(--space-xl) * -1);
+    margin-right: var(--space-lg);
   }
 
   .home-journal-band {
@@ -1198,10 +1348,6 @@ a:focus-visible {
 }
 
 @media (min-width: 72rem) and (hover: hover) {
-  .home-about-tab:hover {
-    transform: translateX(calc(var(--space-sm) * -1));
-  }
-
   .portal-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -1242,8 +1388,8 @@ a:focus-visible {
 
   .home-hero-paper {
     grid-template-areas:
-      "copy media"
-      "destinations media";
+      "copy shelf"
+      "media shelf";
     grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
     grid-template-rows: auto 1fr;
     gap: var(--space-xl) var(--space-hero-section);
@@ -1251,54 +1397,34 @@ a:focus-visible {
     padding-block: var(--space-xl);
   }
 
-  .home-destinations {
-    align-self: end;
-    grid-template-columns: calc(var(--hero-tab-width) - var(--space-lg)) repeat(2, minmax(0, 1fr));
-  }
-
-  .home-about-tab {
-    z-index: -1;
-    flex-direction: column;
-    gap: var(--space-md);
-    align-items: center;
-    align-self: start;
-    order: -1;
-    width: var(--hero-tab-width);
-    margin-top: var(--space-md);
-    padding-block: calc(var(--space-md) + var(--space-xs)) var(--space-md);
-    padding-inline: var(--space-sm);
-  }
-
-  .home-about-tab-label {
-    writing-mode: vertical-rl;
-  }
-
-  /* Tucked under the countries panel; slides out on keyboard focus. */
-  .home-about-tab:focus-visible {
-    transform: translateX(calc(var(--space-sm) * -1));
-  }
-
-  .home-destination {
-    min-height: var(--hero-destination-min-height);
-  }
-
   .home-hero-media {
-    min-height: var(--hero-media-height);
-    align-self: stretch;
+    position: relative;
+    align-self: end;
   }
 
   .home-travel-print {
-    position: absolute;
-    top: 0;
-    right: 22%;
-    width: 66%;
+    width: 44%;
+    margin-left: 0;
   }
 
+  /* Pinned, not nudged: the note overlaps the print's right edge and
+     reaches toward the page middle, vertically centered against it. */
   .home-field-note {
     position: absolute;
-    right: 0;
-    bottom: var(--space-hero-overlap);
-    width: 58%;
+    top: 24%;
+    left: 38%;
+    width: 48%;
+    margin: 0;
+    transform: rotate(4.5deg);
+  }
+
+  /* The smaller print fills the blank pocket ABOVE the note's right end,
+     between the collage and the bookshelf. */
+  .home-mini-print {
+    position: absolute;
+    top: -32%;
+    left: 74%;
+    width: 34%;
     margin: 0;
   }
 

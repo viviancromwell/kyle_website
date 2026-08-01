@@ -1,9 +1,583 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
+import FieldRoutes from '../components/FieldRoutes.astro';
+import chocolateFestival from '../assets/chocolate/kyle-childhood-chocolate-festival.jpeg';
+
+const interests = ['Travel', 'Food', 'Good friends', 'A few rounds of chess'];
 ---
 
 <Base
   title="About Me — Kyle Cromwell"
-  description="About Kyle Cromwell."
+  description="What I study, what I keep coming back to, and the two hobbies I have since put down."
 >
+  <div class="about-journal">
+    <div class="about-paper">
+      <FieldRoutes variant="light" />
+
+      <div class="about-inner">
+        <header class="about-plate">
+          <div class="about-plate-copy reveal">
+            <p class="about-kicker">Personal Journal</p>
+            <h1>About Me</h1>
+            <p class="about-intro">
+              I study political science. This site is where I keep the countries I have visited,
+              the places I still think about, and two hobbies I have since put down.
+            </p>
+          </div>
+
+          <aside class="about-card" aria-label="Contact">
+            <span class="about-card-tape" aria-hidden="true"></span>
+            <p class="about-card-label">Write to me</p>
+            <address class="about-card-address">kylecromwell2023 [at] gmail [dot] com</address>
+            <p class="about-card-note">Written out the long way, on purpose.</p>
+          </aside>
+        </header>
+
+        <section class="about-sheet" aria-labelledby="about-interests-title">
+          <span class="about-binding" aria-hidden="true"></span>
+          <span class="about-sheet-tape" aria-hidden="true"></span>
+
+          <h2 id="about-interests-title">What I keep coming back to</h2>
+          <span class="about-rule" aria-hidden="true"></span>
+
+          <ul class="about-list">
+            {interests.map((interest) => <li>{interest}</li>)}
+          </ul>
+        </section>
+      </div>
+    </div>
+
+    <div class="about-band">
+      <FieldRoutes variant="dark" />
+
+      <div class="about-band-inner">
+        <div class="about-band-copy">
+          <h2 id="about-elsewhere-title">Elsewhere in the journal</h2>
+
+          <nav class="about-band-links" aria-labelledby="about-elsewhere-title">
+            <a href="/countries/">Visited Countries</a>
+            <a href="/places/">Interesting Places</a>
+            <a href="/">Back to the shelf</a>
+          </nav>
+
+          <nav class="about-archive-links" aria-labelledby="about-archive-label">
+            <span class="about-archive-label" id="about-archive-label">Older archives</span>
+            <span class="about-archive-pair">
+              <span class="about-archive-sep" aria-hidden="true">·</span>
+              <a href="/chocolate/">Chocolate</a>
+            </span>
+            <span class="about-archive-pair">
+              <span class="about-archive-sep" aria-hidden="true">·</span>
+              <a href="/poems/">Poems</a>
+            </span>
+          </nav>
+        </div>
+
+        <figure class="about-band-print">
+          <span class="about-print-tape" aria-hidden="true"></span>
+          <Image
+            src={chocolateFestival}
+            alt="Me as a small boy at a chocolate festival, holding up a boxed assortment of truffles with both hands"
+            widths={[360, 540, 720]}
+            sizes="(min-width: 48rem) 24rem, 82vw"
+            loading="lazy"
+          />
+          <figcaption>Me at a chocolate festival, aged about six or seven</figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
 </Base>
+
+<style>
+  /* ---------------------------------------------------------------------
+     The page ground only. The header, nav and footer belong to the shared
+     interior shell in global.css and are deliberately left alone. Scoped
+     with :has() so nothing here can outlive this route; hoist into
+     global.css when interior grounds are migrated.
+     --------------------------------------------------------------------- */
+  :global(body:has(.about-journal)) {
+    color: var(--color-soft-charcoal);
+    background: var(--color-paper);
+  }
+
+  /* The starter grid overlay, hidden the way the home and showcase routes
+     already hide it. */
+  :global(body:has(.about-journal))::before {
+    display: none;
+  }
+
+  /* Full-bleed like the two sibling pages; the measure is held by
+     .about-inner instead. */
+  :global(body:has(.about-journal) .page) {
+    max-width: none;
+    padding: 0;
+  }
+
+  /* --- The page ground: the same wall the home hero is pinned to. ------- */
+  .about-journal {
+    display: grid;
+    overflow-x: clip;
+    color: var(--color-soft-charcoal);
+    background: var(--color-paper);
+  }
+
+  /* Neither section may isolate itself: the print crosses the paper/band
+     boundary and carries its own z-index, exactly as the home collage does. */
+  .about-paper,
+  .about-band {
+    position: relative;
+  }
+
+  .about-paper {
+    padding: var(--space-hero-gutter) var(--space-hero-gutter) var(--space-2xl);
+    background: var(--color-paper) url("../assets/home/wall-white.jpg") left top / 64rem auto repeat;
+  }
+
+  .about-inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: var(--space-hero-section);
+    width: 100%;
+    max-width: var(--max-width-page);
+    margin-inline: auto;
+  }
+
+  /* --- The title page --------------------------------------------------- */
+  .about-plate {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: start;
+    padding-block: var(--space-md) var(--space-xl);
+  }
+
+  .about-plate-copy {
+    display: grid;
+    gap: var(--space-md);
+    align-content: start;
+    max-width: var(--max-width-copy);
+  }
+
+  .about-kicker,
+  .about-intro,
+  .about-plate-copy h1 {
+    margin-bottom: 0;
+  }
+
+  .about-kicker {
+    color: var(--color-field-violet);
+    font-family: var(--font-display);
+    font-size: var(--text-hero-kicker);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+  }
+
+  /* The name rule from the home hero, carried onto the page title: violet
+     hairline closed by a ring node. */
+  .about-plate-copy h1 {
+    position: relative;
+    width: fit-content;
+    padding-right: var(--space-xl);
+    padding-bottom: var(--space-md);
+    border-bottom: var(--border-width) solid var(--color-field-violet);
+    font-size: var(--text-2xl);
+    font-weight: 500;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-tight);
+  }
+
+  .about-plate-copy h1::after {
+    position: absolute;
+    right: 0;
+    bottom: calc(var(--hero-ring-hole) * -1);
+    width: calc(var(--hero-ring-hole) * 2);
+    height: calc(var(--hero-ring-hole) * 2);
+    border: var(--border-width) solid var(--color-field-violet);
+    border-radius: var(--radius-pill);
+    background: var(--color-paper);
+    content: "";
+  }
+
+  .about-intro {
+    max-width: var(--max-width-copy);
+    font-size: var(--text-lg);
+  }
+
+  /* --- The address card ------------------------------------------------- */
+  /* The return address a notebook carries inside its cover, taped down at an
+     angle the way the countries page tapes its tally. */
+  .about-card {
+    --about-tilt: 1.75deg;
+
+    position: relative;
+    display: grid;
+    gap: var(--space-2xs);
+    width: fit-content;
+    padding: var(--space-md) var(--space-lg);
+    border: var(--border-width) solid var(--color-paper-muted);
+    border-radius: var(--radius-note);
+    background: var(--color-paper-raised);
+    box-shadow: var(--shadow-note);
+    transform: rotate(var(--about-tilt));
+    animation: about-lay var(--duration-slow) var(--ease-out) both;
+    animation-delay: var(--duration-fast);
+  }
+
+  /* The tipped objects cannot use the shared .reveal utility: its keyframes
+     set transform, which would land them flat. Their entrance carries the
+     rotation through instead, the way the countries sheets do. */
+  @keyframes about-lay {
+    from {
+      opacity: 0;
+      transform: translateY(var(--space-md)) rotate(var(--about-tilt));
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0) rotate(var(--about-tilt));
+    }
+  }
+
+  .about-card p,
+  .about-card address {
+    margin: 0;
+  }
+
+  .about-card-label {
+    color: var(--color-caption-ink);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+  }
+
+  /* Body type, not display: Cormorant SC would set the address in small
+     capitals and change the letters a reader has to copy out. */
+  .about-card-address {
+    color: var(--color-aubergine);
+    font-size: var(--text-lg);
+    font-style: normal;
+    line-height: var(--leading-snug);
+  }
+
+  .about-card-note {
+    color: var(--color-caption-ink);
+    font-size: var(--text-sm);
+    font-style: italic;
+  }
+
+  /* --- The interests sheet ---------------------------------------------- */
+  .about-sheet {
+    --about-rule-pitch: calc(var(--space-lg) * 1.5);
+    --about-tilt: -1.25deg;
+
+    position: relative;
+    max-width: var(--max-width-copy);
+    padding: var(--space-lg);
+    padding-top: calc(var(--space-lg) + var(--space-md));
+    border: var(--border-width) solid var(--color-paper-line);
+    border-radius: var(--radius-note);
+    background: var(--color-paper-raised);
+    box-shadow: var(--shadow-note);
+    transform: rotate(var(--about-tilt));
+    animation: about-lay var(--duration-slow) var(--ease-out) both;
+    animation-delay: var(--duration-medium);
+  }
+
+  /* Spiral-binding keyholes punched below the top edge; the same embedded
+     tile the home notepads and the countries sheets use. */
+  .about-binding {
+    position: absolute;
+    top: var(--border-width);
+    right: var(--space-md);
+    left: var(--space-md);
+    height: calc(var(--hero-binding-gap) * 0.79);
+    background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2028%2022'%3E%3Cpath%20d='M14.6%200c-.3%203-1.2%205-.9%208.6'%20stroke='%23CFC8BA'%20stroke-width='1.2'%20fill='none'/%3E%3Ccircle%20cx='13.9'%20cy='14'%20r='5'%20fill='%23DFD8CB'/%3E%3Ccircle%20cx='13.9'%20cy='14.4'%20r='3.8'%20fill='%23B5AC9D'/%3E%3Ccircle%20cx='13.9'%20cy='13.6'%20r='3.8'%20fill='%23C6BDAF'/%3E%3C/svg%3E");
+    background-position: left top;
+    background-repeat: round no-repeat;
+    background-size: var(--hero-binding-gap) 100%;
+  }
+
+  /* Six words at the narrowest measure otherwise leave "to" alone on the
+     second line. */
+  .about-sheet h2 {
+    margin-top: var(--space-md);
+    margin-bottom: 0;
+    font-size: var(--text-hero-destination);
+    font-weight: 500;
+    line-height: var(--leading-tight);
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+
+  /* The role rule: a violet hairline anchored by a route ring node. */
+  .about-rule {
+    display: block;
+    height: calc(var(--hero-ring-hole) * 2);
+    margin-top: var(--space-sm);
+    color: var(--color-field-violet);
+    background-image:
+      radial-gradient(
+        circle at var(--hero-ring-hole) center,
+        transparent 0 calc(var(--hero-ring-hole) - var(--hero-pattern-line)),
+        currentColor calc(var(--hero-ring-hole) - var(--hero-pattern-line)) var(--hero-ring-hole),
+        transparent var(--hero-ring-hole)
+      ),
+      linear-gradient(currentColor, currentColor);
+    background-position: left center, right center;
+    background-repeat: no-repeat;
+    background-size: auto, calc(100% - var(--hero-ring-hole) * 2) var(--hero-pattern-line);
+  }
+
+  /* Four things written on the ruling. The ruling lives on the list, not on
+     the sheet, so the lines cannot drift out of step with the writing above
+     them; one spare rule is left at the foot, the way a short list sits on a
+     page with room to spare. */
+  .about-list {
+    min-height: calc(var(--about-rule-pitch) * 5);
+    margin: var(--space-lg) 0 0;
+    padding: 0;
+    list-style: none;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent calc(var(--about-rule-pitch) - var(--hero-pattern-line)),
+      var(--color-paper-line) calc(var(--about-rule-pitch) - var(--hero-pattern-line)),
+      var(--color-paper-line) var(--about-rule-pitch)
+    );
+  }
+
+  .about-list li {
+    position: relative;
+    padding-left: var(--space-lg);
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 500;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--about-rule-pitch);
+  }
+
+  /* A violet ring against each line: the same node the field routes draw at
+     every junction on the wall behind the sheet. */
+  .about-list li::before {
+    position: absolute;
+    top: calc((var(--about-rule-pitch) - var(--hero-ring-hole) * 2) / 2);
+    left: 0;
+    width: calc(var(--hero-ring-hole) * 2);
+    height: calc(var(--hero-ring-hole) * 2);
+    border: var(--border-width) solid var(--color-field-violet);
+    border-radius: var(--radius-pill);
+    content: "";
+  }
+
+  /* --- Washi tape -------------------------------------------------------- */
+  /* Cropped from the approved direction, shared with the home collage; torn
+     ends via clip-path. */
+  .about-card-tape,
+  .about-sheet-tape,
+  .about-print-tape {
+    position: absolute;
+    z-index: 1;
+    background: url("../assets/home/tape-washi.png") center / cover no-repeat;
+    box-shadow: var(--shadow-tape);
+    clip-path: polygon(
+      0 8%, 1.5% 0, 98% 3%, 100% 10%, 98.8% 32%, 100% 52%, 98.5% 78%, 100% 94%,
+      97.5% 100%, 2% 97%, 0 88%, 1.2% 66%, 0 42%, 1% 18%
+    );
+    opacity: 0.9;
+  }
+
+  .about-card-tape {
+    top: calc(var(--hero-tape-height) * -0.45);
+    right: var(--space-lg);
+    width: calc(var(--hero-tape-width) * 0.5);
+    height: calc(var(--hero-tape-height) * 0.8);
+    transform: rotate(7deg);
+  }
+
+  .about-sheet-tape {
+    top: calc(var(--hero-tape-height) * -0.4);
+    left: calc(var(--space-lg) * -1);
+    width: calc(var(--hero-tape-width) * 0.55);
+    height: calc(var(--hero-tape-height) * 0.8);
+    transform: rotate(-16deg);
+  }
+
+  .about-print-tape {
+    top: calc(var(--hero-tape-height) * -0.4);
+    left: 50%;
+    width: calc(var(--hero-tape-width) * 0.66);
+    height: var(--hero-tape-height);
+    transform: translateX(-50%) rotate(-2.5deg);
+  }
+
+  /* --- The journal cover band ------------------------------------------- */
+  .about-band {
+    /* Field Violet is invisible on aubergine (1.8:1); the coral companion
+       carries every underline and focus ring inside the band. */
+    --color-focus: var(--color-collegiate-coral-soft);
+
+    display: grid;
+    align-content: center;
+    min-height: var(--hero-band-min-height);
+    padding: var(--space-xl) var(--space-hero-gutter);
+    color: var(--color-on-aubergine);
+    background: var(--color-aubergine);
+  }
+
+  .about-band-inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+    width: 100%;
+    max-width: var(--max-width-page);
+    margin-inline: auto;
+  }
+
+  .about-band-copy {
+    display: grid;
+    gap: var(--space-lg);
+    align-content: start;
+    padding-left: var(--space-lg);
+    border-left: calc(var(--border-width) * 2) solid var(--color-collegiate-coral-soft);
+  }
+
+  .about-band-copy h2 {
+    margin-bottom: 0;
+    font-size: var(--text-hero-destination);
+    font-weight: 500;
+    line-height: var(--leading-tight);
+    text-transform: uppercase;
+  }
+
+  .about-band-links,
+  .about-archive-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+  }
+
+  .about-band-links {
+    gap: var(--space-sm) var(--space-xl);
+  }
+
+  .about-band-links a,
+  .about-archive-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--hero-touch-target);
+    border-bottom: var(--border-width) solid var(--color-collegiate-coral-soft);
+    color: var(--color-on-aubergine);
+    text-decoration: none;
+  }
+
+  .about-band-links a {
+    padding-bottom: var(--space-xs);
+  }
+
+  .about-band-links a:hover,
+  .about-archive-links a:hover {
+    border-color: var(--color-on-aubergine);
+    color: var(--color-paper);
+  }
+
+  /* The retired hobbies stay a footnote to the nav above them: muted label,
+     no rule of their own, separators bound to their links so a wrap cannot
+     strand one. */
+  .about-archive-links {
+    gap: var(--space-sm) var(--space-lg);
+  }
+
+  .about-archive-label {
+    color: var(--color-on-aubergine-muted);
+  }
+
+  .about-archive-pair {
+    display: inline-flex;
+    gap: var(--space-lg);
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  .about-archive-sep {
+    color: var(--color-collegiate-coral-soft);
+    font-weight: 700;
+  }
+
+  /* --- The band print ---------------------------------------------------- */
+  /* The one picture of me in the journal, tipped in over the band's top edge
+     beside the archive it belongs to. */
+  .about-band-print {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: var(--max-width-intro);
+    margin: 0;
+    justify-self: center;
+    padding: var(--space-sm);
+    border-radius: var(--radius-print);
+    background: var(--color-paper-raised);
+    box-shadow: var(--shadow-paper);
+    transform: rotate(-2deg);
+    transition: transform var(--duration-slow) var(--ease-out);
+  }
+
+  .about-band-print img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .about-band-print figcaption {
+    padding-top: var(--space-xs);
+    color: var(--color-caption-ink);
+    font-size: var(--text-sm);
+    font-style: italic;
+    text-align: center;
+  }
+
+  /* Straightening the print, not lifting it: nothing here is pressable. */
+  @media (hover: hover) {
+    .about-band-print:hover {
+      transform: rotate(0deg);
+    }
+  }
+
+  @media (min-width: 48rem) {
+    .about-plate {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .about-card {
+      justify-self: end;
+      margin-top: var(--space-lg);
+    }
+
+    .about-band-inner {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    /* The print rises past the band's top edge onto the wall, the way the
+       home glimpse crosses the same seam. */
+    .about-band-print {
+      align-self: start;
+      justify-self: end;
+      margin-top: var(--space-hero-band-overlap);
+    }
+  }
+
+  @media (min-width: 72rem) {
+    .about-sheet {
+      margin-left: var(--space-2xl);
+    }
+  }
+</style>

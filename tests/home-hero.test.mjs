@@ -5,20 +5,18 @@ import test from 'node:test';
 const readProjectFile = (path) =>
   readFile(new URL(`../${path}`, import.meta.url), 'utf8');
 
-test('homepage exposes the approved notebook hero destinations', async () => {
+test('homepage exposes the bookshelf hero and journal band', async () => {
   const source = await readProjectFile('src/pages/index.astro');
 
   assert.match(source, /class="home-hero-journal"/);
   assert.match(source, /class="home-hero-kicker"/);
   assert.match(source, /class="home-hero-intro"/);
-  assert.match(source, /class="home-destination home-destination--countries"/);
-  assert.match(source, /class="home-destination home-destination--places"/);
-  assert.match(source, /href="\/countries\/"/);
-  assert.match(source, /href="\/places\/"/);
-  assert.match(source, /href="\/about\/"/);
+  assert.match(source, /<Bookshelf \/>/);
   assert.match(source, /class="home-journal-band"/);
   assert.match(source, /<FieldRoutes variant="light" \/>/);
   assert.match(source, /<FieldRoutes variant="dark" \/>/);
+  assert.doesNotMatch(source, /home-destination/);
+  assert.doesNotMatch(source, /home-about-tab/);
 });
 
 test('homepage hero uses real travel assets with descriptive alternatives', async () => {
@@ -40,4 +38,32 @@ test('tokens define the approved palette and two-family typography system', asyn
   assert.match(source, /--font-display:\s*"Cormorant SC"/);
   assert.match(source, /--font-body:\s*"Avenir Next"/);
   assert.doesNotMatch(source, /--font-note:/);
+  assert.match(source, /--book-height:/);
+  assert.match(source, /--book-height-about:/);
+  assert.match(source, /--book-spine-width:/);
+  assert.match(source, /--book-spine-width-about:/);
+  assert.match(source, /--book-cover-width:/);
+  assert.match(source, /--book-lift:/);
+  assert.match(source, /--shelf-ledge-thickness:/);
+  assert.match(source, /--shelf-perspective:/);
+  assert.match(source, /--shadow-book-board:/);
+  assert.match(source, /--ease-in-out:/);
+});
+
+test('bookshelf renders three book links with the reveal contract', async () => {
+  const source = await readProjectFile('src/components/Bookshelf.astro');
+
+  assert.match(source, /class="book book--countries"/);
+  assert.match(source, /class="book book--places"/);
+  assert.match(source, /class="book book--about"/);
+  assert.match(source, /href="\/countries\/"/);
+  assert.match(source, /href="\/places\/"/);
+  assert.match(source, /href="\/about\/"/);
+  assert.match(source, /data-open="false"/);
+  // Keyboard activation must navigate on the first press, never be gated
+  // behind a reveal that assistive tech cannot perceive.
+  assert.match(source, /if \(fromKeyboard\)/);
+  assert.doesNotMatch(source, /aria-expanded/);
+  assert.match(source, /class="home-shelf-ledge"/);
+  assert.doesNotMatch(source, /home-destination/);
 });

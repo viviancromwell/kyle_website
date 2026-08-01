@@ -2,101 +2,806 @@
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import Base from '../layouts/Base.astro';
+import FieldRoutes from '../components/FieldRoutes.astro';
 import { chocolateArchive } from '../data/chocolateArchive.mjs';
 
 const chocolateImages = import.meta.glob('../assets/chocolate/*', {
   eager: true,
   import: 'default',
 }) as Record<string, ImageMetadata>;
+
+const storyImage = chocolateImages[`../assets/chocolate/${chocolateArchive.aboutImage.file}`];
+
+// The archive's closing paragraph is a signpost to the page this replaces
+// ("scroll down... stay tuned for new offerings in the header above"), and
+// there is no header of offerings left to point at. The two paragraphs that
+// tell the story stay, written as they were.
+const story = chocolateArchive.about.slice(0, 2);
+
+// Every print is cut to the frame it actually lands in. The originals are
+// mostly 2500px portraits, and a 3:4 photograph set much wider than the lead
+// frame would tower over the writing beside it.
+const PRINT_SPECS = {
+  story: { widths: [360, 540, 720], sizes: '(min-width: 48rem) 32rem, 88vw' },
+  lead: { widths: [360, 540, 720], sizes: '(min-width: 48rem) 24rem, 88vw' },
+  pair: { widths: [320, 480, 640], sizes: '(min-width: 48rem) 19rem, 88vw' },
+  detail: { widths: [180, 270, 360], sizes: '(min-width: 48rem) 11rem, 42vw' },
+  small: { widths: [240, 360, 480], sizes: '(min-width: 48rem) 15rem, 60vw' },
+};
+
+type PrintSpec = { widths: number[]; sizes: string };
+
+// Two originals are only a few hundred pixels wide, and asking for widths
+// above the source ships an upscale carrying no extra detail. `width` matters
+// as much as the srcset: left to itself Astro points the plain src at the
+// 2500px original, the one file no frame on this page is big enough to want.
+const frameFor = (source: ImageMetadata, spec: PrintSpec) => {
+  const fitted = spec.widths.filter((width) => width <= source.width);
+  const widths = fitted.length ? fitted : [source.width];
+  return { widths, width: Math.max(...widths), sizes: spec.sizes };
+};
+
+// A strip on all six would read as a pattern instead of a hand laying them
+// down, so only three editions are taped.
+const TAPED = new Set([0, 2, 5]);
+
+// Tilts run off one counter for the whole page rather than restarting per
+// edition, so no two prints that end up next to each other lean the same way.
+let printCount = 0;
+
+const editions = chocolateArchive.editions.map((edition, index) => {
+  const prints = edition.images.map((asset) => {
+    const print = {
+      ...asset,
+      source: chocolateImages[`../assets/chocolate/${asset.file}`],
+      tilt: printCount % 6,
+    };
+    printCount += 1;
+    return print;
+  });
+
+  const [lead, ...rest] = prints;
+
+  // The shape of each entry comes from how many prints survived, not from a
+  // hand-kept list: a contact sheet for the edition that was shot piece by
+  // piece, a facing pair for two, a single plate for one.
+  const layout = prints.length > 2 ? 'sheet' : prints.length === 2 ? 'pair' : 'plate';
+  const leadSpec = layout === 'pair' ? 'pair' : lead.source.width < 700 ? 'small' : 'lead';
+
+  return {
+    ...edition,
+    layout,
+    lead: {
+      ...lead,
+      frame: frameFor(lead.source, PRINT_SPECS[leadSpec]),
+      small: leadSpec === 'small',
+    },
+    rest: rest.map((print) => ({
+      ...print,
+      frame: frameFor(print.source, layout === 'pair' ? PRINT_SPECS.pair : PRINT_SPECS.detail),
+    })),
+    taped: TAPED.has(index),
+    flip: index % 2 === 1,
+  };
+});
+
+const storyFrame = frameFor(storyImage, PRINT_SPECS.story);
 ---
 
 <Base
   title="Chocolate — Kyle Cromwell"
-  description="Kyle Cromwell’s chocolate creations, fundraisers, and seasonal editions from 2020 to 2022."
+  description="The chocolate I made by hand from 2020 to 2022: seasonal boxes, holiday assortments, and fundraising editions."
 >
-  <header class="page-header reveal">
-    <div>
-      <p class="eyebrow">Retired hobby · Chocolate</p>
-      <h1 class="page-title">Come to the dark side.<br /><span>We have chocolate.</span></h1>
-    </div>
-    <p class="lede">
-      A timeline of Kyle’s handmade truffles, holiday boxes, and fundraising editions.
-    </p>
-  </header>
+  <div class="chocolate-page">
+    <div class="chocolate-paper">
+      <div class="chocolate-inner">
+        <header class="chocolate-plate">
+          <FieldRoutes variant="light" />
 
-  <section class="chocolate-section reveal reveal--late" aria-labelledby="order-archive-heading">
-    <article class="statement-card statement-card--wide chocolate-card">
-      <p class="archive-index">Order archive · {chocolateArchive.orderArchive.status}</p>
-      <div class="chocolate-card-copy">
-        <h2 id="order-archive-heading">{chocolateArchive.orderArchive.heading}</h2>
-        <h3>{chocolateArchive.orderArchive.date}:</h3>
-        <p>{chocolateArchive.orderArchive.intro}</p>
-        <ul>
-          {chocolateArchive.orderArchive.inventory.map((item) => <li>{item}</li>)}
-        </ul>
-        <h3>Chocolate used:</h3>
-        <ul>
-          {chocolateArchive.orderArchive.chocolateUsed.map((item) => <li>{item}</li>)}
-        </ul>
-        <h3>Tasting tips:</h3>
-        <ul>
-          {chocolateArchive.orderArchive.tastingTips.map((tip) => <li>{tip}</li>)}
-        </ul>
-      </div>
-    </article>
-  </section>
+          <div class="chocolate-plate-copy reveal">
+            <p class="chocolate-kicker">Retired hobby</p>
+            <h1>Chocolate</h1>
+            <p class="chocolate-intro">
+              I made chocolate by hand from 2020 to 2022: seasonal boxes, holiday assortments,
+              and batches whose sales went to fundraisers. This page is the record I kept of
+              them.
+            </p>
+          </div>
 
-  <section class="chocolate-section" aria-labelledby="chocolate-about-heading">
-    <article class="memory-card chocolate-card">
-      <Image
-        class="chocolate-card-media"
-        src={chocolateImages[`../assets/chocolate/${chocolateArchive.aboutImage.file}`]}
-        alt={chocolateArchive.aboutImage.alt}
-        loading="lazy"
-      />
-      <div class="chocolate-card-copy">
-        <p class="archive-index">The story</p>
-        <h2 id="chocolate-about-heading">About the chocolate</h2>
-        {chocolateArchive.about.map((paragraph) => <p>{paragraph}</p>)}
-      </div>
-    </article>
-  </section>
+          <div class="chocolate-label">
+            <span class="chocolate-tape chocolate-tape--label" aria-hidden="true"></span>
+            <p class="chocolate-label-line">{chocolateArchive.headline}</p>
+            <p class="chocolate-label-years">2020 to 2022</p>
+          </div>
+        </header>
 
-  <div class="section-heading">
-    <h2 id="chocolate-timeline-heading">Chocolate creations</h2>
-    <p>2020–2022</p>
-  </div>
+        <section class="chocolate-story" aria-labelledby="chocolate-story-title">
+          <div class="chocolate-story-copy">
+            <h2 id="chocolate-story-title">How this began</h2>
+            <span class="chocolate-rule" aria-hidden="true"></span>
+            {story.map((paragraph) => <p>{paragraph}</p>)}
+          </div>
 
-  <section class="memory-grid" aria-labelledby="chocolate-timeline-heading">
-    {chocolateArchive.editions.map((edition, index) => (
-      <article class="memory-card chocolate-card">
-        <div class="chocolate-gallery">
-          {edition.images.map((asset) => (
+          <figure class="chocolate-print chocolate-print--story chocolate-print--t3">
+            <span class="chocolate-tape chocolate-tape--story" aria-hidden="true"></span>
             <Image
-              class="chocolate-card-media"
-              src={chocolateImages[`../assets/chocolate/${asset.file}`]}
-              alt={asset.alt}
-              loading="lazy"
+              src={storyImage}
+              alt={chocolateArchive.aboutImage.alt}
+              loading="eager"
+              {...storyFrame}
             />
-          ))}
-        </div>
-        <div class="chocolate-card-copy">
-          <p class="archive-index">Edition · {String(index + 1).padStart(2, '0')}</p>
-          <h2>{edition.title}</h2>
-          <p>{edition.description}</p>
-          {edition.details && (
-            <ul>
-              {edition.details.map((detail) => <li>{detail}</li>)}
-            </ul>
-          )}
-          {edition.secondaryHeading && <h3>{edition.secondaryHeading}</h3>}
-          {edition.flavors && (
-            <ul>
-              {edition.flavors.map((flavor) => <li>{flavor}</li>)}
-            </ul>
-          )}
-        </div>
-      </article>
-    ))}
-  </section>
+          </figure>
+        </section>
+
+        <section class="chocolate-editions" aria-labelledby="chocolate-editions-title">
+          <div class="chocolate-editions-head">
+            <h2 id="chocolate-editions-title">The editions</h2>
+            <span class="chocolate-rule" aria-hidden="true"></span>
+          </div>
+
+          <ul class="chocolate-list">
+            {editions.map((edition) => (
+              <li
+                class:list={[
+                  'chocolate-edition',
+                  `chocolate-edition--${edition.layout}`,
+                  { 'chocolate-edition--flip': edition.flip },
+                ]}
+              >
+                <div class="chocolate-entry">
+                  <h3>{edition.title}</h3>
+                  <span class="chocolate-rule" aria-hidden="true"></span>
+                  <p class="chocolate-note">{edition.description}</p>
+
+                  {edition.details && (
+                    <ul class="chocolate-marks">
+                      {edition.details.map((detail) => <li>{detail}</li>)}
+                    </ul>
+                  )}
+
+                  {edition.secondaryHeading && (
+                    <p class="chocolate-note">{edition.secondaryHeading}</p>
+                  )}
+
+                  {edition.flavors && (
+                    <ul class="chocolate-marks">
+                      {edition.flavors.map((flavor) => <li>{flavor}</li>)}
+                    </ul>
+                  )}
+                </div>
+
+                <div class="chocolate-prints">
+                  <figure
+                    class:list={[
+                      'chocolate-print',
+                      'chocolate-print--lead',
+                      `chocolate-print--t${edition.lead.tilt}`,
+                      { 'chocolate-print--small': edition.lead.small },
+                    ]}
+                  >
+                    {edition.taped && (
+                      <span class="chocolate-tape chocolate-tape--print" aria-hidden="true"></span>
+                    )}
+                    <Image
+                      src={edition.lead.source}
+                      alt={edition.lead.alt}
+                      loading="lazy"
+                      {...edition.lead.frame}
+                    />
+                  </figure>
+
+                  {edition.rest.length > 0 && (
+                    <div class="chocolate-rest">
+                      {edition.rest.map((print) => (
+                        <figure
+                          class:list={['chocolate-print', `chocolate-print--t${print.tilt}`]}
+                        >
+                          <Image
+                            src={print.source}
+                            alt={print.alt}
+                            loading="lazy"
+                            {...print.frame}
+                          />
+                        </figure>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      </div>
+    </div>
+
+    <div class="chocolate-band">
+      <FieldRoutes variant="dark" />
+
+      <div class="chocolate-band-inner">
+        <h2 id="chocolate-band-title">Elsewhere in the journal</h2>
+        <nav class="chocolate-band-links" aria-labelledby="chocolate-band-title">
+          <a href="/poems/">Poems</a>
+          <a href="/about/">About Me</a>
+          <a href="/">Back to the shelf</a>
+        </nav>
+      </div>
+    </div>
+  </div>
 </Base>
+
+<style>
+  /* ---------------------------------------------------------------------
+     The page ground only. The header, nav and footer belong to the shared
+     interior shell in global.css and are deliberately left alone. Scoped
+     with :has() so nothing here can outlive this route; hoist into
+     global.css when interior grounds are migrated.
+     --------------------------------------------------------------------- */
+  :global(body:has(.chocolate-page)) {
+    color: var(--color-soft-charcoal);
+    background: var(--color-paper);
+  }
+
+  /* The starter grid overlay, hidden the way the home and showcase routes
+     already hide it. */
+  :global(body:has(.chocolate-page))::before {
+    display: none;
+  }
+
+  /* Full-bleed like the three sibling pages; the measure is held by
+     .chocolate-inner instead. */
+  :global(body:has(.chocolate-page) .page) {
+    max-width: none;
+    padding: 0;
+  }
+
+  /* --- The page ground: the same wall the home hero is pinned to. ------- */
+  .chocolate-page {
+    /* Every print frame is cut from one measure so the collage keeps a scale
+       relationship instead of six unrelated widths. */
+    --chocolate-print-lead: var(--max-width-intro);
+    --chocolate-print-pair: calc(var(--max-width-intro) * 0.8);
+    --chocolate-print-small: calc(var(--max-width-intro) * 0.62);
+
+    display: grid;
+    overflow-x: clip;
+    color: var(--color-soft-charcoal);
+    background: var(--color-paper);
+  }
+
+  .chocolate-paper {
+    position: relative;
+    padding: var(--space-hero-gutter) var(--space-hero-gutter) var(--space-2xl);
+    background: var(--color-paper) url("../assets/home/wall-white.jpg") left top / 64rem auto repeat;
+  }
+
+  .chocolate-inner {
+    display: grid;
+    gap: var(--space-hero-section);
+    width: 100%;
+    max-width: var(--max-width-page);
+    margin-inline: auto;
+  }
+
+  /* --- The title page --------------------------------------------------- */
+  .chocolate-plate {
+    position: relative;
+    display: grid;
+    gap: var(--space-xl);
+    align-items: start;
+    min-height: var(--hero-note-min-height);
+    padding-block: var(--space-md) var(--space-xl);
+  }
+
+  .chocolate-plate-copy,
+  .chocolate-label {
+    position: relative;
+    z-index: 1;
+  }
+
+  .chocolate-plate-copy {
+    display: grid;
+    gap: var(--space-md);
+    align-content: start;
+    max-width: var(--max-width-copy);
+  }
+
+  .chocolate-kicker,
+  .chocolate-intro,
+  .chocolate-plate-copy h1 {
+    margin-bottom: 0;
+  }
+
+  .chocolate-kicker {
+    color: var(--color-field-violet);
+    font-family: var(--font-display);
+    font-size: var(--text-hero-kicker);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+  }
+
+  /* The name rule from the home hero, carried onto the page title: violet
+     hairline closed by a ring node. It is the only role color the archive
+     claims; everything below is written in caption ink. */
+  .chocolate-plate-copy h1 {
+    position: relative;
+    width: fit-content;
+    padding-right: var(--space-xl);
+    padding-bottom: var(--space-md);
+    border-bottom: var(--border-width) solid var(--color-field-violet);
+    font-size: var(--text-2xl);
+    font-weight: 500;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-tight);
+  }
+
+  .chocolate-plate-copy h1::after {
+    position: absolute;
+    right: 0;
+    bottom: calc(var(--hero-ring-hole) * -1);
+    width: calc(var(--hero-ring-hole) * 2);
+    height: calc(var(--hero-ring-hole) * 2);
+    border: var(--border-width) solid var(--color-field-violet);
+    border-radius: var(--radius-pill);
+    background: var(--color-paper);
+    content: "";
+  }
+
+  .chocolate-intro {
+    max-width: var(--max-width-copy);
+    font-size: var(--text-lg);
+  }
+
+  /* --- The box label ---------------------------------------------------- */
+  /* The line that ran across the top of the old page, kept as the label off a
+     box lid and taped to the title page. */
+  .chocolate-label {
+    --chocolate-tilt: -2.25deg;
+
+    display: grid;
+    gap: var(--space-2xs);
+    width: fit-content;
+    max-width: var(--max-width-intro);
+    padding: var(--space-md) var(--space-lg);
+    border: var(--border-width) solid var(--color-paper-muted);
+    border-radius: var(--radius-note);
+    background: var(--color-paper-raised);
+    box-shadow: var(--shadow-note);
+    transform: rotate(var(--chocolate-tilt));
+    animation: chocolate-lay var(--duration-slow) var(--ease-out) both;
+    animation-delay: var(--duration-fast);
+  }
+
+  /* Tipped objects cannot use the shared .reveal utility: its keyframes set
+     transform, which would land them flat. This entrance carries the rotation
+     through, the way the about card does. */
+  @keyframes chocolate-lay {
+    from {
+      opacity: 0;
+      transform: translateY(var(--space-md)) rotate(var(--chocolate-tilt));
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0) rotate(var(--chocolate-tilt));
+    }
+  }
+
+  .chocolate-label p {
+    margin: 0;
+  }
+
+  .chocolate-label-line {
+    color: var(--color-aubergine);
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 500;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-snug);
+  }
+
+  .chocolate-label-years {
+    color: var(--color-caption-ink);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+  }
+
+  /* --- The story -------------------------------------------------------- */
+  .chocolate-story {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: start;
+  }
+
+  .chocolate-story-copy {
+    display: grid;
+    gap: var(--space-md);
+    align-content: start;
+    max-width: var(--max-width-copy);
+  }
+
+  .chocolate-story-copy p {
+    margin-bottom: 0;
+    line-height: var(--leading-normal);
+  }
+
+  .chocolate-story-copy h2,
+  .chocolate-editions-head h2 {
+    margin-bottom: 0;
+    font-size: var(--text-hero-destination);
+    font-weight: 500;
+    line-height: var(--leading-tight);
+    text-transform: uppercase;
+  }
+
+  /* The sibling rule, drawn in caption ink rather than a role color: violet
+     belongs to the countries page and coral to the places page, and this is
+     the side archive both of them are read before. */
+  .chocolate-rule {
+    display: block;
+    height: calc(var(--hero-ring-hole) * 2);
+    color: var(--color-caption-ink);
+    background-image:
+      radial-gradient(
+        circle at var(--hero-ring-hole) center,
+        transparent 0 calc(var(--hero-ring-hole) - var(--hero-pattern-line)),
+        currentColor calc(var(--hero-ring-hole) - var(--hero-pattern-line)) var(--hero-ring-hole),
+        transparent var(--hero-ring-hole)
+      ),
+      linear-gradient(currentColor, currentColor);
+    background-position: left center, right center;
+    background-repeat: no-repeat;
+    background-size: auto, calc(100% - var(--hero-ring-hole) * 2) var(--hero-pattern-line);
+  }
+
+  /* --- The editions ----------------------------------------------------- */
+  .chocolate-editions {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .chocolate-editions-head {
+    display: grid;
+    gap: var(--space-sm);
+    max-width: var(--max-width-narrow);
+  }
+
+  .chocolate-list {
+    display: grid;
+    gap: var(--space-2xl);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .chocolate-edition {
+    display: grid;
+    gap: var(--space-lg);
+    align-items: start;
+  }
+
+  .chocolate-entry {
+    display: grid;
+    gap: var(--space-sm);
+    align-content: start;
+    max-width: var(--max-width-narrow);
+  }
+
+  .chocolate-entry h3 {
+    margin-bottom: 0;
+    font-size: var(--text-xl);
+    font-weight: 500;
+    line-height: var(--leading-tight);
+    text-transform: uppercase;
+  }
+
+  .chocolate-note {
+    margin-bottom: 0;
+    line-height: var(--leading-normal);
+  }
+
+  /* Chocolates and flavors written out one to a line, each against the ring
+     the field routes draw at every junction on the wall behind them. */
+  .chocolate-marks {
+    display: grid;
+    gap: var(--space-2xs);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .chocolate-marks li {
+    position: relative;
+    padding-left: var(--space-lg);
+    line-height: var(--leading-normal);
+  }
+
+  .chocolate-marks li::before {
+    position: absolute;
+    top: var(--space-xs);
+    left: 0;
+    width: calc(var(--hero-ring-hole) * 2);
+    height: calc(var(--hero-ring-hole) * 2);
+    border: var(--border-width) solid var(--color-caption-ink);
+    border-radius: var(--radius-pill);
+    content: "";
+  }
+
+  /* --- Prints ------------------------------------------------------------ */
+  .chocolate-prints {
+    display: grid;
+    gap: var(--space-lg);
+    align-items: start;
+    justify-items: start;
+  }
+
+  .chocolate-rest {
+    display: grid;
+    gap: var(--space-md);
+    width: 100%;
+  }
+
+  /* The four pieces shot one by one stay a set at every width rather than
+     becoming four more full-width prints. */
+  .chocolate-edition--sheet .chocolate-rest {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .chocolate-print {
+    --chocolate-tilt: 0deg;
+
+    position: relative;
+    width: 100%;
+    margin: 0;
+    padding: var(--space-xs);
+    border-radius: var(--radius-print);
+    background: var(--color-paper-raised);
+    box-shadow: var(--shadow-note);
+    transform: rotate(var(--chocolate-tilt));
+    transition:
+      transform var(--duration-slow) var(--ease-out),
+      box-shadow var(--duration-slow) var(--ease-out);
+  }
+
+  .chocolate-print img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* Only the prints a hand would have held get the wider white border; the
+     four pieces shot one by one are contact-sheet size and would drown in it. */
+  .chocolate-print--story,
+  .chocolate-print--lead {
+    padding: var(--space-sm);
+  }
+
+  .chocolate-print--story {
+    max-width: var(--max-width-narrow);
+  }
+
+  .chocolate-print--lead {
+    max-width: var(--chocolate-print-lead);
+  }
+
+  /* This original is only a few hundred pixels wide, so it prints small and
+     stays sharp. */
+  .chocolate-print--small {
+    max-width: var(--chocolate-print-small);
+  }
+
+  .chocolate-print--t0 { --chocolate-tilt: 1.5deg; }
+  .chocolate-print--t1 { --chocolate-tilt: -2deg; }
+  .chocolate-print--t2 { --chocolate-tilt: 2.5deg; }
+  .chocolate-print--t3 { --chocolate-tilt: -1.25deg; }
+  .chocolate-print--t4 { --chocolate-tilt: 1deg; }
+  .chocolate-print--t5 { --chocolate-tilt: -2.75deg; }
+
+  /* Straightening the print, not lifting it: nothing here is pressable. */
+  @media (hover: hover) {
+    .chocolate-print:hover {
+      box-shadow: var(--shadow-paper);
+      transform: rotate(0deg);
+    }
+  }
+
+  /* --- Washi tape -------------------------------------------------------- */
+  /* Cropped from the approved direction, shared with the home collage; torn
+     ends via clip-path. */
+  .chocolate-tape {
+    position: absolute;
+    z-index: 1;
+    background: url("../assets/home/tape-washi.png") center / cover no-repeat;
+    box-shadow: var(--shadow-tape);
+    clip-path: polygon(
+      0 8%, 1.5% 0, 98% 3%, 100% 10%, 98.8% 32%, 100% 52%, 98.5% 78%, 100% 94%,
+      97.5% 100%, 2% 97%, 0 88%, 1.2% 66%, 0 42%, 1% 18%
+    );
+    opacity: 0.9;
+  }
+
+  .chocolate-tape--label {
+    top: calc(var(--hero-tape-height) * -0.45);
+    left: var(--space-lg);
+    width: calc(var(--hero-tape-width) * 0.5);
+    height: calc(var(--hero-tape-height) * 0.8);
+    transform: rotate(8deg);
+  }
+
+  .chocolate-tape--story {
+    top: calc(var(--hero-tape-height) * -0.4);
+    left: 50%;
+    width: calc(var(--hero-tape-width) * 0.66);
+    height: var(--hero-tape-height);
+    transform: translateX(-50%) rotate(-2.5deg);
+  }
+
+  .chocolate-tape--print {
+    top: calc(var(--hero-tape-height) * -0.38);
+    left: var(--space-lg);
+    width: calc(var(--hero-tape-width) * 0.55);
+    height: calc(var(--hero-tape-height) * 0.8);
+    transform: rotate(-14deg);
+  }
+
+  /* The mirrored rows are taped from the other corner, so the strips read as
+     a hand working across the page rather than a repeated stamp. */
+  .chocolate-edition--flip .chocolate-tape--print {
+    right: var(--space-lg);
+    left: auto;
+    transform: rotate(11deg);
+  }
+
+  /* --- The journal cover band ------------------------------------------- */
+  .chocolate-band {
+    /* Field Violet is invisible on aubergine (1.8:1); the coral companion
+       carries every underline and focus ring inside the band. */
+    --color-focus: var(--color-collegiate-coral-soft);
+
+    position: relative;
+    display: grid;
+    align-content: center;
+    min-height: var(--hero-band-min-height);
+    padding: var(--space-xl) var(--space-hero-gutter);
+    color: var(--color-on-aubergine);
+    background: var(--color-aubergine);
+  }
+
+  .chocolate-band-inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: var(--space-lg);
+    align-content: start;
+    width: 100%;
+    max-width: var(--max-width-page);
+    margin-inline: auto;
+    padding-left: var(--space-lg);
+    border-left: calc(var(--border-width) * 2) solid var(--color-collegiate-coral-soft);
+  }
+
+  .chocolate-band-inner h2 {
+    margin-bottom: 0;
+    font-size: var(--text-hero-destination);
+    font-weight: 500;
+    line-height: var(--leading-tight);
+    text-transform: uppercase;
+  }
+
+  .chocolate-band-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm) var(--space-xl);
+    align-items: center;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+  }
+
+  .chocolate-band-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--hero-touch-target);
+    padding-bottom: var(--space-xs);
+    border-bottom: var(--border-width) solid var(--color-collegiate-coral-soft);
+    color: var(--color-on-aubergine);
+    text-decoration: none;
+  }
+
+  .chocolate-band-links a:hover {
+    border-color: var(--color-on-aubergine);
+    color: var(--color-paper);
+  }
+
+  @media (min-width: 48rem) {
+    .chocolate-plate {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .chocolate-label {
+      justify-self: end;
+      margin-top: var(--space-lg);
+    }
+
+    /* The childhood print takes the left of the spread and the writing sits
+       beside it, but the heading still comes first in the reading order. */
+    .chocolate-story {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    .chocolate-story-copy {
+      grid-row: 1;
+      grid-column: 2;
+    }
+
+    .chocolate-print--story {
+      grid-row: 1;
+      grid-column: 1;
+    }
+
+    .chocolate-edition {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      gap: var(--space-xl);
+    }
+
+    /* Every other entry turns over, the way facing pages alternate. */
+    .chocolate-edition--flip .chocolate-entry {
+      grid-row: 1;
+      grid-column: 2;
+    }
+
+    .chocolate-edition--flip .chocolate-prints {
+      grid-row: 1;
+      grid-column: 1;
+      justify-items: end;
+    }
+
+    /* The edition that was shot piece by piece opens the archive across the
+       whole measure: one print of the assortment, then the four pieces in a
+       contact sheet beside it. */
+    .chocolate-edition--sheet {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    /* Both halves are cut to the lead frame, so the four pieces land at half
+       its width and the contact sheet stands as tall as the print it sits
+       beside. */
+    .chocolate-edition--sheet .chocolate-prints {
+      grid-template-columns:
+        minmax(0, var(--chocolate-print-lead))
+        minmax(0, var(--chocolate-print-lead));
+      gap: var(--space-xl);
+    }
+
+    /* Two prints laid side by side, the second dropped down the page so the
+       pair does not read as a filmstrip. */
+    .chocolate-edition--pair .chocolate-prints {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: var(--space-md);
+    }
+
+    .chocolate-edition--pair .chocolate-print {
+      max-width: var(--chocolate-print-pair);
+    }
+
+    .chocolate-edition--pair .chocolate-rest {
+      margin-top: var(--space-xl);
+    }
+  }
+
+  @media (min-width: 72rem) {
+    .chocolate-edition {
+      gap: var(--space-2xl);
+    }
+
+    /* The entries step in from the margin, the way the countries sheets are
+       set in from the masthead, so the column of writing is not pinned to the
+       page edge. */
+    .chocolate-list {
+      padding-left: var(--space-xl);
+    }
+  }
+</style>

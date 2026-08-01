@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import machuPicchu from '../assets/places/machu-picchu-peru.jpeg';
+import Bookshelf from '../components/Bookshelf.astro';
 
 const colorFamilies = [
   [
@@ -86,7 +87,7 @@ const shadows = [
 
 const navSections = [
   ['Foundations', [['#color', 'Color'], ['#typography', 'Typography'], ['#spacing', 'Spacing'], ['#radius', 'Radius'], ['#elevation', 'Elevation']]],
-  ['Journal components', [['#component-panel', 'Notepad Panel'], ['#component-tab', 'About Tab'], ['#component-print', 'Travel Print'], ['#component-band', 'Band + Archives']]],
+  ['Journal components', [['#component-bookshelf', 'Bookshelf'], ['#component-print', 'Travel Print'], ['#component-band', 'Band + Archives']]],
 ];
 ---
 
@@ -212,40 +213,16 @@ const navSections = [
         </div>
       </section>
 
-      <section id="component-panel">
-        <h2>Notepad Panel</h2>
+      <section id="component-bookshelf">
+        <h2>Bookshelf</h2>
         <div class="ds-demo ds-demo--paper ds-demo--roomy">
-          <a class="home-destination home-destination--countries ds-panel-demo" href="/countries/">
-            <svg class="home-destination-icon" viewBox="0 0 24 24" aria-hidden="true">
-              <circle cx="12" cy="12" r="9"></circle>
-              <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"></path>
-            </svg>
-            <span class="home-destination-title">Visited<br />Countries</span>
-            <span class="home-destination-arrow" aria-hidden="true">→</span>
-          </a>
+          <Bookshelf />
         </div>
         <p class="ds-note">
-          A sheet torn from a spiral notebook: binding keyholes along the top edge, role-colored
-          icon, uppercase Cormorant title with inline arrow, and a rule with a ring node. Hover
-          lifts; press scales down.
-        </p>
-      </section>
-
-      <section id="component-tab">
-        <h2>About Tab</h2>
-        <div class="ds-demo ds-demo--paper">
-          <a class="home-about-tab" href="/about/">
-            <span class="home-about-tab-label">About me</span>
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <circle cx="12" cy="8" r="4"></circle>
-              <path d="M4.5 21c.5-4.2 3-6.5 7.5-6.5s7 2.3 7.5 6.5"></path>
-            </svg>
-          </a>
-        </div>
-        <p class="ds-note">
-          The quieter bookmark. Vertical with a violet cap at desktop widths (tucked behind the
-          countries panel on the homepage, sliding out on hover and focus); a horizontal chip below
-          72rem.
+          The site index as three closed volumes on a wooden ledge: violet leather for countries,
+          coral-blended leather with a stitched binding seam for places, aubergine cloth for the
+          thinner About volume. The first activation pulls a book off the shelf and turns it to its
+          cover; the second navigates. Without JS they are plain links.
         </p>
       </section>
 
@@ -274,7 +251,7 @@ const navSections = [
       <section id="component-band">
         <h2>Band + Archives</h2>
         <div class="ds-demo ds-demo--aubergine">
-          <p class="ds-band-copy">Political science, great food, video games, and time with friends.</p>
+          <p class="ds-band-copy">Political science, history, chess, great food, video games, and time with friends.</p>
           <nav class="home-archive-links" aria-label="Archive links demo">
             <span class="home-archive-label">Older archives</span>
             <span class="home-archive-pair">
@@ -587,10 +564,6 @@ const navSections = [
   .ds-band-copy {
     margin: 0;
     font-size: var(--text-lg);
-  }
-
-  .ds-panel-demo {
-    max-width: var(--max-width-narrow);
   }
 
   /* The homepage's desktop layout rules position the print absolutely;

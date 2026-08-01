@@ -2,45 +2,595 @@
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import Base from '../layouts/Base.astro';
+import FieldRoutes from '../components/FieldRoutes.astro';
 import { interestingPlaces } from '../data/interestingPlaces.mjs';
 
 const placeImages = import.meta.glob('../assets/places/*', {
   eager: true,
   import: 'default',
 }) as Record<string, ImageMetadata>;
+
+// Written from the photographs themselves. The caption names the place, so
+// the alt describes what is actually in the frame.
+const placeAlt: Record<string, string> = {
+  'mostar-bridge-bosnia.jpeg':
+    'The stone Old Bridge arching over the turquoise Neretva River between Mostar’s hillside rooftops',
+  'trabant-car.jpeg': 'A pale Trabant on display in a dim museum hall, visitors standing around it',
+  'atomic-bomb-dome.jpeg':
+    'The gutted brick shell and bare steel dome of the Genbaku Dome against a pale evening sky',
+  'holocaust-memorial-berlin.jpeg':
+    'Rows of grey concrete slabs receding into the distance, a single visitor in a red coat among them',
+  'tallinn-estonia.jpeg':
+    'Red-tiled roofs and a church spire in Tallinn’s old town under heavy cloud, modern towers on the horizon',
+  'nazca-lines-peru.jpeg':
+    'Pale lines winding across the flat desert plain at Nazca, seen from a low rise',
+  'stolperstein-berlin.jpeg':
+    'Four brass memorial blocks set flush into the cobblestones at the edge of a pavement',
+  'cu-chi-tunnels.jpeg':
+    'A crouching figure silhouetted against daylight at the far end of a narrow earth tunnel',
+  'bai-people-china.jpeg':
+    'A woman in an embroidered red headdress cooking over a wok in a tiled kitchen',
+  'batu-caves-malaysia.jpeg':
+    'The gold statue of Lord Murugan beside the rainbow-painted stairway climbing to the limestone caves',
+  'berlin-wall.jpeg':
+    'A preserved stretch of the wall and its raked sand strip, seen from above with the city beyond',
+  'hagia-sophia-istanbul.jpeg':
+    'Hagia Sophia’s domes and minarets catching low evening light above the square',
+  'cafe-van-gogh-arles.jpeg': 'Yellow awnings over café tables on a narrow sunlit street in Arles',
+  'moray-valley-peru.jpeg':
+    'Concentric Inca terraces cut in rings into a green bowl in the hillside',
+  'machu-picchu-peru.jpeg':
+    'Cloud drifting across the stone terraces and steep peaks of Machu Picchu',
+  'mount-vesuvius-italy.png':
+    'A wide view along the dark crater rim of Vesuvius, two walkers small on the path',
+  'todoji-temple-nara.jpeg':
+    'The temple’s broad wooden hall and sweeping tiled roof under a clear sky, visitors crossing the courtyard',
+  'xinjiang-china.jpeg':
+    'A black and white street scene: a man carrying a small child past market stalls, a woman in a headscarf in the foreground',
+  'jiaohe-ruins-china.jpeg':
+    'Eroded earthen walls of the ruined city rising from bare rock against a deep blue sky',
+  'terracotta-warrior-xian.jpeg':
+    'Rows of terracotta soldiers standing in the excavated earthen trenches',
+  'ayutthaya-thailand.jpeg': 'A stone Buddha head held among the twisting roots of a fig tree',
+  'leshan-giant-buddha-china.jpeg':
+    'Looking up the carved red cliff to the Giant Buddha’s head, its huge stone feet in the foreground',
+  'pula-arena-croatia.jpeg':
+    'The tiered stone arches of the Roman amphitheatre curving around the open arena floor',
+  'twin-tower-tridents-nyc.jpeg':
+    'The slurry wall and a memorial column covered in written tributes inside the museum’s cavernous hall',
+  'temple-of-concordia-sicily.png':
+    'A large bronze figure with one wing lying on the sand before the columned Greek temple',
+};
+
+const PRINT_WIDTHS = [360, 540, 720];
+const PLATE_WIDTHS = [480, 720, 960];
+const SPREAD_WIDTHS = [720, 1080, 1440];
+
+// Several of the originals are only a few hundred pixels wide; asking for
+// widths above the source would ship upscaled files with no extra detail.
+const widthsFor = (source: ImageMetadata, candidates: number[]) => {
+  const usable = candidates.filter((width) => width <= source.width);
+  return usable.length ? usable : [source.width];
+};
+
+const entries = interestingPlaces.map((place, index) => {
+  const source = placeImages[`../assets/places/${place.image}`];
+
+  return {
+    ...place,
+    source,
+    alt: placeAlt[place.image] ?? place.title,
+    // Two of the originals are panoramas; they cross the whole spread rather
+    // than squeezing into one column.
+    spread: source.width / source.height > 2.2,
+    // Low-resolution originals print small so they stay sharp.
+    small: source.width < 700,
+    tilt: index % 6,
+    tape: index % 3,
+    tuck: index % 2 === 1,
+  };
+});
+
+const [plate, ...collage] = entries;
 ---
 
 <Base
   title="Interesting Places — Kyle Cromwell"
-  description="Kyle Cromwell’s index of memorable places, overlooked corners, and locations worth revisiting."
+  description="Twenty-five places from my journal, with the photographs and the writing I collected with them."
 >
-  <header class="page-header reveal">
-    <div>
-      <p class="eyebrow">Index · 02</p>
-      <h1 class="page-title">Interesting<br /><span>Places</span></h1>
-    </div>
-    <p class="lede">
-      Twenty-five places that held Kyle’s attention, with the writing and photographs preserved from his original collection.
-    </p>
-  </header>
+  <div class="places-page">
+    <header class="places-plate">
+      <FieldRoutes variant="light" />
 
-  <section class="collection-grid reveal reveal--late" aria-label="Interesting places archive">
-    {interestingPlaces.map((place, index) => (
-      <figure class:list={['archive-card', 'place-card', { 'archive-card--feature': index === 0 }]}>
-        <Image
-          class="place-card-media"
-          src={placeImages[`../assets/places/${place.image}`]}
-          alt={place.title}
-          loading="lazy"
-        />
-        <figcaption class="place-card-copy">
-          <span class="archive-index">Pin · {String(index + 1).padStart(3, '0')}</span>
-          <div>
-            <h2>{place.title}</h2>
-            <p>{place.description}</p>
+      <div class="places-plate-inner">
+        <div class="places-plate-copy reveal">
+          <h1>Interesting Places</h1>
+          <p class="places-kicker">Field Notes</p>
+          <p class="places-intro">
+            Twenty-five places that held my attention. The prints and the writing under them
+            are kept as I first collected them.
+          </p>
+        </div>
+
+        <div class="places-plate-entry reveal reveal--late">
+          <figure class="places-print places-print--plate places-print--t0">
+            <span class="places-tape places-tape--plate" aria-hidden="true"></span>
+            <Image
+              src={plate.source}
+              alt={plate.alt}
+              widths={widthsFor(plate.source, PLATE_WIDTHS)}
+              sizes="(min-width: 72rem) 30rem, (min-width: 48rem) 44vw, 88vw"
+              loading="eager"
+            />
+            <figcaption><h2>{plate.title}</h2></figcaption>
+          </figure>
+
+          <div class="places-plate-note">
+            <span class="places-tape places-tape--note" aria-hidden="true"></span>
+            <p>{plate.description}</p>
           </div>
-        </figcaption>
-      </figure>
-    ))}
-  </section>
+        </div>
+      </div>
+    </header>
+
+    <section class="places-collage" aria-label="Places from my journal">
+      <ul class="places-collage-inner">
+        {collage.map((place) => (
+          <li class:list={['places-entry', { 'places-entry--spread': place.spread }]}>
+            <figure
+              class:list={[
+                'places-print',
+                `places-print--t${place.tilt}`,
+                {
+                  'places-print--small': place.small && !place.spread,
+                  'places-print--tuck': place.small && !place.spread && place.tuck,
+                },
+              ]}
+            >
+              <span class:list={['places-tape', `places-tape--${place.tape}`]} aria-hidden="true"></span>
+              <Image
+                src={place.source}
+                alt={place.alt}
+                widths={widthsFor(place.source, place.spread ? SPREAD_WIDTHS : PRINT_WIDTHS)}
+                sizes={
+                  place.spread
+                    ? '(min-width: 78rem) 68rem, 88vw'
+                    : '(min-width: 72rem) 22rem, (min-width: 48rem) 42vw, 88vw'
+                }
+                loading="lazy"
+              />
+              <figcaption><h2>{place.title}</h2></figcaption>
+            </figure>
+            <p class="places-note">{place.description}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="places-band" aria-labelledby="places-band-title">
+      <FieldRoutes variant="dark" />
+      <div class="places-band-inner">
+        <h2 id="places-band-title">More of the journal</h2>
+        <nav class="places-band-links" aria-label="More of the journal">
+          <a href="/countries/">Visited Countries</a>
+          <a href="/about/">About Me</a>
+        </nav>
+      </div>
+    </section>
+  </div>
 </Base>
+
+<style>
+  /* The interior shell still carries the starter ground (near-white plus a
+     ruled grid overlay). Astro bundles page styles per route, so these three
+     rules repaint the canvas for /places/ only, until the shell itself moves
+     onto the journal system. */
+  :global(body) {
+    color: var(--color-soft-charcoal);
+    background: var(--color-paper);
+  }
+
+  :global(body::before) {
+    display: none;
+  }
+
+  :global(.page) {
+    max-width: none;
+    padding: 0;
+  }
+
+  /* --- The opening plate ------------------------------------------------ */
+
+  /* One continuous sheet under the whole page: the same wall ground as the
+     home hero, so the two surfaces read as one site. */
+  .places-page {
+    background: var(--color-paper) url("../assets/home/wall-white.jpg") left top / 64rem auto repeat;
+  }
+
+  .places-plate {
+    position: relative;
+    overflow-x: clip;
+    padding: var(--space-2xl) var(--space-hero-gutter) 0;
+  }
+
+  /* Coral owns this page, so the route web's crosses and ticks are drawn in
+     the coral companion rather than the violet the countries page uses. */
+  .places-plate :global(.field-routes--light .field-routes__accents) {
+    stroke: var(--color-collegiate-coral-soft);
+  }
+
+  .places-plate-inner,
+  .places-collage-inner,
+  .places-band-inner {
+    position: relative;
+    z-index: 1;
+    max-width: var(--max-width-page);
+    margin-inline: auto;
+  }
+
+  .places-plate-inner {
+    display: grid;
+    gap: var(--space-hero-section);
+    align-items: start;
+  }
+
+  .places-plate-copy {
+    display: grid;
+    gap: var(--space-md);
+    align-content: start;
+  }
+
+  .places-plate-copy h1,
+  .places-plate-copy p {
+    margin-bottom: 0;
+  }
+
+  /* Coral rule with a ring at its open end: the countries page's violet
+     signature, in this page's role color. */
+  .places-plate-copy h1 {
+    position: relative;
+    width: fit-content;
+    padding-right: var(--space-xl);
+    padding-bottom: var(--space-md);
+    border-bottom: var(--border-width) solid var(--color-collegiate-coral);
+    font-size: var(--text-2xl);
+    font-weight: 500;
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--leading-tight);
+  }
+
+  .places-plate-copy h1::after {
+    position: absolute;
+    right: 0;
+    bottom: calc(var(--hero-ring-hole) * -1);
+    width: calc(var(--hero-ring-hole) * 2);
+    height: calc(var(--hero-ring-hole) * 2);
+    border: var(--border-width) solid var(--color-collegiate-coral);
+    border-radius: var(--radius-pill);
+    background: var(--color-paper);
+    content: "";
+  }
+
+  .places-kicker {
+    color: var(--color-collegiate-coral);
+    font-family: var(--font-display);
+    font-size: var(--text-hero-kicker);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+  }
+
+  .places-intro {
+    max-width: var(--max-width-narrow);
+    font-size: var(--text-lg);
+    line-height: var(--leading-normal);
+  }
+
+  .places-plate-entry {
+    display: grid;
+    justify-items: start;
+  }
+
+  /* --- Prints ------------------------------------------------------------ */
+
+  .places-print {
+    position: relative;
+    width: 100%;
+    margin: 0;
+    padding: var(--space-sm);
+    border-radius: var(--radius-print);
+    background: var(--color-paper-raised);
+    box-shadow: var(--shadow-note);
+    transition:
+      transform var(--duration-slow) var(--ease-out),
+      box-shadow var(--duration-slow) var(--ease-out);
+  }
+
+  .places-print img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .places-print figcaption {
+    padding-top: var(--space-xs);
+    color: var(--color-caption-ink);
+    font-size: var(--text-sm);
+    font-style: italic;
+    text-align: center;
+  }
+
+  .places-print figcaption h2 {
+    margin: 0;
+    font: inherit;
+    letter-spacing: normal;
+    font-weight: 600;
+  }
+
+  /* Rotation is the print's alone; the writing under it stays level, the way
+     a photograph sits crooked on a page the notes are ruled onto. */
+  .places-print--t0 {
+    transform: rotate(1.5deg);
+  }
+
+  .places-print--t1 {
+    transform: rotate(-1.25deg);
+  }
+
+  .places-print--t2 {
+    transform: rotate(2.25deg);
+  }
+
+  .places-print--t3 {
+    transform: rotate(-2deg);
+  }
+
+  .places-print--t4 {
+    transform: rotate(1deg);
+  }
+
+  .places-print--t5 {
+    transform: rotate(-2.75deg);
+  }
+
+  /* Straightening the print, not lifting it: nothing here is pressable. */
+  @media (hover: hover) {
+    .places-print:hover {
+      box-shadow: var(--shadow-paper);
+      transform: rotate(0deg);
+    }
+  }
+
+  .places-print--small {
+    width: 66%;
+  }
+
+  .places-print--tuck {
+    margin-left: auto;
+  }
+
+  .places-print--plate {
+    max-width: var(--max-width-narrow);
+  }
+
+  /* --- Washi tape -------------------------------------------------------- */
+
+  .places-tape {
+    position: absolute;
+    z-index: 1;
+    height: calc(var(--hero-tape-height) * 0.72);
+    background: url("../assets/home/tape-washi.png") center / cover no-repeat;
+    box-shadow: var(--shadow-tape);
+    clip-path: polygon(
+      0 8%, 1.5% 0, 98% 3%, 100% 10%, 98.8% 32%, 100% 52%, 98.5% 78%, 100% 94%,
+      97.5% 100%, 2% 97%, 0 88%, 1.2% 66%, 0 42%, 1% 18%
+    );
+    opacity: 0.9;
+  }
+
+  .places-tape--0 {
+    top: calc(var(--hero-tape-height) * -0.34);
+    left: var(--space-lg);
+    width: calc(var(--hero-tape-width) * 0.6);
+    transform: rotate(-11deg);
+  }
+
+  .places-tape--1 {
+    top: calc(var(--hero-tape-height) * -0.32);
+    right: var(--space-xl);
+    width: calc(var(--hero-tape-width) * 0.52);
+    transform: rotate(8deg);
+  }
+
+  .places-tape--2 {
+    top: calc(var(--hero-tape-height) * -0.38);
+    left: 50%;
+    width: calc(var(--hero-tape-width) * 0.72);
+    transform: translateX(-50%) rotate(-2.5deg);
+  }
+
+  .places-tape--plate {
+    top: calc(var(--hero-tape-height) * -0.4);
+    left: 50%;
+    width: var(--hero-tape-width);
+    height: var(--hero-tape-height);
+    transform: translateX(-50%) rotate(-1deg);
+  }
+
+  .places-tape--note {
+    top: calc(var(--hero-tape-height) * -0.45);
+    right: var(--space-xl);
+    width: calc(var(--hero-tape-width) * 0.5);
+    transform: rotate(6deg);
+  }
+
+  /* --- The opening note -------------------------------------------------- */
+
+  /* Ruled sheet: the line pitch is one spacing step, the copy is set to the
+     same leading, and the ruling is nudged down so the writing sits on it. */
+  .places-plate-note {
+    position: relative;
+    max-width: var(--max-width-narrow);
+    margin-top: var(--space-lg);
+    margin-left: var(--space-xl);
+    padding: var(--space-md) var(--space-lg) var(--space-lg);
+    border: var(--border-width) solid var(--color-paper-line);
+    border-radius: var(--radius-note);
+    background-color: var(--color-paper-raised);
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent var(--space-lg),
+      var(--color-paper-line) calc(var(--space-lg) + var(--hero-pattern-line))
+    );
+    background-position: left calc(var(--space-xs) + var(--space-2xs) * 0.5);
+    box-shadow: var(--shadow-note);
+    transform: rotate(-1.25deg);
+  }
+
+  .places-plate-note p {
+    margin-bottom: 0;
+    line-height: var(--space-lg);
+  }
+
+  /* --- The collage ------------------------------------------------------- */
+
+  .places-collage {
+    position: relative;
+    padding: var(--space-2xl) var(--space-hero-gutter) var(--space-3xl);
+  }
+
+  .places-collage-inner {
+    column-gap: var(--space-xl);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* The tape overhangs the print's top edge. Without this pad, a print that
+     lands at the top of a column pushes its tape above the column, and the
+     browser fragments it into an orphan at the foot of the previous one. */
+  .places-entry {
+    margin-bottom: var(--space-xl);
+    padding-top: var(--space-lg);
+    break-inside: avoid;
+  }
+
+  .places-entry--spread {
+    column-span: all;
+    margin-block: var(--space-xl);
+  }
+
+  .places-entry--spread .places-note {
+    max-width: var(--max-width-copy);
+  }
+
+  .places-note {
+    position: relative;
+    margin-top: var(--space-md);
+    margin-bottom: 0;
+    padding-left: var(--space-lg);
+    line-height: var(--leading-normal);
+  }
+
+  /* A coral ring pinned beside the writing, the same node the field routes
+     draw at every junction. */
+  .places-note::before {
+    position: absolute;
+    top: var(--space-xs);
+    left: 0;
+    width: calc(var(--hero-ring-hole) * 2);
+    height: calc(var(--hero-ring-hole) * 2);
+    border: var(--border-width) solid var(--color-collegiate-coral);
+    border-radius: var(--radius-pill);
+    content: "";
+  }
+
+  /* --- The closing band -------------------------------------------------- */
+
+  /* Field violet is invisible on aubergine (1.8:1); coral soft carries the
+     links and the focus ring here. */
+  .places-band {
+    --color-focus: var(--color-collegiate-coral-soft);
+
+    position: relative;
+    padding: var(--space-xl) var(--space-hero-gutter);
+    color: var(--color-on-aubergine);
+    background: var(--color-aubergine);
+  }
+
+  .places-band-inner {
+    display: grid;
+    gap: var(--space-md);
+    padding-left: var(--space-lg);
+    border-left: calc(var(--border-width) * 2) solid var(--color-collegiate-coral-soft);
+  }
+
+  .places-band h2 {
+    margin: 0;
+    font-size: var(--text-hero-destination);
+    font-weight: 500;
+    line-height: var(--leading-tight);
+    text-transform: uppercase;
+  }
+
+  .places-band-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm) var(--space-xl);
+    align-items: center;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+  }
+
+  .places-band-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--hero-touch-target);
+    border-bottom: var(--border-width) solid var(--color-collegiate-coral-soft);
+    color: var(--color-on-aubergine);
+    text-decoration: none;
+  }
+
+  .places-band-links a:hover {
+    border-color: var(--color-on-aubergine);
+    color: var(--color-paper);
+  }
+
+  @media (min-width: 48rem) {
+    .places-plate-inner {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    .places-plate-entry {
+      justify-items: stretch;
+    }
+
+    /* The opening print hangs past the plate's wall ground onto the collage
+       sheet below, the way the home field note descends into the band. */
+    .places-plate-entry {
+      margin-bottom: calc(var(--space-xl) * -1);
+    }
+
+    .places-collage-inner {
+      columns: 2;
+    }
+  }
+
+  @media (min-width: 72rem) {
+    .places-plate-inner {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      padding-bottom: var(--space-xl);
+    }
+
+    .places-plate-copy {
+      padding-top: var(--space-xl);
+    }
+
+    .places-collage-inner {
+      columns: 3;
+    }
+  }
+</style>
