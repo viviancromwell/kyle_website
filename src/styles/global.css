@@ -1503,3 +1503,64 @@ a:focus-visible {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* --- SPIKE: cross-document view transitions ------------------------------
+   Native MPA transitions, no router and no client JS — the whole feature is
+   the at-rule below. Unsupported browsers fall back to an ordinary
+   navigation, so unlike the scroll-driven reveals there is no failure mode
+   worse than "no animation".
+
+   The pairing is title-to-title, not cover-to-page: each book cover already
+   carries its destination's exact <h1> string, so the morph is between two
+   pieces of the same text rather than between leather and a heading.
+
+   OPEN QUESTION this spike exists to answer: .book-cover-title lives inside
+   transform-style: preserve-3d under backface-visibility: hidden, and the
+   View Transition API flattens captured elements to snapshots. Whether it
+   snapshots cleanly from inside a live 3D subtree is not something the spec
+   settles plainly — it needs eyes on a real browser. --- */
+@view-transition {
+  navigation: auto;
+}
+
+.book--countries .book-cover-title {
+  view-transition-name: journal-countries;
+}
+
+.book--places .book-cover-title {
+  view-transition-name: journal-places;
+}
+
+.book--about .book-cover-title {
+  view-transition-name: journal-about;
+}
+
+.countries-title {
+  view-transition-name: journal-countries;
+}
+
+.places-plate-copy h1 {
+  view-transition-name: journal-places;
+}
+
+.about-plate-copy h1 {
+  view-transition-name: journal-about;
+}
+
+::view-transition-old(journal-countries),
+::view-transition-new(journal-countries),
+::view-transition-old(journal-places),
+::view-transition-new(journal-places),
+::view-transition-old(journal-about),
+::view-transition-new(journal-about) {
+  animation-duration: var(--duration-slow);
+  animation-timing-function: var(--ease-out);
+}
+
+/* Reduce keeps the plain crossfade the root transition gives us and drops
+   the travel: it is the movement that causes trouble, not the fade. */
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+}
