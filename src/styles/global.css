@@ -1296,14 +1296,20 @@ a:focus-visible {
    tuned window. No shipping browser splits them today. */
 @supports (animation-timeline: view()) and (animation-range: entry) {
   @media (prefers-reduced-motion: no-preference) {
+    /* The range ends in `cover`, not `entry`. Ending at entry 70% finished the
+       reveal while the element was still near the bottom edge of the screen —
+       measured at roughly 58% of viewport height, below where the eye rests —
+       so the motion was technically running and perceptually absent. Carrying
+       the end into the cover phase keeps it moving until the element has
+       climbed into the readable middle of the screen. */
     .reveal-on-scroll {
       animation: reveal-scroll var(--duration-slow) var(--ease-out) both;
       animation-timeline: view();
-      animation-range: entry 15% entry 70%;
+      animation-range: entry 20% cover 40%;
     }
 
     .reveal-on-scroll--late {
-      animation-range: entry 30% entry 85%;
+      animation-range: entry 35% cover 55%;
     }
   }
 }
@@ -1316,7 +1322,7 @@ a:focus-visible {
 @keyframes reveal-scroll {
   from {
     opacity: 0;
-    translate: 0 var(--space-md);
+    translate: 0 var(--space-xl);
   }
 
   to {
