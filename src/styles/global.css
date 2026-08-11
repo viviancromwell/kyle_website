@@ -1564,3 +1564,14 @@ a:focus-visible {
     navigation: none;
   }
 }
+
+/* SPIKE RESULT (verified in Chrome 151, cross-document navigation):
+   the open question above is answered — the API does capture the title from
+   inside the live preserve-3d subtree. pageswap fired with a real
+   ViewTransition attached, the destination h1 paired on journal-countries,
+   and no name collided. The 3D subtree was not the obstacle it looked like.
+   The genuine constraint is the CLOSED cover: rotateY(-90deg) leaves the
+   title 0px wide, so a transition started from a closed book has nothing to
+   snapshot. The two-click interaction hides this by construction — the book
+   is always open by the time it navigates — but any future entry point that
+   navigates from a closed shelf needs its own handling. */
