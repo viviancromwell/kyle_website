@@ -1289,8 +1289,12 @@ a:focus-visible {
    scroll-driven animations applies the keyframe's opacity: 0 with no timeline
    to advance it and the content never appears. And the global reduce block
    only neutralises animation-duration, which a scroll-driven animation
-   ignores in favour of the timeline, so reduced motion must opt out here. */
-@supports (animation-timeline: view()) {
+   ignores in favour of the timeline, so reduced motion must opt out here.
+   The condition tests both properties, not just the timeline: a browser
+   shipping one without the other would otherwise pass the test and then
+   ignore the range, revealing over the full viewport pass instead of the
+   tuned window. No shipping browser splits them today. */
+@supports (animation-timeline: view()) and (animation-range: entry) {
   @media (prefers-reduced-motion: no-preference) {
     .reveal-on-scroll {
       animation: reveal-scroll var(--duration-slow) var(--ease-out) both;
