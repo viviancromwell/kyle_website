@@ -136,7 +136,7 @@ const [plate, ...collage] = entries;
     <section class="places-collage" aria-label="Places from my journal">
       <ul class="places-collage-inner">
         {collage.map((place) => (
-          <li class:list={['places-entry', { 'places-entry--spread': place.spread }]}>
+          <li class:list={['places-entry', 'reveal-on-scroll', { 'places-entry--spread': place.spread }]}>
             <figure
               class:list={[
                 'places-print',
@@ -302,8 +302,8 @@ const [plate, ...collage] = entries;
     background: var(--color-paper-raised);
     box-shadow: var(--shadow-note);
     transition:
-      transform var(--duration-slow) var(--ease-out),
-      box-shadow var(--duration-slow) var(--ease-out);
+      transform var(--duration-medium) var(--ease-out),
+      box-shadow var(--duration-medium) var(--ease-out);
   }
 
   .places-print img {
@@ -353,7 +353,27 @@ const [plate, ...collage] = entries;
     transform: rotate(-2.75deg);
   }
 
-  /* Straightening the print, not lifting it: nothing here is pressable. */
+  /* A taped photograph pivots around its tape, not its middle. Each print
+     takes its origin from the tape it actually wears — the x of the tape's
+     centre, at the print's top edge where the tape grips. Rotating about the
+     centre instead let the tape slide sideways as the print turned, which
+     reads wrong even when you cannot say why. */
+  .places-print:has(.places-tape--0) {
+    transform-origin: calc(var(--space-lg) + var(--hero-tape-width) * 0.3) top;
+  }
+
+  .places-print:has(.places-tape--1) {
+    transform-origin: calc(100% - var(--space-xl) - var(--hero-tape-width) * 0.26) top;
+  }
+
+  .places-print:has(.places-tape--2),
+  .places-print:has(.places-tape--plate) {
+    transform-origin: 50% top;
+  }
+
+  /* Straightening the print, not lifting it: nothing here is pressable.
+     260ms to match the shelf — at the old 400ms the straighten read as a slow
+     mechanical unrotate rather than a nudge. */
   @media (hover: hover) {
     .places-print:hover {
       box-shadow: var(--shadow-paper);
