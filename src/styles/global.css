@@ -1504,21 +1504,23 @@ a:focus-visible {
   }
 }
 
-/* --- SPIKE: cross-document view transitions ------------------------------
-   Native MPA transitions, no router and no client JS — the whole feature is
-   the at-rule below. Unsupported browsers fall back to an ordinary
-   navigation, so unlike the scroll-driven reveals there is no failure mode
-   worse than "no animation".
+/* --- Shelf-to-page view transitions --------------------------------------
+   Opening a book and following it through should carry its title rather than
+   cut to a new page. Native cross-document transitions do that in one
+   at-rule: no router, no client JS. Unsupported browsers get an ordinary
+   navigation, so the worst case here is no animation — unlike the
+   scroll-driven reveals, nothing can be left hidden.
 
-   The pairing is title-to-title, not cover-to-page: each book cover already
-   carries its destination's exact <h1> string, so the morph is between two
-   pieces of the same text rather than between leather and a heading.
+   Pairing is title-to-title. Each cover already carries its destination's
+   exact <h1> string, so the morph runs between two settings of the same
+   words instead of between leather and a heading.
 
-   OPEN QUESTION this spike exists to answer: .book-cover-title lives inside
-   transform-style: preserve-3d under backface-visibility: hidden, and the
-   View Transition API flattens captured elements to snapshots. Whether it
-   snapshots cleanly from inside a live 3D subtree is not something the spec
-   settles plainly — it needs eyes on a real browser. --- */
+   The pairing depends on the book being OPEN. A closed cover sits at
+   rotateY(-90deg), which leaves its title 0px wide and gives the API nothing
+   to snapshot. The two-click interaction guarantees this by construction —
+   the first activation turns the book, only the second navigates — but a
+   future entry point that navigates straight from a closed shelf would find
+   no old-state snapshot and fall back to a plain crossfade. --- */
 @view-transition {
   navigation: auto;
 }
@@ -1564,14 +1566,3 @@ a:focus-visible {
     navigation: none;
   }
 }
-
-/* SPIKE RESULT (verified in Chrome 151, cross-document navigation):
-   the open question above is answered — the API does capture the title from
-   inside the live preserve-3d subtree. pageswap fired with a real
-   ViewTransition attached, the destination h1 paired on journal-countries,
-   and no name collided. The 3D subtree was not the obstacle it looked like.
-   The genuine constraint is the CLOSED cover: rotateY(-90deg) leaves the
-   title 0px wide, so a transition started from a closed book has nothing to
-   snapshot. The two-click interaction hides this by construction — the book
-   is always open by the time it navigates — but any future entry point that
-   navigates from a closed shelf needs its own handling. */
