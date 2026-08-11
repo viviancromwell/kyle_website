@@ -1516,24 +1516,26 @@ a:focus-visible {
    words instead of between leather and a heading.
 
    The pairing depends on the book being OPEN. A closed cover sits at
-   rotateY(-90deg), which leaves its title 0px wide and gives the API nothing
-   to snapshot. The two-click interaction guarantees this by construction —
-   the first activation turns the book, only the second navigates — but a
-   future entry point that navigates straight from a closed shelf would find
-   no old-state snapshot and fall back to a plain crossfade. --- */
+   rotateY(-90deg), which leaves its title 0px wide, and pairing that against
+   a full-size heading would animate to or from nothing. So the name is
+   scoped to [data-open="true"] rather than assumed from the two-click
+   interaction: keyboard Enter navigates on the first press without ever
+   opening the book, and browser Back lands on a home page whose covers are
+   all closed. In both cases the name is simply absent, nothing pairs, and
+   the navigation falls back to the root crossfade. --- */
 @view-transition {
   navigation: auto;
 }
 
-.book--countries .book-cover-title {
+.book--countries[data-open="true"] .book-cover-title {
   view-transition-name: journal-countries;
 }
 
-.book--places .book-cover-title {
+.book--places[data-open="true"] .book-cover-title {
   view-transition-name: journal-places;
 }
 
-.book--about .book-cover-title {
+.book--about[data-open="true"] .book-cover-title {
   view-transition-name: journal-about;
 }
 
@@ -1559,8 +1561,9 @@ a:focus-visible {
   animation-timing-function: var(--ease-out);
 }
 
-/* Reduce keeps the plain crossfade the root transition gives us and drops
-   the travel: it is the movement that causes trouble, not the fade. */
+/* navigation: none disables the cross-document transition outright, so reduce
+   gets an instant swap rather than a crossfade. That matches how the rest of
+   the shelf behaves under reduce, where the book turn also swaps instantly. */
 @media (prefers-reduced-motion: reduce) {
   @view-transition {
     navigation: none;
