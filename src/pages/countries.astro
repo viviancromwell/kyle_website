@@ -92,6 +92,36 @@ const totalEntries = regions.reduce((total, region) => total + region.countries.
       </div>
     </div>
   </div>
+
+  <script>
+    import { inView } from 'motion';
+
+    // The sheet crossing the reading band becomes the current one, so moving
+    // down the page feels like turning through a notebook rather than
+    // scrolling a list. inView is IntersectionObserver underneath, so nothing
+    // measures on the main thread per frame.
+    //
+    // The band is deliberately narrow and sits above centre: a sheet claims
+    // focus as it reaches where the eye already is, not when it first appears
+    // at the bottom edge. That was the mistake in the reveal on /places/.
+    const sheets = [...document.querySelectorAll('.countries-sheet')];
+
+    sheets.forEach((sheet) => {
+      inView(
+        sheet,
+        () => {
+          sheets.forEach((other) => other.classList.remove('is-current'));
+          sheet.classList.add('is-current');
+
+          // Leaving the band does not clear the class: the last sheet you
+          // read stays marked until another claims it, so the page is never
+          // in a state where nothing is current.
+          return () => {};
+        },
+        { margin: '-30% 0px -55% 0px', amount: 'some' }
+      );
+    });
+  </script>
 </Base>
 
 <style>
@@ -315,11 +345,26 @@ const totalEntries = regions.reduce((total, region) => total + region.countries.
     box-shadow: var(--shadow-note);
     scroll-margin-top: calc(var(--space-2xl) + var(--space-md));
     transform: rotate(var(--sheet-rotate));
-    animation: countries-pin var(--duration-slow) var(--ease-out) both;
+    transition:
+      border-color var(--duration-medium) var(--ease-out),
+      box-shadow var(--duration-medium) var(--ease-out),
+      transform var(--duration-medium) var(--ease-out);
   }
 
-  .countries-sheet:target {
+  /* The sheet you are reading lifts off the stack. This extends the page's
+     existing :target vocabulary to scroll position rather than inventing a
+     second signal. Deliberately no dimming of the other sheets: their body
+     text would drop below AA contrast, and the rule is that nothing on this
+     site trades legibility for effect. The rotation has to be repeated here
+     or the scale would replace the sheet's tilt instead of composing. */
+  .countries-sheet:target,
+  .countries-sheet.is-current {
     border-color: var(--color-field-violet);
+  }
+
+  .countries-sheet.is-current {
+    box-shadow: var(--shadow-paper);
+    transform: rotate(var(--sheet-rotate)) scale(1.012);
   }
 
   .countries-sheet:focus-visible {
@@ -334,25 +379,6 @@ const totalEntries = regions.reduce((total, region) => total + region.countries.
   .countries-sheet:nth-child(5) { --sheet-rotate: -1.25deg; }
   .countries-sheet:nth-child(6) { --sheet-rotate: 2deg; }
   .countries-sheet:nth-child(7) { --sheet-rotate: -1.75deg; }
-
-  .countries-sheet:nth-child(2) { animation-delay: calc(var(--duration-fast) * 0.25); }
-  .countries-sheet:nth-child(3) { animation-delay: calc(var(--duration-fast) * 0.5); }
-  .countries-sheet:nth-child(4) { animation-delay: calc(var(--duration-fast) * 0.75); }
-  .countries-sheet:nth-child(5) { animation-delay: var(--duration-fast); }
-  .countries-sheet:nth-child(6) { animation-delay: calc(var(--duration-fast) * 1.25); }
-  .countries-sheet:nth-child(7) { animation-delay: calc(var(--duration-fast) * 1.5); }
-
-  @keyframes countries-pin {
-    from {
-      opacity: 0;
-      transform: translateY(var(--space-sm)) rotate(var(--sheet-rotate));
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0) rotate(var(--sheet-rotate));
-    }
-  }
 
   /* Spiral-binding keyholes punched below the top edge; the same embedded
      tile the home notepads use, so the sheets read as the same notebook. */

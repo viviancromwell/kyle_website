@@ -167,7 +167,7 @@ const [plate, ...collage] = entries;
       </ul>
     </section>
 
-    <section class="places-band" aria-labelledby="places-band-title">
+    <section class="places-band" aria-labelledby="places-band-title" data-band>
       <FieldRoutes variant="dark" />
       <div class="places-band-inner">
         <h2 id="places-band-title">More of the journal</h2>
@@ -178,6 +178,41 @@ const [plate, ...collage] = entries;
       </div>
     </section>
   </div>
+
+  <script>
+    import { animate, scroll } from 'motion';
+
+    // Prints drift at different rates as the page moves, so the collage reads
+    // as photographs lying loose on the paper rather than printed into it.
+    //
+    // The subject is the <li>, not the print inside it: .places-print carries
+    // its own rotate() for the tilt, and animating `transform` on that element
+    // would overwrite the tilt rather than compose with it. The <li> has no
+    // transform of its own, so it is free to take one.
+    //
+    // Literal transform strings rather than Motion's `y` shorthand — the
+    // shorthand animates an independent value on the main thread (A-tier),
+    // while a transform string stays on the compositor via ScrollTimeline.
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      // Four depths cycled across the collage. Prime-ish spacing keeps
+      // neighbours in a column from sharing a rate, which is what would
+      // collapse the effect back into one moving sheet.
+      const depths = [22, 9, 31, 15, 26, 6];
+
+      document.querySelectorAll('.places-entry').forEach((entry, index) => {
+        const drift = depths[index % depths.length];
+
+        scroll(
+          animate(
+            entry,
+            { transform: [`translateY(${drift}px)`, `translateY(${-drift}px)`] },
+            { ease: 'linear' }
+          ),
+          { target: entry }
+        );
+      });
+    }
+  </script>
 </Base>
 
 <style>
