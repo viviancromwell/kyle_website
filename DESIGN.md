@@ -109,7 +109,7 @@ descends into the band, the band print rises to meet it).
 - Asymmetric collage layout with controlled overlap across section boundaries
 - Closed set of grounds: Warm Paper, Paper Raised, Deep Aubergine
 - Color is role-coded: violet = countries, coral = places
-- Motion is restrained: entrance and hover only, nothing over 400ms
+- Motion is restrained: entrance and hover only, nothing over 400ms of travel. A spring may run longer in clock time provided the extra is settle, not travel, and nothing waits on it — the book turn is the only current case
 
 ## 2. Colors
 
@@ -174,7 +174,7 @@ Depth is conveyed by material stacking (overlap, rotation, tape) far more than b
 - **Materials:** Visited Countries wears a sampled violet leather (`src/assets/textures/leather-violet.jpg`); Interesting Places wears a sampled leather whose grain and single stitched binding seam carry the texture while `--color-collegiate-coral-soft` supplies the color through luminosity blending (raw coral goes muddy against the leather's dark luminance, and the seam sits on the closed spine's left edge, on the cover's right); About Me is Deep Aubergine cloth under the rag-paper grain tile. `--color-book-cloth-violet` (the role accent mixed 70/30 toward Soft Charcoal) is the aged-cloth fallback beneath the violet leather, and `--color-book-cloth-aubergine` is the About volume's cloth. Book 2 needs no cloth fallback: its background color is the coral the leather blends against.
 - **Shape:** 0.125rem radius (`--radius-book`), height clamp(18rem, 30vw, 26rem), primary spines clamp(4.5rem, 6.5vw, 6rem). Titles are Cormorant SC in On Aubergine, vertical-rl on the spine and horizontal on the cover, set straight on the material with no label card.
 - **Hierarchy:** About Me is the thinner (2.75rem), shorter volume, keeping it quieter than the two primaries per PRODUCT.md without a rule change.
-- **States:** hover tips the book (hover-capable pointers only); the first activation pulls it off the shelf and turns it to face the viewer, presenting the cover clear of the other spines (left of the row on wide screens, centered over it on small ones); the second activation navigates. `aria-expanded` tracks the state, one book open at a time, Esc or click-away closes, and the shelf raises above the collage while a book is out. Without JS the books are plain links, so navigation is never gated. The turn is a single transform on `--ease-in-out` within the 400ms ceiling; reduced motion swaps instantly.
+- **States:** hover tips the book (hover-capable pointers only); the first activation pulls it off the shelf and turns it to face the viewer, presenting the cover clear of the other spines (left of the row on wide screens, centered over it on small ones); the second activation navigates. `aria-expanded` tracks the state, one book open at a time, Esc or click-away closes, and the shelf raises above the collage while a book is out. Without JS the books are plain links, so navigation is never gated. The turn is a single transform on the `--ease-book-open` spring: 450ms of travel within the ceiling, with the remaining clock time spent settling. Hover and close use `--ease-out` at 260ms, matching the contact shadow. Reduced motion swaps instantly.
 - **Contact shadow:** a soft radial shadow grounds each book on the ledge, fading on hover and disappearing once the book is off the shelf. This is the one sanctioned exception to The Whisper-Shadow Rule: at 0.09 the shadow was invisible against the wood.
 
 ### Shelf Ledge
@@ -206,7 +206,9 @@ Depth is conveyed by material stacking (overlap, rotation, tape) far more than b
 - **Do** delete a starter token as soon as the last page using it is redesigned. Every page now carries journal type and journal grounds, so the bridge has shrunk to what the shared shell still needs: the site footer, the skip link, and the generic card and grid rules the redesigned pages no longer reference. Retiring the footer and those leftover shell rules empties the block entirely.
 - **Do** keep every design-token change in sync with `/showcase` in the same change.
 - **Do** keep rotations between 1 and 4.5 degrees and overlaps deliberate; collage, not clutter.
-- **Do** gate hover transforms behind `(hover: hover)` and keep all motion within 400ms, entrance and hover only, honoring reduced motion.
+- **Do** gate hover transforms behind `(hover: hover)` and keep all motion within 400ms of travel, entrance and hover only, honoring reduced motion.
+- **Do** animate the individual `translate` property, not `transform`, when the element carries a base rotation — a `transform` keyframe under `fill-mode: both` holds its end value over the top of it and flattens the tilt.
+- **Do** guard scroll-driven animations with `@supports (animation-timeline: view())` and their own reduced-motion opt-out. Without the first, an unsupporting browser holds the element at `opacity: 0` forever; the global reduce block only neutralises `animation-duration`, which a scroll-driven animation ignores.
 - **Do** keep About Me reachable but quieter than the two primary destinations on every breakpoint, per PRODUCT.md.
 
 ### Don't:
