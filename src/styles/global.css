@@ -538,6 +538,9 @@ a:focus-visible {
   z-index: 3;
 }
 
+/* Hover and open share this transform but not its transition — the open state
+   below overrides with a spring. Closing falls back here by design: presenting
+   a book is weighted, dismissing it is not. */
 .book-inner {
   position: relative;
   display: block;
@@ -545,7 +548,7 @@ a:focus-visible {
   height: 100%;
   transform-origin: left center;
   transform-style: preserve-3d;
-  transition: transform var(--duration-slow) var(--ease-in-out);
+  transition: transform var(--duration-medium) var(--ease-out);
 }
 
 .book-spine,
@@ -573,8 +576,12 @@ a:focus-visible {
   opacity: 0.6;
 }
 
+/* Timed off the spring's perceptual duration, not its 750ms clock time: the
+   rest of that curve is settle, and a longer fade would leave a shadow under
+   a book that has already cleared the shelf. */
 .book[data-open="true"]::after {
   opacity: 0;
+  transition-duration: var(--duration-slow);
 }
 
 .book-spine {
@@ -668,8 +675,10 @@ a:focus-visible {
   text-transform: uppercase;
 }
 
+/* A weighted object being handled, so it settles rather than stopping dead. */
 .book[data-open="true"] .book-inner {
   transform: translateX(var(--book-shift)) translateY(var(--book-lift)) rotate(-2deg) rotateY(84deg);
+  transition: transform var(--duration-book-open) var(--ease-book-open);
 }
 
 @media (hover: hover) {
@@ -1270,6 +1279,28 @@ a:focus-visible {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* Below-the-fold entrances, driven by the element's progress through the
+   viewport rather than the load-time delay ladder above, which would have
+   fired while this content was still offscreen.
+   Both guards are load-bearing. Without @supports, a browser lacking
+   scroll-driven animations applies the keyframe's opacity: 0 with no timeline
+   to advance it and the content never appears. And the global reduce block
+   only neutralises animation-duration, which a scroll-driven animation
+   ignores in favour of the timeline, so reduced motion must opt out here. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal-on-scroll {
+      animation: reveal var(--duration-slow) var(--ease-out) both;
+      animation-timeline: view();
+      animation-range: entry 15% entry 70%;
+    }
+
+    .reveal-on-scroll--late {
+      animation-range: entry 30% entry 85%;
+    }
   }
 }
 
