@@ -208,7 +208,7 @@ Depth is conveyed by material stacking (overlap, rotation, tape) far more than b
 - **Do** keep rotations between 1 and 4.5 degrees and overlaps deliberate; collage, not clutter.
 - **Do** gate hover transforms behind `(hover: hover)` and keep all motion within 400ms of travel, entrance and hover only, honoring reduced motion.
 - **Do** animate the individual `translate` property, not `transform`, when the element carries a base rotation — a `transform` keyframe under `fill-mode: both` holds its end value over the top of it and flattens the tilt.
-- **Do** guard scroll-driven animations with `@supports (animation-timeline: view())` and their own reduced-motion opt-out. Without the first, an unsupporting browser holds the element at `opacity: 0` forever; the global reduce block only neutralises `animation-duration`, which a scroll-driven animation ignores.
+- **Do** guard scroll-driven animations with `@supports (animation-timeline: view()) and (animation-range: entry)` and their own reduced-motion opt-out. Without the first, an unsupporting browser holds the element at `opacity: 0` forever, and testing only the timeline lets a partial-support browser through to ignore the range; the global reduce block only neutralises `animation-duration`, which a scroll-driven animation ignores.
 - **Do** keep About Me reachable but quieter than the two primary destinations on every breakpoint, per PRODUCT.md.
 
 ### Don't:
