@@ -105,12 +105,17 @@
   --shelf-ledge-thickness: 1rem;
   --shelf-perspective: 70rem;
 
-  /* --- Motion: entrance and hover only, 400ms ceiling --- */
+  /* --- Motion: entrance and hover only, 400ms ceiling. The book-open spring
+     is the one exception — 750ms of clock time but 450ms of perceptual
+     duration, the tail being settle rather than travel. Time any sibling
+     motion off 450ms, not 750ms. --- */
   --duration-fast: 160ms;
   --duration-medium: 260ms;
   --duration-slow: 400ms;
+  --duration-book-open: 750ms;
   --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-book-open: linear(0, 0.0553, 0.1843, 0.3437, 0.505, 0.6509, 0.7729, 0.8683, 0.9382, 0.9859, 1.0156, 1.0316, 1.0379, 1.0377, 1.0338, 1.028, 1.0218, 1.0158, 1.0107, 1.0066, 1.0035, 1.0013, 0.9998, 0.999, 1);
 
   /* --- STARTER BRIDGE ------------------------------------------------------
      Consumed only by the not-yet-redesigned interior pages (about, countries,
