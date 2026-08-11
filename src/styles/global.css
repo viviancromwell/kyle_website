@@ -1503,3 +1503,69 @@ a:focus-visible {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* --- Shelf-to-page view transitions --------------------------------------
+   Opening a book and following it through should carry its title rather than
+   cut to a new page. Native cross-document transitions do that in one
+   at-rule: no router, no client JS. Unsupported browsers get an ordinary
+   navigation, so the worst case here is no animation — unlike the
+   scroll-driven reveals, nothing can be left hidden.
+
+   Pairing is title-to-title. Each cover already carries its destination's
+   exact <h1> string, so the morph runs between two settings of the same
+   words instead of between leather and a heading.
+
+   The pairing depends on the book being OPEN. A closed cover sits at
+   rotateY(-90deg), which leaves its title 0px wide, and pairing that against
+   a full-size heading would animate to or from nothing. So the name is
+   scoped to [data-open="true"] rather than assumed from the two-click
+   interaction: keyboard Enter navigates on the first press without ever
+   opening the book, and browser Back lands on a home page whose covers are
+   all closed. In both cases the name is simply absent, nothing pairs, and
+   the navigation falls back to the root crossfade. --- */
+@view-transition {
+  navigation: auto;
+}
+
+.book--countries[data-open="true"] .book-cover-title {
+  view-transition-name: journal-countries;
+}
+
+.book--places[data-open="true"] .book-cover-title {
+  view-transition-name: journal-places;
+}
+
+.book--about[data-open="true"] .book-cover-title {
+  view-transition-name: journal-about;
+}
+
+.countries-title {
+  view-transition-name: journal-countries;
+}
+
+.places-plate-copy h1 {
+  view-transition-name: journal-places;
+}
+
+.about-plate-copy h1 {
+  view-transition-name: journal-about;
+}
+
+::view-transition-old(journal-countries),
+::view-transition-new(journal-countries),
+::view-transition-old(journal-places),
+::view-transition-new(journal-places),
+::view-transition-old(journal-about),
+::view-transition-new(journal-about) {
+  animation-duration: var(--duration-slow);
+  animation-timing-function: var(--ease-out);
+}
+
+/* navigation: none disables the cross-document transition outright, so reduce
+   gets an instant swap rather than a crossfade. That matches how the rest of
+   the shelf behaves under reduce, where the book turn also swaps instantly. */
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+}
