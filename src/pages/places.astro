@@ -156,9 +156,14 @@ const carouselSlides = await Promise.all(
       </div>
     </header>
 
-    <section class="places-carousel-section" aria-label="Places from my journal, as a carousel">
-      <PlacesCarousel slides={carouselSlides} client:visible />
-    </section>
+    {/*
+      client:idle, not client:visible. The component hides its own section
+      until it mounts so a failed bundle cannot leave a tall transparent gap,
+      and a hidden element never triggers the visibility observer — the two
+      together deadlock, and the carousel simply never appears. Idle has no
+      such dependency, and the photographs inside are lazy regardless.
+    */}
+    <PlacesCarousel slides={carouselSlides} client:idle />
 
     <section class="places-collage" aria-label="Places from my journal">
       <ul class="places-collage-inner">
@@ -373,17 +378,6 @@ const carouselSlides = await Promise.all(
   }
 
   /* --- Prints ------------------------------------------------------------ */
-
-  /* The carousel component sets its own width, so the measure is held here
-     rather than inside the island: a print has to be narrow enough that its
-     neighbours fall inside the fade range, or you only ever see one and the
-     offset-linked scale and blur have nothing to act on. */
-  .places-carousel-section {
-    width: 100%;
-    max-width: var(--max-width-narrow);
-    margin-inline: auto;
-    padding-block: var(--space-2xl);
-  }
 
   .places-print {
     position: relative;

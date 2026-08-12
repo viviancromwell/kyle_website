@@ -20,6 +20,13 @@ const props = defineProps<{
 const { offset } = useTickerItem()!;
 
 const SPAN = 900;
+// --max-width-narrow in pixels. The carousel never renders a print wider than
+// this, so it is what `sizes` should advertise.
+const NARROW_MEASURE_PX = 512;
+// Blur radius stays small on purpose: compositor cost scales with radius times
+// layer area, and 24 prints each carry their own layer while drifting.
+const BLUR_PX = 4;
+const LIFT_PX = 28;
 
 // The centred print sits square and its neighbours keep the collage's tilt,
 // so photographs read as laid down on a page rather than filed upright.
@@ -30,16 +37,45 @@ const opacity = useTransform(
   [-SPAN, -SPAN * 0.5, 0, SPAN * 0.5, SPAN],
   [0, 0.55, 1, 0.55, 0]
 );
-// Held at 4px: blur is compositor work proportional to radius times layer
-// area, and these are large prints.
-const filter = useTransform(offset, [-SPAN, 0, SPAN], ['blur(4px)', 'blur(0px)', 'blur(4px)']);
-const y = useTransform(offset, [-SPAN, 0, SPAN], [28, 0, 28]);
+// Blur is the expensive part of this effect — 24 prints each carrying their
+// own blurred layer measured GPU D on mobile against B on desktop. Small
+// screens show one print at a time anyway, where there are no neighbours to
+// push back, so they get the scale and fade without it. The guard on window
+// is for the server pass, where this component is rendered but never runs.
+const blurAffordable =
+  typeof window !== 'undefined' && window.matchMedia('(min-width: 48rem)').matches;
+
+const filter = useTransform(
+  offset,
+  [-SPAN, 0, SPAN],
+  blurAffordable
+    ? [`blur(${BLUR_PX}px)`, 'blur(0px)', `blur(${BLUR_PX}px)`]
+    : ['blur(0px)', 'blur(0px)', 'blur(0px)']
+);
+const y = useTransform(offset, [-SPAN, 0, SPAN], [LIFT_PX, 0, LIFT_PX]);
 </script>
 
 <template>
   <motion.figure class="carousel-print" :style="{ rotate, scale, opacity, filter, y }">
     <span :class="['carousel-tape', 'carousel-tape--' + tape]" aria-hidden="true"></span>
-    <img :src="src" :srcset="srcset" :alt="alt" draggable="false" />
+    <!--
+      lazy + sizes both matter here. Astro server-renders this island, so the
+      browser finds all 24 images before any JS runs — client:visible defers
+      the script, not the markup. And with width descriptors and no sizes, a
+      browser assumes 100vw and picks the largest variant of every one of
+      them, for prints that are never wider than the narrow measure.
+      alt is empty because the section is aria-hidden and the collage below
+      carries the described copy of each photograph.
+    -->
+    <img
+      :src="src"
+      :srcset="srcset"
+      :sizes="`(min-width: 48rem) ${NARROW_MEASURE_PX}px, 100vw`"
+      alt=""
+      loading="lazy"
+      decoding="async"
+      draggable="false"
+    />
     <figcaption>
       <h3>{{ title }}</h3>
       <p>{{ description }}</p>
