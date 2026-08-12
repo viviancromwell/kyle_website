@@ -49,7 +49,7 @@ const totalEntries = regions.reduce((total, region) => total + region.countries.
           {regions.map((region) => <a href={`#${region.id}`}>{region.name}</a>)}
         </nav>
 
-        <div class="countries-sheets" data-pinboard>
+        <div class="countries-sheets">
           {regions.map((region) => (
             <section
               class="countries-sheet"
@@ -92,39 +92,6 @@ const totalEntries = regions.reduce((total, region) => total + region.countries.
       </div>
     </div>
   </div>
-
-  <script>
-    import { inView } from 'motion';
-
-    // Cards drop onto the board as they arrive. inView is IntersectionObserver
-    // underneath, so nothing measures on the main thread per frame.
-    const board = document.querySelector('[data-pinboard]');
-    const sheets = [...document.querySelectorAll('.countries-sheet')];
-
-    // Hiding the cards is the script's doing, so the script has to be the one
-    // that can un-hide them. Setting this only once JS is running means a
-    // failed bundle leaves the board fully visible rather than blank.
-    board?.setAttribute('data-pinboard', 'ready');
-
-    // Each card pins itself as it arrives rather than the board pinning all
-    // seven at once: the lower rows are a screen further down, and a single
-    // group trigger would spend their motion off-screen — the mistake that
-    // made the old countries-pin animation invisible.
-    sheets.forEach((sheet, index) => {
-      inView(
-        sheet,
-        () => {
-          // Stagger within a row, not across the whole board, so cards that
-          // arrive together land in sequence instead of in unison.
-          sheet.style.transitionDelay = `${(index % 3) * 70}ms`;
-          sheet.classList.add('is-pinned');
-          return () => {};
-        },
-        { margin: '0px 0px -12% 0px', amount: 0.15 }
-      );
-    });
-
-  </script>
 </Base>
 
 <style>
@@ -326,7 +293,6 @@ const totalEntries = regions.reduce((total, region) => total + region.countries.
     transform: rotate(1deg);
   }
 
-
   /* --- Region sheets --------------------------------------------------- */
   /* Sheets are placed by hand rather than flowed: the wide region across the
      top, then two rows of three, so the pinboard has a composed bottom edge
@@ -349,44 +315,11 @@ const totalEntries = regions.reduce((total, region) => total + region.countries.
     box-shadow: var(--shadow-note);
     scroll-margin-top: calc(var(--space-2xl) + var(--space-md));
     transform: rotate(var(--sheet-rotate));
-    transition:
-      border-color var(--duration-medium) var(--ease-out),
-      box-shadow var(--duration-medium) var(--ease-out),
-      transform var(--duration-medium) var(--ease-out);
+    animation: countries-pin var(--duration-slow) var(--ease-out) both;
   }
 
   .countries-sheet:target {
     border-color: var(--color-field-violet);
-  }
-
-  /* Cards drop onto the board and settle, the way a note gets pinned up.
-     This page is cream on cream by design, so a tonal signal — a border, a
-     tint, a fade — has nowhere to go and reads as nothing. The motion has to
-     be geometric to be seen at all.
-
-     The hidden state is gated on [data-pinboard="ready"], which the script
-     sets on the container. Without JS the attribute never appears, the cards
-     are never hidden, and the page is exactly what it was. */
-  [data-pinboard="ready"] .countries-sheet {
-    opacity: 0;
-    transform: translateY(calc(var(--space-xl) * -1)) rotate(var(--sheet-rotate)) scale(1.04);
-  }
-
-  /* The rotation is restated in both states so the drop composes with each
-     card's tilt instead of flattening it on the way down. */
-  [data-pinboard="ready"] .countries-sheet.is-pinned {
-    opacity: 1;
-    transform: translateY(0) rotate(var(--sheet-rotate)) scale(1);
-    transition:
-      opacity var(--duration-medium) var(--ease-out),
-      transform var(--duration-book-open) var(--ease-book-open);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    [data-pinboard="ready"] .countries-sheet {
-      opacity: 1;
-      transform: rotate(var(--sheet-rotate));
-    }
   }
 
   .countries-sheet:focus-visible {
@@ -401,6 +334,25 @@ const totalEntries = regions.reduce((total, region) => total + region.countries.
   .countries-sheet:nth-child(5) { --sheet-rotate: -1.25deg; }
   .countries-sheet:nth-child(6) { --sheet-rotate: 2deg; }
   .countries-sheet:nth-child(7) { --sheet-rotate: -1.75deg; }
+
+  .countries-sheet:nth-child(2) { animation-delay: calc(var(--duration-fast) * 0.25); }
+  .countries-sheet:nth-child(3) { animation-delay: calc(var(--duration-fast) * 0.5); }
+  .countries-sheet:nth-child(4) { animation-delay: calc(var(--duration-fast) * 0.75); }
+  .countries-sheet:nth-child(5) { animation-delay: var(--duration-fast); }
+  .countries-sheet:nth-child(6) { animation-delay: calc(var(--duration-fast) * 1.25); }
+  .countries-sheet:nth-child(7) { animation-delay: calc(var(--duration-fast) * 1.5); }
+
+  @keyframes countries-pin {
+    from {
+      opacity: 0;
+      transform: translateY(var(--space-sm)) rotate(var(--sheet-rotate));
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0) rotate(var(--sheet-rotate));
+    }
+  }
 
   /* Spiral-binding keyholes punched below the top edge; the same embedded
      tile the home notepads use, so the sheets read as the same notebook. */
