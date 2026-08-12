@@ -64,7 +64,6 @@ const placeAlt: Record<string, string> = {
 };
 
 const PRINT_WIDTHS = [360, 540, 720];
-const PLATE_WIDTHS = [480, 720, 960];
 const SPREAD_WIDTHS = [720, 1080, 1440];
 
 // Several of the originals are only a few hundred pixels wide; asking for
@@ -92,7 +91,11 @@ const entries = interestingPlaces.map((place, index) => {
   };
 });
 
-const [plate, ...collage] = entries;
+// No plate is held back any more. The masthead used to feature the first
+// place as a large static print with its own note, which did the same job the
+// carousel now does and left the carousel one short of the twenty-five the
+// intro promises. Every place goes through the same presentation.
+const collage = entries;
 
 // The Vue island cannot import astro:assets, so every photograph is
 // optimised here and handed across as plain src/srcset strings.
@@ -129,30 +132,15 @@ const carouselSlides = await Promise.all(
         <div class="places-plate-copy reveal">
           <h1>Interesting Places</h1>
           <p class="places-kicker">Field Notes</p>
-          <p class="places-intro">
-            Twenty-five places that held my attention. The prints and the writing under them
-            are kept as I first collected them.
-          </p>
         </div>
 
-        <div class="places-plate-entry reveal reveal--late">
-          <figure class="places-print places-print--plate places-print--t0">
-            <span class="places-tape places-tape--plate" aria-hidden="true"></span>
-            <Image
-              src={plate.source}
-              alt={plate.alt}
-              widths={widthsFor(plate.source, PLATE_WIDTHS)}
-              sizes="(min-width: 72rem) 30rem, (min-width: 48rem) 44vw, 88vw"
-              loading="eager"
-            />
-            <figcaption><h2>{plate.title}</h2></figcaption>
-          </figure>
-
-          <div class="places-plate-note">
-            <span class="places-tape places-tape--note" aria-hidden="true"></span>
-            <p>{plate.description}</p>
-          </div>
-        </div>
+        {/* The intro crosses to the right, where the featured print used to
+            hang, so the masthead spans the measure instead of trailing off
+            into empty wall. */}
+        <p class="places-intro reveal reveal--late">
+          Twenty-five places that held my attention. The prints and the writing under them
+          are kept as I first collected them.
+        </p>
       </div>
     </header>
 
@@ -316,7 +304,7 @@ const carouselSlides = await Promise.all(
 
   .places-plate-inner {
     display: grid;
-    gap: var(--space-hero-section);
+    gap: var(--space-md);
     align-items: start;
   }
 
@@ -372,12 +360,15 @@ const carouselSlides = await Promise.all(
     line-height: var(--leading-normal);
   }
 
-  .places-plate-entry {
-    display: grid;
-    justify-items: start;
-  }
-
   /* --- Prints ------------------------------------------------------------ */
+
+  /* The collage is what the page is until the carousel mounts, and what it
+     stays as if the bundle never arrives. Once the carousel is running this
+     retires it — display: none rather than a visual trick, so the same 24
+     places are not left in the accessibility tree behind the carousel. */
+  :global([data-places-carousel="ready"]) .places-collage {
+    display: none;
+  }
 
   .places-print {
     position: relative;
@@ -674,18 +665,19 @@ const carouselSlides = await Promise.all(
   }
 
   @media (min-width: 48rem) {
+    /* Title and kicker left, intro right, on one row. Baseline rather than
+       start: aligned to the top of the row the intro floats above the title
+       and reads as unrelated to it; on baselines the first line of the intro
+       meets the title and the masthead becomes a single band of type. */
     .places-plate-inner {
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      align-items: baseline;
+      gap: var(--space-hero-section);
     }
 
-    .places-plate-entry {
-      justify-items: stretch;
-    }
-
-    /* The opening print hangs past the plate's wall ground onto the collage
-       sheet below, the way the home field note descends into the band. */
-    .places-plate-entry {
-      margin-bottom: calc(var(--space-xl) * -1);
+    .places-intro {
+      max-width: var(--max-width-intro);
+      justify-self: end;
     }
 
     .places-collage-inner {

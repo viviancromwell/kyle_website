@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue';
 import { Carousel } from 'motion-plus-vue';
 import CarouselPrint from './CarouselPrint.vue';
+import CarouselControls from './CarouselControls.vue';
 
 interface Slide {
   src: string;
@@ -22,37 +23,30 @@ defineProps<{ slides: Slide[] }>();
 // prints sit, and how far outside the viewport the component keeps items
 // mounted — not design values, and they are named here rather than inlined.
 const CAROUSEL_GAP = 32;
-const CAROUSEL_SAFE_MARGIN = 300;
+// Trimmed from 300. Every item inside this margin stays mounted and
+// composited; now that the carousel is the only presentation of these
+// photographs it renders on phones too, where that memory is scarcest.
+const CAROUSEL_SAFE_MARGIN = 120;
 
-// The section is rendered hidden and only revealed once the component has
-// actually mounted. Astro server-renders this markup, so without the gate a
-// failed or blocked bundle would leave a tall transparent block above the
-// collage: Motion+ holds its list at opacity 0 until it can measure on the
-// client, and client:visible defers the JS, not the HTML.
+// The static list below is what the page shows until this mounts. Swapping
+// only on mount means a blocked bundle leaves the readable list in place
+// rather than an empty page.
 const ready = ref(false);
 onMounted(() => {
-  // Wide screens only. Twenty-four slides stay mounted at once so the ticker
-  // can measure them, and every one is a composited layer — that measured GPU
-  // D on mobile against B on desktop. The carousel is decorative and the
-  // collage below carries the same photographs, so a phone loses nothing by
-  // not rendering it, and a phone is where the memory actually hurts.
-  ready.value = window.matchMedia('(min-width: 48rem)').matches;
+  ready.value = true;
+  // The collage is the page's no-JS and pre-hydration state. Marking the
+  // document only once the carousel is genuinely running lets CSS retire it,
+  // and display: none takes it out of the accessibility tree too, so the 24
+  // places are never announced twice.
+  document.documentElement.setAttribute('data-places-carousel', 'ready');
 });
 </script>
 
 <template>
-  <!--
-    aria-hidden, deliberately. This is a second presentation of the same 24
-    places the collage below already lists, and a drag carousel with no
-    focusable children is not operable by keyboard. Rather than ship an
-    inoperable widget and announce every photograph twice, the carousel is
-    decorative and the collage remains the accessible copy. Nothing in here
-    is focusable, so it cannot be tabbed into and then lost.
-  -->
   <section
     v-if="ready"
     class="places-carousel-section"
-    aria-hidden="true"
+    aria-label="Places from my journal"
   >
     <Carousel
       class="places-carousel"
@@ -62,6 +56,10 @@ onMounted(() => {
       :safe-margin="CAROUSEL_SAFE_MARGIN"
     >
       <CarouselPrint v-for="(slide, index) in slides" :key="index" v-bind="slide" />
+
+      <template #after>
+        <CarouselControls />
+      </template>
     </Carousel>
   </section>
 </template>
