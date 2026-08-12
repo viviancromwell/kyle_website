@@ -1,0 +1,126 @@
+<script setup lang="ts">
+import { motion, useTransform } from 'motion-v';
+import { useTickerItem } from 'motion-plus-vue';
+
+const props = defineProps<{
+  src: string;
+  srcset: string;
+  alt: string;
+  title: string;
+  description: string;
+  tape: number;
+  tilt: number;
+}>();
+
+// `offset` is this print's distance in pixels from the carousel's centre, so
+// every value below is a mapping of position rather than of elapsed time.
+// This lives in its own single-file component because a `template` string on
+// an inline defineComponent needs Vue's runtime template compiler, which the
+// Astro integration does not ship — an SFC is compiled at build time instead.
+const { offset } = useTickerItem()!;
+
+const SPAN = 900;
+
+// The centred print sits square and its neighbours keep the collage's tilt,
+// so photographs read as laid down on a page rather than filed upright.
+const rotate = useTransform(offset, [-SPAN, 0, SPAN], [props.tilt, 0, -props.tilt]);
+const scale = useTransform(offset, [-SPAN, 0, SPAN], [0.72, 1, 0.72]);
+const opacity = useTransform(
+  offset,
+  [-SPAN, -SPAN * 0.5, 0, SPAN * 0.5, SPAN],
+  [0, 0.55, 1, 0.55, 0]
+);
+// Held at 4px: blur is compositor work proportional to radius times layer
+// area, and these are large prints.
+const filter = useTransform(offset, [-SPAN, 0, SPAN], ['blur(4px)', 'blur(0px)', 'blur(4px)']);
+const y = useTransform(offset, [-SPAN, 0, SPAN], [28, 0, 28]);
+</script>
+
+<template>
+  <motion.figure class="carousel-print" :style="{ rotate, scale, opacity, filter, y }">
+    <span :class="['carousel-tape', 'carousel-tape--' + tape]" aria-hidden="true"></span>
+    <img :src="src" :srcset="srcset" :alt="alt" draggable="false" />
+    <figcaption>
+      <h3>{{ title }}</h3>
+      <p>{{ description }}</p>
+    </figcaption>
+  </motion.figure>
+</template>
+
+<style scoped>
+.carousel-print {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  padding: var(--space-sm);
+  border-radius: var(--radius-print);
+  background: var(--color-paper-raised);
+  box-shadow: var(--shadow-paper);
+}
+
+.carousel-print img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.carousel-print figcaption {
+  padding-top: var(--space-xs);
+  text-align: center;
+}
+
+.carousel-print figcaption h3 {
+  margin: 0;
+  color: var(--color-soft-charcoal);
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 500;
+  letter-spacing: var(--tracking-tight);
+}
+
+.carousel-print figcaption p {
+  margin: var(--space-2xs) 0 0;
+  color: var(--color-caption-ink);
+  font-size: var(--text-sm);
+  font-style: italic;
+  line-height: var(--leading-normal);
+}
+
+/* The same washi tape the collage prints wear, so a photograph looks the
+   same whether it is pinned to the page or held in the carousel. */
+.carousel-tape {
+  position: absolute;
+  z-index: 1;
+  height: calc(var(--hero-tape-height) * 0.72);
+  background: url('../assets/home/tape-washi.png') center / cover no-repeat;
+  box-shadow: var(--shadow-tape);
+  clip-path: polygon(
+    0 8%, 1.5% 0, 98% 3%, 100% 10%, 98.8% 32%, 100% 52%, 98.5% 78%, 100% 94%,
+    97.5% 100%, 2% 97%, 0 88%, 1.2% 66%, 0 42%, 1% 18%
+  );
+  opacity: 0.9;
+}
+
+.carousel-tape--0 {
+  top: calc(var(--hero-tape-height) * -0.34);
+  left: var(--space-lg);
+  width: calc(var(--hero-tape-width) * 0.6);
+  transform: rotate(-11deg);
+}
+
+.carousel-tape--1 {
+  top: calc(var(--hero-tape-height) * -0.32);
+  right: var(--space-xl);
+  width: calc(var(--hero-tape-width) * 0.52);
+  transform: rotate(8deg);
+}
+
+.carousel-tape--2 {
+  top: calc(var(--hero-tape-height) * -0.38);
+  left: 50%;
+  width: calc(var(--hero-tape-width) * 0.72);
+  transform: translateX(-50%) rotate(-2.5deg);
+}
+</style>
