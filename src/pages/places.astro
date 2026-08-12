@@ -1,7 +1,8 @@
 ---
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import Base from '../layouts/Base.astro';
+import PlacesCarousel from '../components/PlacesCarousel.vue';
 import FieldRoutes from '../components/FieldRoutes.astro';
 import { interestingPlaces } from '../data/interestingPlaces.mjs';
 
@@ -92,6 +93,28 @@ const entries = interestingPlaces.map((place, index) => {
 });
 
 const [plate, ...collage] = entries;
+
+// The Vue island cannot import astro:assets, so every photograph is
+// optimised here and handed across as plain src/srcset strings.
+const carouselSlides = await Promise.all(
+  collage.map(async (place) => {
+    const optimized = await getImage({
+      src: place.source,
+      widths: widthsFor(place.source, PRINT_WIDTHS),
+      format: 'webp',
+    });
+
+    return {
+      src: optimized.src,
+      srcset: optimized.srcSet.attribute,
+      alt: place.alt,
+      title: place.title,
+      description: place.description,
+      tape: place.tape,
+      tilt: [1.5, -1.25, 2.25, -2, 1, -2.75][place.tilt] ?? 0,
+    };
+  })
+);
 ---
 
 <Base
@@ -133,6 +156,15 @@ const [plate, ...collage] = entries;
       </div>
     </header>
 
+    {/*
+      client:idle, not client:visible. The component hides its own section
+      until it mounts so a failed bundle cannot leave a tall transparent gap,
+      and a hidden element never triggers the visibility observer — the two
+      together deadlock, and the carousel simply never appears. Idle has no
+      such dependency, and the photographs inside are lazy regardless.
+    */}
+    <PlacesCarousel slides={carouselSlides} client:idle />
+
     <section class="places-collage" aria-label="Places from my journal">
       <ul class="places-collage-inner">
         {collage.map((place) => (
@@ -148,17 +180,19 @@ const [plate, ...collage] = entries;
               ]}
             >
               <span class:list={['places-tape', `places-tape--${place.tape}`]} aria-hidden="true"></span>
-              <Image
-                src={place.source}
-                alt={place.alt}
-                widths={widthsFor(place.source, place.spread ? SPREAD_WIDTHS : PRINT_WIDTHS)}
-                sizes={
-                  place.spread
-                    ? '(min-width: 78rem) 68rem, 88vw'
-                    : '(min-width: 72rem) 22rem, (min-width: 48rem) 42vw, 88vw'
-                }
-                loading="lazy"
-              />
+              <span class="places-window">
+                <Image
+                  src={place.source}
+                  alt={place.alt}
+                  widths={widthsFor(place.source, place.spread ? SPREAD_WIDTHS : PRINT_WIDTHS)}
+                  sizes={
+                    place.spread
+                      ? '(min-width: 78rem) 68rem, 88vw'
+                      : '(min-width: 72rem) 22rem, (min-width: 48rem) 42vw, 88vw'
+                  }
+                  loading="lazy"
+                />
+              </span>
               <figcaption><h2>{place.title}</h2></figcaption>
             </figure>
             <p class="places-note">{place.description}</p>
@@ -167,7 +201,7 @@ const [plate, ...collage] = entries;
       </ul>
     </section>
 
-    <section class="places-band" aria-labelledby="places-band-title">
+    <section class="places-band" aria-labelledby="places-band-title" data-band>
       <FieldRoutes variant="dark" />
       <div class="places-band-inner">
         <h2 id="places-band-title">More of the journal</h2>
@@ -178,6 +212,58 @@ const [plate, ...collage] = entries;
       </div>
     </section>
   </div>
+
+  <script>
+    import { animate, scroll } from 'motion';
+
+    // Prints drift at different rates as the page moves, so the collage reads
+    // as photographs lying loose on the paper rather than printed into it.
+    //
+    // The subject is the <li>, not the print inside it: .places-print carries
+    // its own rotate() for the tilt, and animating `transform` on that element
+    // would overwrite the tilt rather than compose with it. The <li> has no
+    // transform of its own, so it is free to take one.
+    //
+    // Literal transform strings rather than Motion's `y` shorthand — the
+    // shorthand animates an independent value on the main thread (A-tier),
+    // while a transform string stays on the compositor via ScrollTimeline.
+    // Twenty-four oversized photographs each get their own compositor layer
+    // while they drift, which measured as a GPU tier of C on mobile against
+    // S on desktop. The collage is a single column on small screens anyway,
+    // where parallax between neighbours has nothing to play against, so it
+    // is simply not worth the memory there.
+    const wideEnough = matchMedia('(min-width: 48rem)').matches;
+
+    if (wideEnough && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      // Percentages of the image's own height, so a tall print and a small
+      // one drift proportionally rather than the small one barely moving.
+      // The 1.18 scale in CSS gives 9% of headroom at each edge; staying
+      // under that is what keeps a gap from appearing at the frame.
+      const depths = [7, 4, 8, 5];
+
+      document.querySelectorAll('.places-window img').forEach((img, index) => {
+        const drift = depths[index % depths.length];
+
+        scroll(
+          animate(
+            img,
+            {
+              transform: [
+                `translateY(${-drift}%) scale(1.18)`,
+                `translateY(${drift}%) scale(1.18)`,
+              ],
+            },
+            { ease: 'linear' }
+          ),
+          // The full pass: from the print's top edge meeting the bottom of
+          // the viewport to its bottom edge leaving the top. Without this the
+          // drift is packed into the tail of the crossing and sits clamped
+          // for most of the time the photograph is actually on screen.
+          { target: img, offset: ['start end', 'end start'] }
+        );
+      });
+    }
+  </script>
 </Base>
 
 <style>
@@ -310,6 +396,34 @@ const [plate, ...collage] = entries;
     display: block;
     width: 100%;
     height: auto;
+  }
+
+  /* The photograph moves against its own border rather than the whole print
+     moving down the page. Drifting the card gave about 44px of travel spread
+     across a full viewport pass — roughly 3% of the scroll distance, which
+     is not perceptible. Held inside a fixed window the same movement is read
+     against a stationary edge, which is what makes parallax legible.
+     The window keeps the print's aspect so nothing reflows; the image is
+     oversized inside it so there is room to travel without exposing a gap. */
+  /* clip, not hidden: `overflow: hidden` makes this a scroll container, and
+     the scroll timeline then binds to it instead of the page. It never
+     scrolls, so every image sat clamped at the end of its drift. `clip`
+     clips without creating a scrollport. */
+  .places-window {
+    display: block;
+    overflow: clip;
+  }
+
+  /* No will-change here. It was on all 24 images and cost a GPU tier — S to
+     A on desktop, C on mobile — for nothing: the scroll animation is WAAPI,
+     which promotes the layer on its own. */
+  /* The oversize only exists to give the drift somewhere to go, so it is
+     applied at the same breakpoint the drift is, and never under reduce —
+     otherwise the photograph is silently cropped for no reason. */
+  @media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
+    .places-window img {
+      transform: scale(1.18);
+    }
   }
 
   .places-print figcaption {

@@ -4,3 +4,6 @@ dist/
 .DS_Store
 .vercel
 .impeccable/hook.cache.json
+
+# Local agent skills, not project code
+.agents/skills/
