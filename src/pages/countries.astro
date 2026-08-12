@@ -49,7 +49,7 @@ const totalEntries = regions.reduce((total, region) => total + region.countries.
           {regions.map((region) => <a href={`#${region.id}`}>{region.name}</a>)}
         </nav>
 
-        <div class="countries-sheets">
+        <div class="countries-sheets" data-pinboard>
           {regions.map((region) => (
             <section
               class="countries-sheet"
@@ -104,17 +104,58 @@ const totalEntries = regions.reduce((total, region) => total + region.countries.
     // The band is deliberately narrow and sits above centre: a sheet claims
     // focus as it reaches where the eye already is, not when it first appears
     // at the bottom edge. That was the mistake in the reveal on /places/.
+    const board = document.querySelector('[data-pinboard]');
     const sheets = [...document.querySelectorAll('.countries-sheet')];
+    const tabs = [...document.querySelectorAll('.countries-tabs a')];
+
+    // Hiding the cards is the script's doing, so the script has to be the one
+    // that can un-hide them. Setting this only once JS is running means a
+    // failed bundle leaves the board fully visible rather than blank.
+    board?.setAttribute('data-pinboard', 'ready');
+
+    // Each card pins itself as it arrives rather than the board pinning all
+    // seven at once: the lower rows are a screen further down, and a single
+    // group trigger would spend their motion off-screen — the mistake that
+    // made the old countries-pin animation invisible.
+    sheets.forEach((sheet, index) => {
+      inView(
+        sheet,
+        () => {
+          // Stagger within a row, not across the whole board, so cards that
+          // arrive together land in sequence instead of in unison.
+          sheet.style.transitionDelay = `${(index % 3) * 70}ms`;
+          sheet.classList.add('is-pinned');
+          return () => {};
+        },
+        { margin: '0px 0px -12% 0px', amount: 0.15 }
+      );
+    });
+
+    // Tabs are matched to sheets by the fragment they link to rather than by
+    // position, so reordering the regions cannot silently mismatch them.
+    const tabFor = (sheet) => tabs.find((tab) => tab.hash === `#${sheet.id}`);
 
     sheets.forEach((sheet) => {
       inView(
         sheet,
         () => {
-          sheets.forEach((other) => other.classList.remove('is-current'));
-          sheet.classList.add('is-current');
+          sheets.forEach((other) => {
+            other.classList.remove('is-current');
+            tabFor(other)?.classList.remove('is-current');
+            tabFor(other)?.removeAttribute('aria-current');
+          });
 
-          // Leaving the band does not clear the class: the last sheet you
-          // read stays marked until another claims it, so the page is never
+          sheet.classList.add('is-current');
+          const tab = tabFor(sheet);
+          if (tab) {
+            tab.classList.add('is-current');
+            // The row is a navigation index, so the marked tab is genuinely
+            // the current location and should say so, not just look it.
+            tab.setAttribute('aria-current', 'true');
+          }
+
+          // Leaving the band does not clear the class: the last region you
+          // read stays marked until another claims it, so the row is never
           // in a state where nothing is current.
           return () => {};
         },
@@ -323,6 +364,31 @@ const totalEntries = regions.reduce((total, region) => total + region.countries.
     transform: rotate(1deg);
   }
 
+  /* The tab for the region you are reading inverts to the journal's cover
+     colour and stands out of the row, the way you would pull a divider
+     forward to hold your place. Inverting rather than tinting keeps the
+     label above AA on its new ground (on-aubergine over aubergine), and the
+     rotations are restated so the lift composes with each tab's tilt instead
+     of flattening it. */
+  .countries-tabs a.is-current {
+    border-color: var(--color-aubergine);
+    color: var(--color-on-aubergine);
+    background: var(--color-aubergine);
+    box-shadow: var(--shadow-paper);
+  }
+
+  .countries-tabs a.is-current::before {
+    background: var(--color-collegiate-coral-soft);
+  }
+
+  .countries-tabs a:nth-child(odd).is-current {
+    transform: rotate(-1deg) translateY(calc(var(--space-2xs) * -1));
+  }
+
+  .countries-tabs a:nth-child(even).is-current {
+    transform: rotate(1deg) translateY(calc(var(--space-2xs) * -1));
+  }
+
   /* --- Region sheets --------------------------------------------------- */
   /* Sheets are placed by hand rather than flowed: the wide region across the
      top, then two rows of three, so the pinboard has a composed bottom edge
@@ -351,20 +417,39 @@ const totalEntries = regions.reduce((total, region) => total + region.countries.
       transform var(--duration-medium) var(--ease-out);
   }
 
-  /* The sheet you are reading lifts off the stack. This extends the page's
-     existing :target vocabulary to scroll position rather than inventing a
-     second signal. Deliberately no dimming of the other sheets: their body
-     text would drop below AA contrast, and the rule is that nothing on this
-     site trades legibility for effect. The rotation has to be repeated here
-     or the scale would replace the sheet's tilt instead of composing. */
   .countries-sheet:target,
   .countries-sheet.is-current {
     border-color: var(--color-field-violet);
   }
 
-  .countries-sheet.is-current {
-    box-shadow: var(--shadow-paper);
-    transform: rotate(var(--sheet-rotate)) scale(1.012);
+  /* Cards drop onto the board and settle, the way a note gets pinned up.
+     This page is cream on cream by design, so a tonal signal — a border, a
+     tint, a fade — has nowhere to go and reads as nothing. The motion has to
+     be geometric to be seen at all.
+
+     The hidden state is gated on [data-pinboard="ready"], which the script
+     sets on the container. Without JS the attribute never appears, the cards
+     are never hidden, and the page is exactly what it was. */
+  [data-pinboard="ready"] .countries-sheet {
+    opacity: 0;
+    transform: translateY(calc(var(--space-xl) * -1)) rotate(var(--sheet-rotate)) scale(1.04);
+  }
+
+  /* The rotation is restated in both states so the drop composes with each
+     card's tilt instead of flattening it on the way down. */
+  [data-pinboard="ready"] .countries-sheet.is-pinned {
+    opacity: 1;
+    transform: translateY(0) rotate(var(--sheet-rotate)) scale(1);
+    transition:
+      opacity var(--duration-medium) var(--ease-out),
+      transform var(--duration-book-open) var(--ease-book-open);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-pinboard="ready"] .countries-sheet {
+      opacity: 1;
+      transform: rotate(var(--sheet-rotate));
+    }
   }
 
   .countries-sheet:focus-visible {
