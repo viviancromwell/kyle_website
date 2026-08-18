@@ -4,6 +4,7 @@ import Base from '../layouts/Base.astro';
 import FieldRoutes from '../components/FieldRoutes.astro';
 import Bookshelf from '../components/Bookshelf.astro';
 import { interestingPlaces } from '../data/interestingPlaces.mjs';
+import { placeAlt } from '../data/placeAlt.mjs';
 import machuPicchu from '../assets/places/machu-picchu-peru.jpeg';
 import mostarBridge from '../assets/places/mostar-bridge-bosnia.jpeg';
 import baiPeople from '../assets/places/bai-people-china.jpeg';
@@ -22,7 +23,12 @@ const heroPool = await Promise.all(
         widths: [480, 720, 960],
         format: 'webp',
       });
-      return { src: optimized.src, srcset: optimized.srcSet.attribute, alt: place.title };
+      return {
+        src: optimized.src,
+        srcset: optimized.srcSet.attribute,
+        alt: placeAlt[place.image] ?? place.title,
+        caption: place.title,
+      };
     })
 );
 
@@ -156,8 +162,10 @@ const placeTitle = (file, fallback) =>
               swapped = true;
               img.srcset = pick.srcset;
               img.src = pick.src;
-              img.alt = '';
-              if (caption) caption.textContent = pick.alt;
+              // The markup ships a written description per photograph, so
+              // the swap carries one too rather than dropping to alt="".
+              img.alt = pick.alt;
+              if (caption) caption.textContent = pick.caption;
               requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
                   img.style.opacity = '1';

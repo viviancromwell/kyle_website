@@ -139,7 +139,7 @@ const storyFrame = frameFor(storyImage, PRINT_SPECS.story);
             <span class="chocolate-rule" aria-hidden="true"></span>
           </div>
 
-          <ul class="chocolate-list">
+          <ul class="chocolate-list" role="list">
             {editions.map((edition) => (
               <li
                 class:list={[
@@ -154,7 +154,7 @@ const storyFrame = frameFor(storyImage, PRINT_SPECS.story);
                   <p class="chocolate-note">{edition.description}</p>
 
                   {edition.details && (
-                    <ul class="chocolate-marks">
+                    <ul class="chocolate-marks" role="list">
                       {edition.details.map((detail) => <li>{detail}</li>)}
                     </ul>
                   )}
@@ -164,7 +164,7 @@ const storyFrame = frameFor(storyImage, PRINT_SPECS.story);
                   )}
 
                   {edition.flavors && (
-                    <ul class="chocolate-marks">
+                    <ul class="chocolate-marks" role="list">
                       {edition.flavors.map((flavor) => <li>{flavor}</li>)}
                     </ul>
                   )}

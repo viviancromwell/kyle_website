@@ -68,10 +68,11 @@ const entries = poems.map((poem) => ({
                 {/* One block per authored line inside a single stanza, so the
                     breaks Kyle wrote survive without JavaScript and a line that
                     runs past the measure hangs indented instead of reading as a
-                    new line. */}
-                <p class="poems-verse">
-                  {poem.lines.map((line) => <span class="poems-line">{line}</span>)}
-                </p>
+                    new line. Real block elements, not spans blocked by CSS:
+                    a screen reader takes the breaks from the markup. */}
+                <div class="poems-verse">
+                  {poem.lines.map((line) => <p class="poems-line">{line}</p>)}
+                </div>
               </div>
 
               <figure class="poems-art">
@@ -403,7 +404,7 @@ const entries = poems.map((poem) => ({
      starts flush and anything that will not fit the measure is set in, so a
      wrap can never be mistaken for a line Kyle wrote. */
   .poems-line {
-    display: block;
+    margin: 0;
     padding-left: var(--space-lg);
     text-indent: calc(var(--space-lg) * -1);
   }
