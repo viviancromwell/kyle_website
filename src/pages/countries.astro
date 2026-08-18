@@ -71,7 +71,7 @@ const totalEntries = regions.reduce((total, region) => total + region.countries.
               </div>
               <span class="countries-rule" aria-hidden="true"></span>
 
-              <ul class="countries-list">
+              <ul class="countries-list" role="list">
                 {region.countries.map((country) => <li>{country}</li>)}
               </ul>
             </section>
@@ -455,7 +455,11 @@ const totalEntries = regions.reduce((total, region) => total + region.countries.
     break-inside: avoid;
   }
 
-  /* A violet check against each country: visited, ticked off by hand. */
+  /* A violet check against each country: visited, ticked off by hand. Every
+     entry here is visited, so read aloud the mark only puts "check mark" in
+     front of a hundred names — the empty alt text after the slash silences
+     it. The bare declaration stays first: a browser without alt-text support
+     drops that line and still draws the check. */
   .countries-list li::before {
     display: inline-block;
     width: var(--space-md);
@@ -464,6 +468,7 @@ const totalEntries = regions.reduce((total, region) => total + region.countries.
     line-height: 1;
     text-indent: 0;
     content: "✓";
+    content: "✓" / "";
   }
 
   /* Washi tape cropped from the approved direction, shared with the home

@@ -28,15 +28,24 @@ const NARROW_MEASURE_PX = 512;
 const BLUR_PX = 4;
 const LIFT_PX = 28;
 
+// Motion writes every value below as an inline style, which the global reduce
+// block in global.css cannot reach: it only zeroes CSS animation and
+// transition durations. So the opt-out is read here instead.
+const reduced =
+  typeof window !== 'undefined' &&
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// Under reduce a print holds `resting` at every offset, so it pages across
+// without turning, shrinking, lifting or fading — the instant swap the shelf
+// and the page transitions already make.
+const track = <T extends number | string>(input: number[], output: T[], resting: T) =>
+  useTransform(offset, input, reduced ? input.map(() => resting) : output);
+
 // The centred print sits square and its neighbours keep the collage's tilt,
 // so photographs read as laid down on a page rather than filed upright.
-const rotate = useTransform(offset, [-SPAN, 0, SPAN], [props.tilt, 0, -props.tilt]);
-const scale = useTransform(offset, [-SPAN, 0, SPAN], [0.72, 1, 0.72]);
-const opacity = useTransform(
-  offset,
-  [-SPAN, -SPAN * 0.5, 0, SPAN * 0.5, SPAN],
-  [0, 0.55, 1, 0.55, 0]
-);
+const rotate = track([-SPAN, 0, SPAN], [props.tilt, 0, -props.tilt], 0);
+const scale = track([-SPAN, 0, SPAN], [0.72, 1, 0.72], 1);
+const opacity = track([-SPAN, -SPAN * 0.5, 0, SPAN * 0.5, SPAN], [0, 0.55, 1, 0.55, 0], 1);
 // Blur is the expensive part of this effect: 24 prints each carrying their
 // own blurred layer measured GPU D on mobile against B on desktop. Small
 // screens show one print at a time anyway, with no neighbours to push back,
@@ -45,14 +54,14 @@ const opacity = useTransform(
 const blurAffordable =
   typeof window !== 'undefined' && window.matchMedia('(min-width: 48rem)').matches;
 
-const filter = useTransform(
-  offset,
+const filter = track(
   [-SPAN, 0, SPAN],
   blurAffordable
     ? [`blur(${BLUR_PX}px)`, 'blur(0px)', `blur(${BLUR_PX}px)`]
-    : ['blur(0px)', 'blur(0px)', 'blur(0px)']
+    : ['blur(0px)', 'blur(0px)', 'blur(0px)'],
+  'blur(0px)'
 );
-const y = useTransform(offset, [-SPAN, 0, SPAN], [LIFT_PX, 0, LIFT_PX]);
+const y = track([-SPAN, 0, SPAN], [LIFT_PX, 0, LIFT_PX], 0);
 </script>
 
 <template>
@@ -77,7 +86,7 @@ const y = useTransform(offset, [-SPAN, 0, SPAN], [LIFT_PX, 0, LIFT_PX]);
       draggable="false"
     />
     <figcaption>
-      <h3>{{ title }}</h3>
+      <h2>{{ title }}</h2>
       <p>{{ description }}</p>
     </figcaption>
   </motion.figure>
@@ -107,7 +116,7 @@ const y = useTransform(offset, [-SPAN, 0, SPAN], [LIFT_PX, 0, LIFT_PX]);
   text-align: center;
 }
 
-.carousel-print figcaption h3 {
+.carousel-print figcaption h2 {
   margin: 0;
   color: var(--color-soft-charcoal);
   font-family: var(--font-display);
