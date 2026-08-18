@@ -129,7 +129,7 @@ const totalEntries = regions.reduce((total, region) => total + region.countries.
   .countries-paper {
     padding: var(--space-hero-gutter);
     overflow-x: clip;
-    background: var(--color-paper) url("../assets/home/wall-white.jpg") left top / 64rem auto repeat;
+    background: var(--color-paper) url("../assets/home/wall-white.webp") left top / 64rem auto repeat;
   }
 
   .countries-inner {
@@ -342,9 +342,11 @@ const totalEntries = regions.reduce((total, region) => total + region.countries.
   .countries-sheet:nth-child(6) { animation-delay: calc(var(--duration-fast) * 1.25); }
   .countries-sheet:nth-child(7) { animation-delay: calc(var(--duration-fast) * 1.5); }
 
+  /* 0.001 rather than 0: an element that first paints fully transparent is
+     never eligible for Largest Contentful Paint. See `reveal` in global.css. */
   @keyframes countries-pin {
     from {
-      opacity: 0;
+      opacity: 0.001;
       transform: translateY(var(--space-sm)) rotate(var(--sheet-rotate));
     }
 

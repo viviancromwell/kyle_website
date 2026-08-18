@@ -88,7 +88,7 @@ test('the Visited Countries page renders the migrated regional country data', as
 test('the Interesting Places page renders all migrated writing and local images', async () => {
   assert.match(placesPage, /import \{ interestingPlaces \} from '\.\.\/data\/interestingPlaces\.mjs';/);
   assert.match(placesPage, /interestingPlaces\.map/);
-  assert.match(placesPage, /import \{ Image \} from 'astro:assets';/);
+  assert.match(placesPage, /import \{ Image, getImage \} from 'astro:assets';/);
   assert.match(placesPage, /loading="lazy"/);
   assert.match(bookshelf, /href="\/places\/"/);
 
@@ -193,4 +193,30 @@ test('the token system uses neutral light surfaces with purple reserved for acce
 
   const atmosphere = tokens.match(/--gradient-atmosphere:([\s\S]*?);/)?.[1] ?? '';
   assert.doesNotMatch(atmosphere, /radial-gradient/);
+});
+
+test('the display font ships from this origin, not from Google', async () => {
+  assert.doesNotMatch(layout, /fonts\.(googleapis|gstatic)\.com/);
+  assert.match(layout, /rel="preload" as="font" type="font\/woff2"/);
+
+  const faces = await readFile(new URL('../src/styles/fonts.css', import.meta.url), 'utf8');
+  for (const weight of [500, 600]) {
+    assert.match(faces, new RegExp(`font-weight: ${weight};`));
+    for (const subset of ['latin', 'latin-ext', 'vietnamese']) {
+      await access(new URL(`../src/assets/fonts/cormorant-sc-${weight}-${subset}.woff2`, import.meta.url));
+    }
+  }
+});
+
+test('entrance animations never start fully transparent', async () => {
+  // Chrome skips an element for Largest Contentful Paint if it is transparent
+  // at its first paint, and never reconsiders it, so a keyframe starting at
+  // opacity 0 can leave a page reporting no LCP at all.
+  const styled = ['../styles/global.css', '../pages/about.astro', '../pages/chocolate.astro',
+    '../pages/countries.astro', '../pages/poems.astro'];
+
+  for (const file of styled) {
+    const source = await readFile(new URL(file, new URL('../src/layouts/', import.meta.url)), 'utf8');
+    assert.doesNotMatch(source, /from \{\s*\n\s*opacity: 0;/, `${file} fades in from a full zero`);
+  }
 });

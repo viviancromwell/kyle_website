@@ -317,7 +317,7 @@ a:focus-visible {
   overflow-x: clip;
   /* Vivian's wall-paper trial ground; --color-paper stays underneath as the
      load/fallback color. */
-  background: var(--color-paper) url("../assets/home/wall-white.jpg") left top / 64rem auto repeat;
+  background: var(--color-paper) url("../assets/home/wall-white.webp") left top / 64rem auto repeat;
 }
 
 .field-routes {
@@ -616,7 +616,7 @@ a:focus-visible {
 .book--countries .book-spine,
 .book--countries .book-cover {
   background-color: var(--color-book-cloth-violet);
-  background-image: url("../assets/textures/leather-violet.jpg");
+  background-image: url("../assets/textures/leather-violet.webp");
   background-position: center;
   background-size: cover;
 }
@@ -633,12 +633,12 @@ a:focus-visible {
 }
 
 .book--places .book-spine {
-  background-image: url("../assets/textures/leather-stitched-left.jpg");
+  background-image: url("../assets/textures/leather-stitched-left.webp");
   background-position: left center;
 }
 
 .book--places .book-cover {
-  background-image: url("../assets/textures/leather-stitched.jpg");
+  background-image: url("../assets/textures/leather-stitched.webp");
   background-position: right center;
 }
 
@@ -1270,9 +1270,13 @@ a:focus-visible {
   animation-delay: var(--duration-medium);
 }
 
+/* Starts a hair above zero, not at zero. Chrome only considers an element for
+   Largest Contentful Paint at its first paint, and skips it entirely if it is
+   transparent then, so the hero print fading in from 0 made the homepage
+   report no LCP at all. 0.001 is invisible and keeps it eligible. */
 @keyframes reveal {
   from {
-    opacity: 0;
+    opacity: 0.001;
     transform: translateY(var(--space-md));
   }
 
@@ -1315,7 +1319,7 @@ a:focus-visible {
    translate composes with transform instead of replacing it. */
 @keyframes reveal-scroll {
   from {
-    opacity: 0;
+    opacity: 0.001;
     translate: 0 var(--space-md);
   }
 
