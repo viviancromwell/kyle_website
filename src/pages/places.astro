@@ -13,6 +13,8 @@ const placeImages = import.meta.glob('../assets/places/*', {
 }) as Record<string, ImageMetadata>;
 
 const PRINT_WIDTHS = [360, 540, 720];
+// Matches the aspect-ratio the carousel print is displayed at.
+const CAROUSEL_RATIO = 4 / 3;
 const SPREAD_WIDTHS = [720, 1080, 1440];
 
 // Several of the originals are only a few hundred pixels wide; asking for
@@ -48,17 +50,32 @@ const collage = entries;
 
 // The Vue island cannot import astro:assets, so every photograph is
 // optimised here and handed across as plain src/srcset strings.
+// The carousel crops every print to 4:3 and centres it, so a portrait
+// original shipped whole was paying for a thousand rows of pixels that
+// object-fit threw away — the two tallest were 245 KiB each. Cropping here
+// hands over the same visible pixels at half the weight. The collage below
+// still uses the uncropped files: it shows the whole photograph.
 const carouselSlides = await Promise.all(
   collage.map(async (place) => {
-    const optimized = await getImage({
-      src: place.source,
-      widths: widthsFor(place.source, PRINT_WIDTHS),
-      format: 'webp',
-    });
+    // One call per width rather than `widths`, which pairs with neither a
+    // crop nor a height: each variant is cut to the carousel's ratio here.
+    const widths = widthsFor(place.source, PRINT_WIDTHS);
+    const variants = await Promise.all(
+      widths.map((width) =>
+        getImage({
+          src: place.source,
+          width,
+          height: Math.round(width / CAROUSEL_RATIO),
+          fit: 'cover',
+          position: 'center',
+          format: 'webp',
+        })
+      )
+    );
 
     return {
-      src: optimized.src,
-      srcset: optimized.srcSet.attribute,
+      src: variants[variants.length - 1].src,
+      srcset: variants.map((variant, i) => `${variant.src} ${widths[i]}w`).join(', '),
       alt: place.alt,
       title: place.title,
       description: place.description,
@@ -73,6 +90,23 @@ const carouselSlides = await Promise.all(
   title="Interesting Places — Kyle Cromwell"
   description="Twenty-five places from my journal, with the photographs and the writing I collected with them."
 >
+  <script is:inline>
+    // Both presentations of these photographs sit in this page: the collage
+    // is what the HTML holds, the carousel is what the island replaces it
+    // with. Marking the document here, before the collage parses, keeps
+    // twenty-five files off the network for everyone who is going to get the
+    // carousel — the browser treats them all as near the viewport and fetched
+    // every one. Without JS this never runs and the collage stands. If the
+    // island is slow or never arrives, the collage comes back.
+    document.documentElement.dataset.placesCarousel = 'pending';
+
+    setTimeout(() => {
+      if (document.documentElement.dataset.placesCarousel !== 'pending') return;
+      delete document.documentElement.dataset.placesCarousel;
+      document.dispatchEvent(new Event('places:collage-restored'));
+    }, 5000);
+  </script>
+
   <div class="places-page">
     <header class="places-plate">
       <FieldRoutes variant="light" />
@@ -171,7 +205,7 @@ const carouselSlides = await Promise.all(
     // is simply not worth the memory there.
     const wideEnough = matchMedia('(min-width: 48rem)').matches;
 
-    if (wideEnough && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const startDrift = () => {
       // Percentages of the image's own height, so a tall print and a small
       // one drift proportionally rather than the small one barely moving.
       // The 1.18 scale in CSS gives 9% of headroom at each edge; staying
@@ -199,6 +233,18 @@ const carouselSlides = await Promise.all(
           { target: img, offset: ['start end', 'end start'] }
         );
       });
+    };
+
+    // Only the collage drifts, and it is retired the moment the carousel is
+    // on its way, so setting up twenty-four scroll timelines behind a hidden
+    // section is pure cost. The restore event is the fallback path: if the
+    // island never arrived and the collage came back, it drifts after all.
+    if (wideEnough && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      if (document.documentElement.dataset.placesCarousel) {
+        document.addEventListener('places:collage-restored', startDrift, { once: true });
+      } else {
+        startDrift();
+      }
     }
   </script>
 </Base>
@@ -311,11 +357,19 @@ const carouselSlides = await Promise.all(
 
   /* --- Prints ------------------------------------------------------------ */
 
-  /* The collage is what the page is until the carousel mounts, and what it
-     stays as if the bundle never arrives. Once the carousel is running this
-     retires it — display: none rather than a visual trick, so the same 24
-     places are not left in the accessibility tree behind the carousel. */
-  :global([data-places-carousel="ready"]) .places-collage {
+  /* The collage is what the page is without JS, and what it falls back to if
+     the island never arrives. Any value of the attribute retires it — pending
+     while the carousel is on its way, ready once it is running — as display:
+     none rather than a visual trick, so the same 24 places are not left in the
+     accessibility tree behind the carousel. */
+  :global([data-places-carousel]) .places-collage {
+    display: none;
+  }
+
+  /* The other side of that swap. Without JS the attribute is never set, the
+     collage stands, and the island's static first print would otherwise show
+     the same photograph twice over. */
+  :global(html:not([data-places-carousel]) .places-carousel-seat) {
     display: none;
   }
 
