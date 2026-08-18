@@ -1,0 +1,21 @@
+{
+  "name": "Kyle Cromwell — Personal Journal",
+  "short_name": "Kyle Cromwell",
+  "icons": [
+    {
+      "src": "/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "theme_color": "#5D4099",
+  "background_color": "#F4EDE2",
+  "display": "standalone"
+}
