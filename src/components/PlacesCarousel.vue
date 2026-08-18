@@ -72,7 +72,7 @@ onMounted(() => {
           draggable="false"
         />
         <figcaption>
-          <h3>{{ slides[0].title }}</h3>
+          <h2>{{ slides[0].title }}</h2>
           <p>{{ slides[0].description }}</p>
         </figcaption>
       </figure>

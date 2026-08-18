@@ -71,7 +71,11 @@ const y = track([-SPAN, 0, SPAN], [LIFT_PX, 0, LIFT_PX], 0);
 // photographs to show one. A print asks for its file once it comes within a
 // screen and a half of the centre, and never gives it back: dropping a src on
 // the way out would refetch it on the way in.
-const LOAD_WITHIN_PX = SPAN * 1.5;
+// A screen and a half of drift, or the width of the window if that is wider:
+// past SPAN a print is transparent and has nothing to show, but under reduced
+// motion it holds full opacity at every offset, so on a wide display the
+// outermost print is visible and must not be an empty box.
+const LOAD_WITHIN_PX = Math.max(SPAN * 1.5, typeof window === 'undefined' ? 0 : window.innerWidth);
 // The prints that open the carousel hold theirs from the first render.
 // Waiting on the offset to report costs them a frame, and a frame here is the
 // difference between the photograph painting with the carousel and after it.
