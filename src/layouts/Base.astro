@@ -1,6 +1,9 @@
 ---
+import '../styles/fonts.css';
 import '../styles/tokens.css';
 import '../styles/global.css';
+import cormorant500 from '../assets/fonts/cormorant-sc-500-latin.woff2?url';
+import cormorant600 from '../assets/fonts/cormorant-sc-600-latin.woff2?url';
 import FieldRoutes from '../components/FieldRoutes.astro';
 
 const {
@@ -31,17 +34,11 @@ const isCurrent = (route) => pathname === route || pathname.startsWith(route);
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#5D4099" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="preload"
-      as="style"
-      href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@500;600&display=swap"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@500;600&display=swap"
-      rel="stylesheet"
-    />
+    {/* Both weights are above the fold on every page, and would otherwise
+        only be discovered once the stylesheet parses. The latin-ext cuts stay
+        behind their unicode-range gate. */}
+    <link rel="preload" as="font" type="font/woff2" href={cormorant500} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={cormorant600} crossorigin />
   </head>
   <body class:list={{ 'home-route': isHome, 'showcase-route': isShowcase }}>
     <a class="skip-link" href="#main">Skip to content</a>

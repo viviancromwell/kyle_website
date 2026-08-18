@@ -52,12 +52,15 @@ const placeTitle = (file, fallback) =>
       <div class="home-hero-media reveal reveal--later">
         <figure class="home-travel-print">
           <span class="home-travel-tape" aria-hidden="true"></span>
+          {/* The largest thing on the first screen, and it was queueing
+              behind the wall and leather textures. */}
           <Image
             src={machuPicchu}
             alt="Machu Picchu emerging through low clouds in Peru"
             widths={[480, 720, 960]}
             sizes="(min-width: 64rem) 38vw, (min-width: 48rem) 48vw, 88vw"
             loading="eager"
+            fetchpriority="high"
           />
           <figcaption>{placeTitle('machu-picchu-peru.jpeg', 'Machu Picchu, Peru')}</figcaption>
         </figure>
@@ -70,6 +73,7 @@ const placeTitle = (file, fallback) =>
             widths={[320, 480]}
             sizes="(min-width: 64rem) 19vw, (min-width: 48rem) 27vw, 74vw"
             loading="eager"
+            fetchpriority="low"
           />
           <figcaption>{placeTitle('mostar-bridge-bosnia.jpeg', 'Mostar Bridge, Bosnia')}</figcaption>
         </figure>
@@ -82,6 +86,7 @@ const placeTitle = (file, fallback) =>
             widths={[320, 480]}
             sizes="(min-width: 64rem) 16vw, (min-width: 48rem) 24vw, 46vw"
             loading="eager"
+            fetchpriority="low"
           />
           <figcaption>{placeTitle('hagia-sophia-istanbul.jpeg', 'Hagia Sophia, Istanbul')}</figcaption>
         </figure>
@@ -111,7 +116,7 @@ const placeTitle = (file, fallback) =>
           alt="Lunch with a Bai family near Dali in Yunnan, China"
           widths={[360, 540]}
           sizes="(min-width: 64rem) 27vw, (min-width: 48rem) 38vw, 82vw"
-          loading="eager"
+          loading="lazy"
         />
         <figcaption>{placeTitle('bai-people-china.jpeg', 'Near Dali in Yunnan, China')}</figcaption>
       </figure>
@@ -119,45 +124,54 @@ const placeTitle = (file, fallback) =>
   </section>
 
   <script is:inline define:vars={{ heroPool }}>
-    const figures = ['.home-travel-print', '.home-field-note', '.home-mini-print', '.home-journal-glimpse']
-      .map((selector) => document.querySelector(selector))
-      .filter(Boolean);
-    const pool = [...heroPool];
-    for (let i = pool.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [pool[i], pool[j]] = [pool[j], pool[i]];
-    }
-    figures.forEach((figure, i) => {
-      const pick = pool[i];
-      if (!pick) return;
-      const img = figure.querySelector('img');
-      const caption = figure.querySelector('figcaption');
-      const next = new Image();
-      next.srcset = pick.srcset;
-      next.sizes = img.sizes || '';
-      next.src = pick.src;
-      next
-        .decode()
-        .then(() => {
-          img.style.opacity = '0';
-          let swapped = false;
-          const swap = () => {
-            if (swapped) return;
-            swapped = true;
-            img.srcset = pick.srcset;
-            img.src = pick.src;
-            img.alt = '';
-            if (caption) caption.textContent = pick.alt;
-            requestAnimationFrame(() => {
+    // Waits for load. Starting at parse time hid the print that was already
+    // in the HTML and fetched a replacement, so on a slow connection the
+    // largest paint was that second photograph, seconds late. The swap still
+    // happens, one beat later, with the same crossfade.
+    const shuffleHeroPrints = () => {
+      const figures = ['.home-travel-print', '.home-field-note', '.home-mini-print', '.home-journal-glimpse']
+        .map((selector) => document.querySelector(selector))
+        .filter(Boolean);
+      const pool = [...heroPool];
+      for (let i = pool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [pool[i], pool[j]] = [pool[j], pool[i]];
+      }
+      figures.forEach((figure, i) => {
+        const pick = pool[i];
+        if (!pick) return;
+        const img = figure.querySelector('img');
+        const caption = figure.querySelector('figcaption');
+        const next = new Image();
+        next.srcset = pick.srcset;
+        next.sizes = img.sizes || '';
+        next.src = pick.src;
+        next
+          .decode()
+          .then(() => {
+            img.style.opacity = '0';
+            let swapped = false;
+            const swap = () => {
+              if (swapped) return;
+              swapped = true;
+              img.srcset = pick.srcset;
+              img.src = pick.src;
+              img.alt = '';
+              if (caption) caption.textContent = pick.alt;
               requestAnimationFrame(() => {
-                img.style.opacity = '1';
+                requestAnimationFrame(() => {
+                  img.style.opacity = '1';
+                });
               });
-            });
-          };
-          img.addEventListener('transitionend', swap, { once: true });
-          setTimeout(swap, 400);
-        })
-        .catch(() => {});
-    });
+            };
+            img.addEventListener('transitionend', swap, { once: true });
+            setTimeout(swap, 400);
+          })
+          .catch(() => {});
+      });
+    };
+
+    if (document.readyState === 'complete') shuffleHeroPrints();
+    else window.addEventListener('load', shuffleHeroPrints, { once: true });
   </script>
 </Base>

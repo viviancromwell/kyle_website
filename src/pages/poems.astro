@@ -150,7 +150,7 @@ const entries = poems.map((poem) => ({
   .poems-paper {
     position: relative;
     padding: var(--space-hero-gutter) var(--space-hero-gutter) var(--space-2xl);
-    background: var(--color-paper) url("../assets/home/wall-white.jpg") left top / 64rem auto repeat;
+    background: var(--color-paper) url("../assets/home/wall-white.webp") left top / 64rem auto repeat;
   }
 
   .poems-inner {
@@ -247,9 +247,11 @@ const entries = poems.map((poem) => ({
   /* The tipped card cannot use the shared .reveal utility: its keyframes set
      transform, which would land the card flat. Its entrance carries the
      rotation through instead, the way the about card's does. */
+  /* 0.001 rather than 0: an element that first paints fully transparent is
+     never eligible for Largest Contentful Paint. See `reveal` in global.css. */
   @keyframes poems-lay {
     from {
-      opacity: 0;
+      opacity: 0.001;
       transform: translateY(var(--space-md)) rotate(var(--poems-tilt));
     }
 
