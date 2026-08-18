@@ -202,7 +202,10 @@ a:focus-visible {
   top: 50%;
   right: 0;
   left: 0;
-  height: var(--hero-touch-target);
+  /* The set wraps on small screens, where --space-md is all the room there is
+     between one row and the next. Capped at it, two stacked targets meet
+     without ever crossing. */
+  height: min(var(--hero-touch-target), calc(100% + var(--space-md)));
   translate: 0 -50%;
   content: "";
 }
