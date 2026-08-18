@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import { onMounted, onUnmounted, ref } from 'vue';
 import { motion, useTransform } from 'motion-v';
 import { useTickerItem } from 'motion-plus-vue';
 
 const props = defineProps<{
+  eager: boolean;
   src: string;
   srcset: string;
   alt: string;
@@ -62,6 +64,30 @@ const filter = track(
   'blur(0px)'
 );
 const y = track([-SPAN, 0, SPAN], [LIFT_PX, 0, LIFT_PX], 0);
+
+// The carousel lays all twenty-five prints out at once, close enough together
+// that the browser counts every one as near the viewport and fetches it on
+// mount — `loading="lazy"` buys nothing here, and the page pulled 1.6 MB of
+// photographs to show one. A print asks for its file once it comes within a
+// screen and a half of the centre, and never gives it back: dropping a src on
+// the way out would refetch it on the way in.
+const LOAD_WITHIN_PX = SPAN * 1.5;
+// The prints that open the carousel hold theirs from the first render.
+// Waiting on the offset to report costs them a frame, and a frame here is the
+// difference between the photograph painting with the carousel and after it.
+const requested = ref(props.eager || Math.abs(offset.get()) < LOAD_WITHIN_PX);
+let stopWatching = () => {};
+
+onMounted(() => {
+  if (requested.value) return;
+  stopWatching = offset.on('change', (distance: number) => {
+    if (Math.abs(distance) >= LOAD_WITHIN_PX) return;
+    requested.value = true;
+    stopWatching();
+  });
+});
+
+onUnmounted(() => stopWatching());
 </script>
 
 <template>
@@ -71,12 +97,13 @@ const y = track([-SPAN, 0, SPAN], [LIFT_PX, 0, LIFT_PX], 0);
       alt carries the real description again: this carousel is now the page's
       only presentation of these photographs, so it is the accessible copy
       rather than a decorative second one.
-      lazy + sizes both matter. Astro server-renders this island, so the
-      browser finds every image before any JS runs, and with width
-      descriptors and no sizes it assumes 100vw and picks the largest variant
-      of each — for prints never wider than the narrow measure.
+      sizes matters: with width descriptors and no sizes the browser assumes
+      100vw and picks the largest variant of each, for prints that are never
+      wider than the narrow measure. Out of range the empty span holds the box
+      open at the same ratio, so nothing shifts when the file arrives.
     -->
     <img
+      v-if="requested"
       :src="src"
       :srcset="srcset"
       :sizes="`(min-width: 48rem) ${NARROW_MEASURE_PX}px, 100vw`"
@@ -85,6 +112,7 @@ const y = track([-SPAN, 0, SPAN], [LIFT_PX, 0, LIFT_PX], 0);
       decoding="async"
       draggable="false"
     />
+    <span v-else class="carousel-pending" aria-hidden="true"></span>
     <figcaption>
       <h2>{{ title }}</h2>
       <p>{{ description }}</p>
@@ -92,7 +120,10 @@ const y = track([-SPAN, 0, SPAN], [LIFT_PX, 0, LIFT_PX], 0);
   </motion.figure>
 </template>
 
-<style scoped>
+<!-- Not scoped: PlacesCarousel renders the first print as plain markup before
+     this island mounts, and it wears the same box. One set of rules, two
+     renderings — the class names are specific enough to stay out of the way. -->
+<style>
 .carousel-print {
   position: relative;
   width: 100%;
@@ -103,7 +134,8 @@ const y = track([-SPAN, 0, SPAN], [LIFT_PX, 0, LIFT_PX], 0);
   box-shadow: var(--shadow-paper);
 }
 
-.carousel-print img {
+.carousel-print img,
+.carousel-pending {
   display: block;
   width: 100%;
   height: auto;

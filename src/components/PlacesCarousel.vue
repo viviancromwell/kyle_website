@@ -27,10 +27,18 @@ const CAROUSEL_GAP = 32;
 // composited; now that the carousel is the only presentation of these
 // photographs it renders on phones too, where that memory is scarcest.
 const CAROUSEL_SAFE_MARGIN = 120;
+// How many prints hold their photograph from the first render. One is on
+// screen and the next two are a swipe away; the remaining twenty-two ask for
+// theirs as they come within range.
+const EAGER_PRINTS = 3;
 
-// The static list below is what the page shows until this mounts. Swapping
-// only on mount means a blocked bundle leaves the readable list in place
-// rather than an empty page.
+// Matches CarouselPrint: the carousel never renders a print wider than the
+// narrow measure, so that is what `sizes` should advertise.
+const NARROW_MEASURE_PX = 512;
+
+// The seat below is what the page shows until this mounts. Swapping only on
+// mount means a blocked bundle leaves readable content in place rather than an
+// empty page.
 const ready = ref(false);
 onMounted(() => {
   ready.value = true;
@@ -43,19 +51,47 @@ onMounted(() => {
 </script>
 
 <template>
-  <section
-    v-if="ready"
-    class="places-carousel-section"
-    aria-label="Places from my journal"
-  >
+  <section class="places-carousel-section" aria-label="Places from my journal">
+    <!--
+      Until this island mounts the section holds the first print, static, in
+      the box the carousel will put it in. It keeps the page's height so
+      nothing shifts on hydration, and it puts the photograph in the HTML
+      where the preload scanner finds it: the carousel's own markup does not
+      exist until its JavaScript has run, and an image discovered that late
+      costs seconds on a slow connection.
+    -->
+    <div v-if="!ready" class="places-carousel-seat">
+      <figure class="carousel-print">
+        <span :class="['carousel-tape', 'carousel-tape--' + slides[0].tape]" aria-hidden="true"></span>
+        <img
+          :src="slides[0].src"
+          :srcset="slides[0].srcset"
+          :sizes="`(min-width: 48rem) ${NARROW_MEASURE_PX}px, 100vw`"
+          :alt="slides[0].alt"
+          fetchpriority="high"
+          draggable="false"
+        />
+        <figcaption>
+          <h3>{{ slides[0].title }}</h3>
+          <p>{{ slides[0].description }}</p>
+        </figcaption>
+      </figure>
+    </div>
+
     <Carousel
+      v-else
       class="places-carousel"
       item-size="fill"
       :overflow="true"
       :gap="CAROUSEL_GAP"
       :safe-margin="CAROUSEL_SAFE_MARGIN"
     >
-      <CarouselPrint v-for="(slide, index) in slides" :key="index" v-bind="slide" />
+      <CarouselPrint
+        v-for="(slide, index) in slides"
+        :key="index"
+        :eager="index < EAGER_PRINTS"
+        v-bind="slide"
+      />
 
       <template #after>
         <CarouselControls />
@@ -72,7 +108,8 @@ onMounted(() => {
   padding-block: var(--space-2xl);
 }
 
-.places-carousel {
+.places-carousel,
+.places-carousel-seat {
   width: 100%;
 }
 
