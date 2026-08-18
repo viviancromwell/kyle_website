@@ -271,7 +271,7 @@ const storyFrame = frameFor(storyImage, PRINT_SPECS.story);
   .chocolate-paper {
     position: relative;
     padding: var(--space-hero-gutter) var(--space-hero-gutter) var(--space-2xl);
-    background: var(--color-paper) url("../assets/home/wall-white.jpg") left top / 64rem auto repeat;
+    background: var(--color-paper) url("../assets/home/wall-white.webp") left top / 64rem auto repeat;
   }
 
   .chocolate-inner {
@@ -375,9 +375,11 @@ const storyFrame = frameFor(storyImage, PRINT_SPECS.story);
   /* Tipped objects cannot use the shared .reveal utility: its keyframes set
      transform, which would land them flat. This entrance carries the rotation
      through, the way the about card does. */
+  /* 0.001 rather than 0: an element that first paints fully transparent is
+     never eligible for Largest Contentful Paint. See `reveal` in global.css. */
   @keyframes chocolate-lay {
     from {
-      opacity: 0;
+      opacity: 0.001;
       transform: translateY(var(--space-md)) rotate(var(--chocolate-tilt));
     }
 
