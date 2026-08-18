@@ -22,25 +22,31 @@ colors:
 typography:
   display:
     fontFamily: "Cormorant SC, Georgia, Times New Roman, serif"
-    fontSize: "clamp(3.25rem, 5.4vw, 5.5rem)"
+    fontSize: "min(clamp(3.25rem, 5.4vw, 5.5rem), 13vw)"
     fontWeight: 500
     lineHeight: 0.96
-    letterSpacing: "-0.045em"
+    letterSpacing: "0.012em"
   headline:
     fontFamily: "Cormorant SC, Georgia, Times New Roman, serif"
     fontSize: "clamp(1.5rem, 1.9vw, 1.85rem)"
     fontWeight: 500
     lineHeight: 0.96
-    letterSpacing: "-0.045em"
+    letterSpacing: "0.04em"
   kicker:
     fontFamily: "Cormorant SC, Georgia, Times New Roman, serif"
-    fontSize: "clamp(1rem, 1.3vw, 1.25rem)"
+    fontSize: "clamp(0.9375rem, 1.05vw, 1.0625rem)"
     fontWeight: 600
+    lineHeight: 1.2
     letterSpacing: "0.18em"
   body:
     fontFamily: "Avenir Next, Avenir, Helvetica Neue, Arial, sans-serif"
     fontSize: "1rem"
     lineHeight: 1.55
+  bodyReversed:
+    fontFamily: "Avenir Next, Avenir, Helvetica Neue, Arial, sans-serif"
+    fontSize: "1rem"
+    lineHeight: 1.66
+    letterSpacing: "0.01em"
   label:
     fontFamily: "Avenir Next, Avenir, Helvetica Neue, Arial, sans-serif"
     fontSize: "0.875rem"
@@ -144,14 +150,19 @@ A warm cream field with two saturated role accents and one committed dark band.
 **Character:** small-caps serif titles against a clean humanist sans, matching the approved direction's collegiate-notebook proportions. The notebook character comes from composition, ruled paper, tape, and rotation, never from a handwriting font.
 
 ### Hierarchy
-- **Display** (500, clamp(3.25rem, 5.4vw, 5.5rem), 0.96): Kyle's name only.
-- **Headline** (500, clamp(1.5rem, 1.9vw, 1.85rem), 0.96, uppercase): book spine and cover titles.
-- **Kicker** (600, clamp(1rem, 1.3vw, 1.25rem), 0.18em tracking, uppercase, Field Violet): the "Personal Journal" line.
-- **Body** (400, 1rem, 1.55): copy and the intro; intro measures capped at 24rem.
+- **Display** (500, min(clamp(3.25rem, 5.4vw, 5.5rem), 13vw), 0.96, +0.012em): Kyle's name and every page title.
+- **Headline** (500, clamp(1.5rem, 1.9vw, 1.85rem), 0.96, +0.04em, uppercase): book spine and cover titles.
+- **Kicker** (600, clamp(0.9375rem, 1.05vw, 1.0625rem), 1.2, 0.18em tracking, uppercase, Field Violet): the "Personal Journal" line. It sits under the intro in size so the ladder reads name, then lede, then eyebrow; caps, color, and tracking carry its rank, not size.
+- **Body** (400, 1rem, 1.55): copy and the intro; prose ledes measure 28rem, about 45 characters at --text-lg.
+- **Body reversed** (400, 1.66, +0.01em): the same copy on Deep Aubergine. Weight does not change; Avenir Next holds at this size and a step up blooms on the dark ground.
 - **Label** (600, 0.875rem, 0.12em tracking, uppercase): archive links, About tab.
 - **Caption** (400 italic, 0.875rem, centered, Caption Ink): print labels under photographs.
 
 ### Named Rules
+**The Caps-Air Rule.** Cormorant SC sets every lowercase letter as a small cap, so no display role is ever tracked negatively. Tracking is positive and size-inverse: `--tracking-display` (+0.012em) above 2rem, `--tracking-caps` (+0.04em) below it. The face's own kerning is not enough at these sizes; -0.045em collided the M and W of CROMWELL at the hero size.
+
+**The Reversed-Copy Rule.** Prose on Deep Aubergine takes `--leading-reverse` and `--tracking-reverse` in place of the paper values. Light on dark closes up optically, and the correction is leading and tracking only.
+
 **The Two-Family Rule.** Redesigned surfaces use exactly Cormorant SC and Avenir Next. The monospace running through the interior pages' nav, footer, and labels is starter residue, slated for replacement as each page is redesigned, and must not spread to new work.
 
 ## 4. Elevation
@@ -199,12 +210,48 @@ Depth is conveyed by material stacking (overlap, rotation, tape) far more than b
 ### Navigation (interior pages)
 - **Style:** sticky pill nav from the starter shell (mono labels); functional but not yet part of this system. Redesign pending per The Two-Family Rule.
 
-## 6. Do's and Don'ts
+## 6. Adaptation
+
+The grounds are full-bleed at every width; what sits on them is not.
+
+**The Bounded-Composition Rule.** Paper, band, and the home footer strip run
+edge to edge, but their contents are inset by `--hero-inset`, which is the page
+gutter until the viewport passes `--max-width-hero` (96rem) and half the
+remainder after that. The collage was composed at laptop width, and past that
+bound it stops being a composition: the overlaps pull apart, the shelf plank
+runs on half empty, and the paper opens a void nothing is placed in.
+
+**Breakpoints are content-driven.** Three: 48rem for the shell and the print
+scale, 62rem for the two-column collage, 72rem for the viewport-fill and the
+tuned grid. The collage asked for 62rem the hard way. At 48rem a portrait
+tablet got the desktop composition in a width that could not hold it, and the
+prints strung out into a vertical chain down the left with the shelf sitting
+over half a screen of empty paper. The single-column stack carries 768px far
+better.
+
+**Height decides on a short viewport.** A phone in landscape is wide enough for
+two columns and far too short for a stack, so the collage query also answers to
+`(min-width: 34rem) and (max-height: 34rem)`, and a `max-height: 34rem` block
+drops the shelf's raise and the paper's minimum height. The book heights carry
+`svh` terms for the same reason. Without all of it the site's only navigation
+sits entirely below the fold with its spine titles cut in half.
+
+**Touch targets never fall below `--tap-floor`.** It is 44px, deliberately not
+a rem: it is the floor inside the `vw` caps, and a minimum that scales with the
+root font is not a minimum.
+
+**The prints stack at three scales, not one.** 92/82/46% on a phone, 72/62/40%
+from 48rem, and the collage percentages from 62rem. A print that fills a phone
+reads as a photograph taped to a page; the same 92% on a portrait tablet is a
+675px slideshow.
+
+## 7. Do's and Don'ts
 
 ### Do:
 - **Do** source every color, size, spacing, and radius from `src/styles/tokens.css` via `var(--*)`; new values land in tokens first.
 - **Do** delete a starter token as soon as the last page using it is redesigned. Every page now carries journal type and journal grounds, so the bridge has shrunk to what the shared shell still needs: the site footer, the skip link, and the generic card and grid rules the redesigned pages no longer reference. Retiring the footer and those leftover shell rules empties the block entirely.
 - **Do** keep every design-token change in sync with `/showcase` in the same change.
+- **Do** cap a rem-floored `clamp()` with a `vw` ceiling on anything that sets a container's intrinsic width. A reader who raises their browser's default font size grows the rem floor but not the viewport, and one unbreakable word (CROMWELL) then pushes the whole page into sideways scroll. The caps are inert at the default size.
 - **Do** keep rotations between 1 and 4.5 degrees and overlaps deliberate; collage, not clutter.
 - **Do** gate hover transforms behind `(hover: hover)` and keep all motion within 400ms of travel, entrance and hover only, honoring reduced motion.
 - **Do** animate the individual `translate` property, not `transform`, when the element carries a base rotation — a `transform` keyframe under `fill-mode: both` holds its end value over the top of it and flattens the tilt.

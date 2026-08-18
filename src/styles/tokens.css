@@ -37,14 +37,27 @@
   --text-xl: 1.5rem;
   --text-2xl: clamp(2rem, 5vw, 3.5rem);
   --text-3xl: clamp(3rem, 8vw, 6rem);
-  --text-hero-name: clamp(3.25rem, 5.4vw, 5.5rem);
-  --text-hero-kicker: clamp(1rem, 1.3vw, 1.25rem);
+  /* The vw ceiling is load-bearing: the rem floor alone lets a larger default
+     font size push CROMWELL, one unbreakable word, wider than the phone it is
+     on, and the whole page scrolls sideways. Inert at the default size. */
+  --text-hero-name: min(clamp(3.25rem, 5.4vw, 5.5rem), 13vw);
+  /* An eyebrow: below the intro it introduces rather than tied with it.
+     Rank comes from color, caps, and tracking, not size. */
+  --text-hero-kicker: clamp(0.9375rem, 1.05vw, 1.0625rem);
   --text-hero-destination: clamp(1.5rem, 1.9vw, 1.85rem);
 
   --leading-tight: 0.96;
   --leading-snug: 1.2;
   --leading-normal: 1.55;
-  --tracking-tight: -0.045em;
+  /* Light on dark closes up optically, so band copy gets a little more
+     leading and a hair of tracking. Weight stays 400: a step up blooms. */
+  --leading-reverse: 1.66;
+  --tracking-reverse: 0.01em;
+  /* Cormorant SC sets lowercase as small caps, so nothing in the display
+     family is tracked negatively: caps need air, and the smaller they are the
+     more of it. Two steps, size-inverse. */
+  --tracking-display: 0.012em;
+  --tracking-caps: 0.04em;
   --tracking-wide: 0.12em;
   --tracking-wider: 0.18em;
 
@@ -58,9 +71,17 @@
   --space-2xl: 6rem;
   --space-3xl: 9rem;
   --space-hero-gutter: clamp(1.5rem, 5vw, 5.5rem);
+  /* Whichever is larger: the page gutter, or what it takes to hold the content
+     at --max-width-hero. The second term only overtakes the first around
+     107rem, and below that the gutter is the wider of the two, so the content
+     is at or under the bound the whole way up. Grounds stay full-bleed. */
+  --hero-inset: max(var(--space-hero-gutter), calc((100% - var(--max-width-hero)) / 2));
   --space-hero-section: clamp(2rem, 4vw, 4.5rem);
   --space-hero-overlap-sm: -1rem;
   --space-hero-band-overlap: -2.5rem;
+  /* The run of rule past the name to its ring, capped in vw because it counts
+     toward the h1's intrinsic width. */
+  --space-hero-rule-tail: min(var(--space-xl), 8vw);
 
   /* --- Radius and borders --- */
   --radius-sm: 0.5rem;
@@ -75,11 +96,18 @@
 
   /* --- Layout and journal component dimensions --- */
   --max-width-page: 78rem;
+  /* Past this the collage stops being a composition: overlaps pull apart, the
+     shelf plank runs on half empty, the paper opens a void. Grounds still run
+     edge to edge; only what sits on them is bounded. */
+  --max-width-hero: 96rem;
   --max-width-copy: 42rem;
   --max-width-narrow: 32rem;
   --max-width-intro: 24rem;
+  /* Lede measure: ~45 characters at --text-lg, where 24rem gave 37. Interior
+     pages move onto it as each is next touched. */
+  --max-width-lede: 28rem;
   --hover-lift: -0.25rem;
-  --hero-paper-min-height: 36rem;
+  --hero-paper-min-height: min(36rem, 100svh);
   --hero-fill-height: min(100svh, 58rem);
   --hero-band-min-height: 16rem;
   --hero-note-min-height: 16rem;
@@ -88,19 +116,25 @@
   --hero-binding-gap: 1.75rem;
   --hero-tape-width: 9rem;
   --hero-tape-height: 2.6rem;
-  --hero-glimpse-width: clamp(18rem, 31vw, 31rem);
-  --hero-touch-target: 2.75rem;
+  /* Capped in vw for the same reason the hero name is. The svh terms are for
+     the short viewport a phone becomes in landscape, where a book taller than
+     the window put the only navigation below the fold. Inert upright. */
+  --hero-glimpse-width: min(clamp(18rem, 31vw, 31rem), 74vw);
+  --touch-target: max(var(--tap-floor), 2.75rem);
+  /* Deliberately px, not rem: it is the floor inside the vw caps below, and a
+     minimum that scales with the root font is not a minimum. */
+  --tap-floor: 44px;
   /* Aged cloth: the role accents muted toward charcoal so large book boards
      sit quietly in the theme; the raw accents stay for small details. */
   --color-book-cloth-violet: color-mix(in oklab, var(--color-field-violet) 70%, var(--color-soft-charcoal));
   --color-book-cloth-aubergine: var(--color-aubergine);
   --color-shelf-wood: color-mix(in oklab, var(--color-caption-ink) 72%, var(--color-soft-charcoal));
   --color-shelf-wood-light: color-mix(in oklab, var(--color-caption-ink) 55%, var(--color-paper));
-  --book-height: clamp(18rem, 30vw, 26rem);
-  --book-height-about: clamp(14rem, 24vw, 20rem);
-  --book-spine-width: clamp(4.5rem, 6.5vw, 6rem);
-  --book-spine-width-about: 2.75rem;
-  --book-cover-width: clamp(12rem, 46vw, 17rem);
+  --book-height: min(clamp(18rem, 30vw, 26rem), 74vw, 70svh);
+  --book-height-about: min(clamp(14rem, 24vw, 20rem), 58vw, 54svh);
+  --book-spine-width: min(clamp(4.5rem, 6.5vw, 6rem), max(var(--tap-floor), 19vw));
+  --book-spine-width-about: max(var(--tap-floor), min(2.75rem, 12vw));
+  --book-cover-width: min(clamp(12rem, 46vw, 17rem), 60vw);
   --book-lift: -3.5rem;
   --shelf-ledge-thickness: 1rem;
   --shelf-perspective: 70rem;

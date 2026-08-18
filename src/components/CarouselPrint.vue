@@ -158,7 +158,7 @@ onUnmounted(() => stopWatching());
   font-family: var(--font-display);
   font-size: var(--text-xl);
   font-weight: 500;
-  letter-spacing: var(--tracking-tight);
+  letter-spacing: var(--tracking-caps);
 }
 
 .carousel-print figcaption p {

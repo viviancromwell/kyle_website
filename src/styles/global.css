@@ -76,7 +76,7 @@ h2,
 h3 {
   font-family: var(--font-display);
   line-height: var(--leading-snug);
-  letter-spacing: var(--tracking-tight);
+  letter-spacing: var(--tracking-display);
 }
 
 a {
@@ -104,6 +104,9 @@ a:focus-visible {
   left: var(--space-md);
   top: var(--space-md);
   z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--touch-target);
   padding: var(--space-xs) var(--space-sm);
   border-radius: var(--radius-sm);
   color: var(--color-accent-ink);
@@ -165,7 +168,7 @@ a:focus-visible {
   font-family: var(--font-display);
   font-size: var(--text-xl);
   font-weight: 500;
-  letter-spacing: var(--tracking-tight);
+  letter-spacing: var(--tracking-caps);
   text-decoration: none;
 }
 
@@ -194,7 +197,7 @@ a:focus-visible {
   transition: color var(--duration-fast) var(--ease-out);
 }
 
-/* Every other link block in the journal gets a --hero-touch-target box; the
+/* Every other link block in the journal gets a --touch-target box; the
    masthead's set is 28px tall. Padding it out would drop the current-page
    underline away from the words, so the target is laid over instead. */
 .nav-links a::after {
@@ -205,7 +208,7 @@ a:focus-visible {
   /* The set wraps on small screens, where --space-md is all the room there is
      between one row and the next. Capped at it, two stacked targets meet
      without ever crossing. */
-  height: min(var(--hero-touch-target), calc(100% + var(--space-md)));
+  height: min(var(--touch-target), calc(100% + var(--space-md)));
   translate: 0 -50%;
   content: "";
 }
@@ -271,6 +274,12 @@ a:focus-visible {
   background: var(--color-paper);
 }
 
+/* A window taller than the page used to show the starter ground below the
+   footer, a cooler white against its cream. Paper all the way down. */
+.home-route {
+  background: var(--color-paper);
+}
+
 /* The field note and glimpse print cross the paper/band boundary in both
    directions, so neither section may isolate or raise itself: the sections
    stay unstacked and the crossing elements carry their own z-index. */
@@ -287,7 +296,8 @@ a:focus-visible {
     "media";
   gap: var(--space-hero-section);
   min-height: var(--hero-paper-min-height);
-  padding: var(--space-hero-gutter);
+  padding-block: var(--space-hero-gutter);
+  padding-inline: var(--hero-inset);
   overflow-x: clip;
   /* Vivian's wall-paper trial ground; --color-paper stays underneath as the
      load/fallback color. */
@@ -373,12 +383,12 @@ a:focus-visible {
 .home-hero-copy h1 {
   position: relative;
   width: fit-content;
-  padding-right: var(--space-xl);
+  padding-right: var(--space-hero-rule-tail);
   padding-bottom: var(--space-md);
   border-bottom: var(--border-width) solid var(--color-field-violet);
   font-size: var(--text-hero-name);
   font-weight: 500;
-  letter-spacing: var(--tracking-tight);
+  letter-spacing: var(--tracking-display);
   line-height: var(--leading-tight);
 }
 
@@ -400,13 +410,15 @@ a:focus-visible {
   font-size: var(--text-hero-kicker);
   font-weight: 600;
   letter-spacing: var(--tracking-wider);
+  line-height: var(--leading-snug);
   text-transform: uppercase;
 }
 
 .home-hero-intro {
-  max-width: var(--max-width-intro);
+  max-width: var(--max-width-lede);
   font-size: var(--text-lg);
   line-height: var(--leading-normal);
+  text-wrap: pretty;
 }
 
 /* Bookshelf: three cloth-bound journals on a drawn ledge. First activation
@@ -626,6 +638,7 @@ a:focus-visible {
   font-family: var(--font-display);
   font-size: var(--text-hero-destination);
   font-weight: 500;
+  letter-spacing: var(--tracking-caps);
   line-height: var(--leading-tight);
   text-transform: uppercase;
   writing-mode: vertical-rl;
@@ -644,6 +657,7 @@ a:focus-visible {
   font-family: var(--font-display);
   font-size: var(--text-hero-destination);
   font-weight: 500;
+  letter-spacing: var(--tracking-caps);
   line-height: var(--leading-tight);
   text-align: center;
   text-transform: uppercase;
@@ -734,10 +748,12 @@ a:focus-visible {
 }
 
 /* A smaller print in the same material as the travel print, filling the
-   collage gap between the note and the shelf. */
+   collage gap between the note and the shelf, and sitting above it. The two
+   overlap at desktop widths, and this print's tilt traps its caption in its
+   own stacking context, so under the note the caption was cut in half. */
 .home-mini-print {
   position: relative;
-  z-index: 0;
+  z-index: 2;
   width: 46%;
   margin-top: calc(var(--space-xl) * -1);
   padding: var(--space-sm);
@@ -824,7 +840,8 @@ a:focus-visible {
   display: grid;
   gap: var(--space-lg);
   min-height: var(--hero-band-min-height);
-  padding: var(--space-lg) var(--space-hero-gutter);
+  padding-block: var(--space-lg);
+  padding-inline: var(--hero-inset);
   color: var(--color-on-aubergine);
   background: var(--color-aubergine);
 }
@@ -840,10 +857,13 @@ a:focus-visible {
 }
 
 .home-journal-copy p {
-  max-width: var(--max-width-intro);
+  max-width: var(--max-width-lede);
   margin-bottom: 0;
   color: var(--color-on-aubergine);
   font-size: var(--text-lg);
+  letter-spacing: var(--tracking-reverse);
+  line-height: var(--leading-reverse);
+  text-wrap: pretty;
 }
 
 .home-archive-links {
@@ -862,7 +882,7 @@ a:focus-visible {
 .home-archive-links a {
   display: inline-flex;
   align-items: center;
-  min-height: var(--hero-touch-target);
+  min-height: var(--touch-target);
   padding-bottom: var(--space-xs);
 }
 
@@ -904,7 +924,7 @@ a:focus-visible {
 .showcase-route .site-footer {
   max-width: none;
   padding-block: var(--space-md);
-  padding-inline: var(--space-hero-gutter);
+  padding-inline: var(--hero-inset);
   border-top: none;
   color: var(--color-caption-ink);
   background: var(--color-paper);
@@ -1026,6 +1046,26 @@ a:focus-visible {
     justify-content: flex-end;
   }
 
+  /* Still stacked, but no longer filling the width: a 675px photograph on a
+     portrait tablet reads as a slideshow, not as something taped to a page. */
+  .home-travel-print {
+    width: 72%;
+  }
+
+  .home-field-note {
+    width: 62%;
+  }
+
+  .home-mini-print {
+    width: 40%;
+  }
+}
+
+/* Asked for at 48rem, the collage gave a portrait tablet a composition its
+   width could not hold: prints strung down the left in a chain, shelf over
+   half a screen of empty paper. It waits for 62rem, or for a viewport short
+   enough that side-by-side is the only thing that fits. */
+@media (min-width: 62rem), (min-width: 34rem) and (max-height: 34rem) {
   /* Prints stack under the copy on the left; the shelf owns the right
      column full-height so the books sit low, near the band. */
   .home-hero-paper {
@@ -1081,6 +1121,21 @@ a:focus-visible {
     align-self: start;
     justify-self: end;
     margin-top: var(--space-hero-band-overlap);
+  }
+}
+
+/* The collage above already answers to a short viewport; what it cannot
+   inherit is the vertical breathing room. Without this the shelf's raise and
+   the paper's minimum height put the site's only navigation below the fold. */
+@media (max-height: 34rem) {
+  .home-hero-paper {
+    gap: var(--space-lg);
+    min-height: 0;
+    padding-block: var(--space-lg);
+  }
+
+  .home-shelf {
+    padding-top: 0;
   }
 }
 
